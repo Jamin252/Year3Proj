@@ -1,0 +1,41 @@
+\section{Preprocessing Structure}
+\subsection{Pipeline Definition}
+Each preprocessing method is implemented as a deterministic function $f(\cdot)$ applied to waveform audio, producing a processed waveform:
+\[
+x' = f(x;\theta),
+\]
+where $\theta$ are fixed parameters. Pipelines are defined as ordered compositions (e.g., normalisation $\rightarrow$ enhancement $\rightarrow$ ASR), where normalisation is always applied as it is computationally cheap and necessary for consistent input to downstream models, but to avoid combinatorial explosion, only a limited set of combinations is evaluated.
+
+\subsection{Experimental Plan}
+The experimental study includes:
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Individual preprocessing methods:} baseline vs each preprocessing method in isolation.
+    \item \textbf{Selected multi-step pipelines:} a small set of combinations chosen based on theoretical complementarity.
+    \item \textbf{Speaker embedding experiment:} for target-speaker filtering, evaluate \textit{with} vs \textit{without} embeddings, holding all other factors fixed.
+\end{enumerate}
+If separation methods are constrained to $K=2$ due to model limitations, this is explicitly reported and separation results are presented as a focused subset.
+
+\section{ASR Inference Controls}
+To ensure fair comparisons, inference settings are held constant per model:
+\begin{itemize}
+    \item \textbf{Sampling rate:} audio is resampled to each model’s required input rate (typically 16\,kHz), with consistent resampling across conditions.
+    \item \textbf{Decoding configuration:} beam size / temperature / language constraints are fixed and documented for each model.
+    \item \textbf{Chunking/segmentation:} if models require chunked inference, chunk length and overlap are fixed and applied identically across conditions.
+\end{itemize}
+All model versions, checkpoints, and library commits are recorded for reproducibility.
+
+\section{Evaluation Protocol}
+\subsection{Reference Transcripts}
+For synthetic mixtures, the reference includes the known transcript for each source speaker. For real datasets, references are taken from official annotations. Where multi-speaker references exist, meeting-style scoring is used (Section~\ref{sec:metrics_meeting}).
+
+\subsection{Primary and Secondary Metrics}
+\textbf{Primary outcome:} word error rate (WER) on the full clip reference(s).\\
+\textbf{Secondary outcomes:} overlap-aware scores, meeting-style WER (where applicable), and error breakdowns. Metrics are defined formally in Section~\ref{sec:metrics}.
+
+\subsection{Overlap-aware Evaluation}
+\label{sec:metrics_overlap}
+To directly answer RQ1 and RQ4, overlap-aware evaluation is performed by restricting scoring to words occurring within overlapped regions (using the overlap mask for synthetic mixtures, and overlap annotations/estimates for real audio). This yields \textbf{overlap-only WER}, which isolates performance under simultaneous speech from non-overlapped regions.
+
+\subsection{Meeting-style Scoring for Multi-speaker References}
+\label{sec:metrics_meeting}
+When multi-speaker references are available and speaker attribution is not guaranteed in the hypothesis, meeting-style scoring such as concatenated permutation WER (cpWER) is used to reduce sensitivity to speaker ordering.

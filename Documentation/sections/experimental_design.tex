@@ -1,0 +1,82 @@
+\section{Objective and Scope}
+This model evaluation plan evaluate the robustness of multiple English automatic speech recognition (ASR) transcription models under (i) overlapping speech and (ii) additive noise, and investigates and quantifies how different preprocessing strategies affect performance across these conditions and different ASR models. The plan follows: compare ASR performance against overlap ratio and SNR, evaluate preprocessing impacts (normalisation, enhancement, separation, and target-speaker filtering), and an study where speaker embedding are provided vs not provided. The evaluation will be conducted under a controlled experimental design, with systematic variation of overlap ratios, SNR levels, and preprocessing, and will be statistically analysed to determine the significance of observed differences in ASR performance. The results will inform the best pipelines for improving ASR robustness in real-world scenarios with overlapping speech and noise.
+
+\section{Research Questions}
+\begin{enumerate}[label=\textbf{RQ\arabic*:}, leftmargin=*]
+    \item How does ASR performances change as the \emph{overlap ratio} increases, under constants SNR levels, and how does this vary across different ASR models?
+    \item How does ASR performance change as \emph{SNR levels} increase, under constant overlap ratios, and how does this vary across different ASR models?
+    \item Do trends observed on \emph{synthetic mixtures} in RQ1 and RQ2 transfer to real-world audio conditions, and how do they differ across ASR models?
+    \item How do different preprocessing models affect ASR performance under overlapping speech and noise conditions?
+    \item What is the impact of providing \emph{speaker embeddings} on ASR performance under overlapping speech conditions?
+\end{enumerate}
+
+\section{Experimental Design Overview}
+The evaluation is performed under a controlled crossed design to quanitfy the effects of (i) overlap ratio, (ii) number of overlapping speakers, (iii) Singal-to-Noise Ratio (SNR), (iv) noise type, (iv) preprocessing strategy, and (v) availability of speaker embedding information. The design includes two types of audio data:
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Synthetic mixtures (controlled):} audio mixtures are generated with precise control of overlap ratio, number of concurrent speaker, SNR, and noise type. This enables causal attribution of performance changese to specific factors and their relationships.
+    \item \textbf{Real-world overlapped speech (ecological validity):} evaluation is implemented on real-world conversational datasets to assess the transferability of the trends observed on synthetic mixtures to real-world conditions.
+\end{enumerate}
+Across both tracks, all models are evaluated on identical audio segments and references to enable paired statistical comparisons.
+
+\subsection{Factors and Levels}
+Table~\ref{tab:design_factors} summarises the main experimental factors. The full condition matrix is implemented via a fractional factorial design to keep the total number of runs computationally feasible while preserving coverage of key interactions (e.g., overlap $\times$ SNR, preprocessing $\times$ overlap, model $\times$ preprocessing).
+
+\begin{table}[ht]
+\centering
+\caption{Experimental factors and planned levels.}
+\label{tab:design_factors}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Factor} & \textbf{Levels} \\
+\midrule
+Overlap ratio (OR) & $0\%, 10\%, 25\%, 50\%, 75\%, 90\%$ \\
+Max concurrent speakers ($K$) & $2, 3, 4$ (with separation experiments prioritised for $K\leq2$ if needed) \\
+SNR (dB) & clean, 20, 10, 0, $-5$ \\
+Noise type & domestic, nature, office, public, street, transportation\\
+Audio duration & fixed-length clips (e.g., 15--30 s) and a long-form subset (meetings) \\
+Preprocessing pipeline & baseline, enhancement, separation, target-speaker filtering and combination of them \\
+Speaker embeddings & provided vs not provided (for target-speaker methods only) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+\subsection{Performance Metrics}
+The performance of each experimental unit is measured using standard automatic speech recognition (ASR) metrics, including:
+\begin{itemize}
+    \item \textbf{Word Error Rate (WER)}: The percentage of words that are incorrectly transcribed relative to the reference transcript.
+    \item \textbf{Concatenated minimum-Permutation WER (cpWER)}: It assumes that the system groups its output by speakers and the recognized transcripts, i.e., the concatenation of several utterances, of each speaker are compared to the reference transcripts of each speaker. 
+\end{itemize}
+\subsection{Experimental Units}
+The experimental unity is an pairing of an audio clip (with specific overlap, SNR, noise type), a preprocessing pipeline (including no preprocessing), target-speaker embedding availability (for target-speaker methods), and an ASR model. 
+\[
+\text{clip} \to \{\text{preprocessing pipeline}\}\times (\text{speaker embedding}) \times\{\text{ASR model}\}\]
+Each unit is evaluated to produce a set of performance metrics (e.g., WER, overlap-specific WER) that are then statistically analysed to answer the research questions.
+
+
+
+
+
+\section{Datasets and Data Splits}
+\subsection{Track A: Synthetic Mixture Dataset (Controlled Overlap)}
+\subsubsection{Source Speech Selection}
+Synthetic mixtures are constructed from clean English speech utterances with high-quality transcripts with accurate timestamps. The source speech is selected from datasets such as LibriSpeech and VCTK, which provide a large number of speakers and utterances to enable the generation of mixtures with varying overlap ratios and speaker combinations.
+
+\subsubsection{Overlap Construction}
+For each mixture, a target overlap ratio (OR) is achieved by controlling the alignment of selected utterances. The overlap ratio is defined as:
+\[
+\mathrm{OR} = \frac{\text{time with $\geq 2$ active speakers}}{\text{active speech time (time with at least one speaker)}}.
+\]
+For $K>2$, the generator also tracks overlap depth (e.g., time with exactly 2, 3, or 4 simultaneous speakers). Each clip stores an \textbf{overlap mask} (frame-level overlap indicator and depth), enabling overlap-specific evaluation.
+
+\subsubsection{Noise Addition and SNR Control}
+Additive noise is added to the clean mixtures to achieve target SNR levels. The SNR (RMS) is calculated as:
+\[
+\mathrm{SNR}_{dB} = 20 \log_{10}\left(\frac{\text{A}_\text{speech}}{\text{A}_\text{noise}}\right),
+\]
+where $A$ denotes root mean square (RMS) amplitude. The noise is first normalised and rescaled by $\alpha$ to achieve the target SNR (Table \ref{tab:design_factors}).
+\[
+\alpha = \frac{A_\text{speech}}{A_\text{noise} \times 10^{\mathrm{SNR}_{dB}/20}}.
+\]
+Type of noise is varied across conditions, with noise segments selected from dataset DEMAND to represent a range of real-world environments.
+
+\subsection{Track B: Real Overlapped Speech Dataset}
+A real conversational or meeting dataset containing natural overlap is used to validate transferability of findings. Real audio is segmented into clips comparable in duration to the synthetic evaluation. Where available, target-speaker information (e.g., from diarisation) is used for the target-speaker embedding conditions.

@@ -1,0 +1,37 @@
+\section{Datasets}
+The evaluation will be conducted on the following datasets:
+\begin{itemize}
+    \item \textbf{Single Speaker Clean Speech (for synthetic mixtures)} 
+    \begin{itemize}
+        \item \textbf{LibriSpeech train-clean-360} LibriSpeech is a corpus of approximately 1000 hours of 16kHz read English speech, prepared by Vassil Panayotov with the assistance of Daniel Povey. The data is derived from read audiobooks from the LibriVox project, and has been carefully segmented and aligned. \cite{librispeech}
+        \item \textbf{CSTR VCTK Corpus} \cite{voxceleb}: a large-scale speaker recognition dataset containing speech from thousands of speakers, suitable for creating synthetic mixtures with varying overlap and SNR.
+    \end{itemize}
+    \item \textbf{Real-world Overlapped Speech}
+    \begin{itemize}
+        \item \textbf{CHiME6\_eval} \cite{chime6}: English multi-channel far field meeting data used in the CHiME-6 Challenge. It is derived from CHiME\-5 by fixing some array synchronization errors.
+        \item \textbf{The AMI Corpus} \cite{ami-corpus}: The AMI Meeting Corpus is a multi-modal data set consisting of 100 hours of meeting recordings.
+    \end{itemize}
+    \item \textbf{Noise Data}
+    \begin{itemize}
+        \item \textbf{DEMAND} \cite{demand}: The DEMAND (Diverse Environments Multichannel Acoustic Noise Database) aims to provide a set of recordings that allow testing of algorithms using real-world noise in a variety of settings.
+    \end{itemize}
+\end{itemize}
+
+\section{Baseline Models under Evaluation}
+The evaluation will include the following ASR models:
+\begin{itemize}
+    \item \textbf{Faster Whisper} (OpenAI): faster-whisper is a reimplementation of OpenAI's Whisper model using CTranslate2, which is a fast inference engine for Transformer models. \cite{github_openai_faster-whisper}
+    \item \textbf{Wav2Vec2-Large-960h} (Meta AI): The large model pretrained and fine-tuned on 960 hours of Librispeech on 16kHz sampled speech audio. When using the model make sure that your speech input is also sampled at 16Khz. \cite{facebook_wav2vec2-large-960h}
+    \item \textbf{parakeet-tdt-0.6b-v3} (NVIDIA): parakeet-tdt-0.6b-v3 is a 600-million-parameter multilingual automatic speech recognition (ASR) model designed for high-throughput speech-to-text transcription. \cite{nvidia/parakeet-tdt-0.6b-v3}
+    \item \textbf{NVIDIA NeMo Canary-Qwen-2.5B} (NVIDIA): NVIDIA NeMo Canary-Qwen-2.5B is an English speech recognition model that achieves state-of-the art performance on multiple English speech benchmarks. \cite{nvidia/canary-qwen-2.5b}
+    \item \textbf{granite-speech-3.3-8b} (IBM Research): Granite-speech-3.3-8b is a compact and efficient speech-language model, specifically designed for automatic speech recognition (ASR) and automatic speech translation (AST).\cite{ibm-granite/granite-speech-3.3-8b}
+    \item \textbf{Phi-4-multimodal-instruct} (Microsoft): Phi-4-multimodal-instruct is a lightweight open multimodal foundation model that leverages the language, vision, and speech research and datasets used for Phi-3.5 and 4.0 models. \cite{microsoft/phi-4-multimodal-instruct}
+\end{itemize}
+\section{Preprocessing Strategies}
+The evaluation will investigate the following preprocessing strategies to assess their impact on ASR performance under overlapping speech and noise conditions:
+\begin{itemize}
+    \item \textbf{ESPnet Single Channel Speech Enhancement} (ESPnet-SE) \cite{ESPnet}
+    \item \textbf{ESPnet Speech Separation} (ESPnet-SS) \cite{ESPnet}
+    \item \textbf{SepRefomer} \cite{SepReformer}
+    \item \textbf{VoiceFilter} \cite{VoiceFilter}
+\end{itemize}

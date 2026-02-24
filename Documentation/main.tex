@@ -1,0 +1,59 @@
+\documentclass[11pt,a4paper]{report}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{siunitx}
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+% Citations (BibTeX)
+\usepackage[numbers]{natbib}
+\bibliographystyle{plainnat} % or IEEEtranN if your department prefers IEEE
+
+\title{Model Evaluation Plan: Evaluating ASR Robustness Under Overlapping English Speech}
+\author{Jamin}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\chapter{Introduction}
+% \input{sections/01_introduction}
+
+\chapter{Datasets, ASR Models and Preprocessing Strategies}
+\input{sections/datasets_models.tex}
+
+\chapter{Experimental Design}
+\input{sections/experimental_design}
+
+\chapter{Preprocessing Pipelines}
+\input{sections/preprocessing}
+
+% \chapter{Evaluation Metrics}
+% \input{sections/05_metrics}
+
+% \chapter{Statistical Analysis Plan}
+% \input{sections/06_statistics}
+
+% \chapter{Implementation Plan and Reproducibility}
+% \input{sections/07_implementation}
+
+\bibliography{references}
+
+\appendix
+% \chapter{Experiment Matrix}
+% optionally input a big table here
+
+\end{document}
