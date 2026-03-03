@@ -1,0 +1,2 @@
+/home/jamin/Year3Proj/Data/LibriSpeech
+/home/jamin/Year3Proj/Data/wav48_silence_trimmed
