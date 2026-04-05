@@ -1,0 +1,13 @@
+{
+  "clip_id": "mix_0002105_0.20_2_7.4_T",
+  "model_name": "faster-whisper",
+  "status": "success",
+  "ref_segments": 7,
+  "hyp_segments": 6,
+  "is_segmented": true,
+  "metrics": {
+    "cpwer": 0.8195121951219512,
+    "wer": 0.22926829268292684
+  },
+  "metric_type": "segmented"
+}

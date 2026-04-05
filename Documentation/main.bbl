@@ -1,4 +1,4 @@
-\begin{thebibliography}{14}
+\begin{thebibliography}{20}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -11,11 +11,36 @@
 \newblock \url{https://www.openslr.org/16/}, 2007.
 \newblock Accessed: 2026-02-14.
 
+\bibitem[Chen et~al.(2020)Chen, Yoshioka, Lu, Zhou, Meng, Luo, Wu, Xiao, and
+  Li]{9053426}
+Zhuo Chen, Takuya Yoshioka, Liang Lu, Tianyan Zhou, Zhong Meng, Yi~Luo, Jian
+  Wu, Xiong Xiao, and Jinyu Li.
+\newblock Continuous speech separation: Dataset and analysis.
+\newblock In \emph{ICASSP 2020 - 2020 IEEE International Conference on
+  Acoustics, Speech and Signal Processing (ICASSP)}, pages 7284--7288, 2020.
+\newblock \doi{10.1109/ICASSP40776.2020.9053426}.
+
 \bibitem[{CHiME}(2020)]{chime6}
 {CHiME}.
 \newblock Chime-6 challenge.
 \newblock \url{https://www.openslr.org/150/}, 2020.
 \newblock Accessed: 2026-02-14.
+
+\bibitem[Cosentino et~al.(2020)Cosentino, Pariente, Cornell, Deleforge, and
+  Vincent]{cosentino2020librimixopensourcedatasetgeneralizable}
+Joris Cosentino, Manuel Pariente, Samuele Cornell, Antoine Deleforge, and
+  Emmanuel Vincent.
+\newblock Librimix: An open-source dataset for generalizable speech separation,
+  2020.
+\newblock URL \url{https://arxiv.org/abs/2005.11262}.
+
+\bibitem[Cosentino et~al.(2023)Cosentino, Pariente, Cornell, Deleforge, and
+  Vincent]{Handling_Trade-Offs_in_Speech_Separation_with_Sparsely-Gated_Mixture_of_Experts}
+Joris Cosentino, Manuel Pariente, Samuele Cornell, Antoine Deleforge, and
+  Emmanuel Vincent.
+\newblock Handling trade-offs in speech separation with sparsely-gated mixture
+  of experts, 2023.
+\newblock URL \url{https://arxiv.org/abs/2211.06493}.
 
 \bibitem[{ESPnet}(2024)]{ESPnet}
 {ESPnet}.
@@ -74,17 +99,34 @@
 \newblock Accessed: 2026-02-14.
 
 \bibitem[Quan~Wang(2019)]{VoiceFilter}
-Kevin Wilson Prashant Sridhar-Zelin Wu John Hershey Rif A. Saurous Ron J. Weiss
+Kevin Wilson Prashant Sridhar Zelin Wu John Hershey Rif A. Saurous Ron J. Weiss
   Ye Jia Ignacio Lopez~Moreno Quan~Wang, Hannah~Muckenhirn.
 \newblock Voicefilter: Targeted voice separation by speaker-conditioned
   spectrogram masking.
 \newblock \emph{arXiv:1810.04826}, 2019.
+\newblock URL \url{https://arxiv.org/pdf/1810.04826}.
+
+\bibitem[Shriberg et~al.(2001)Shriberg, Stolcke, and
+  Baron]{Shriberg2001ObservationsOO}
+Elizabeth Shriberg, Andreas Stolcke, and Don Baron.
+\newblock Observations on overlap: findings and implications for automatic
+  processing of multi-party conversation.
+\newblock In \emph{Interspeech}, 2001.
+\newblock URL \url{https://api.semanticscholar.org/CorpusID:11947676}.
+
+\bibitem[Thilo~von Neumann(2025)]{Word_Error_Rate_Definitions}
+Marc Delcroix Reinhold Haeb-Umbach Thilo~von Neumann, Christoph~Boeddeker.
+\newblock Word error rate definitions and algorithms for long-form multi-talker
+  speech recognition.
+\newblock \emph{arXiv:2508.02112}, 2025.
+\newblock URL \url{https://arxiv.org/pdf/2508.02112}.
 
 \bibitem[Ui-Hyeop~Shin(2024)]{SepReformer}
 Taehan Kim Hyung-Min~Park Ui-Hyeop~Shin, Sangyoun~Lee.
 \newblock Separate and reconstruct: Asymmetric encoder-decoder for speech
   separation.
 \newblock \emph{arXiv:2406.05983}, 2024.
+\newblock URL \url{https://arxiv.org/pdf/2406.05983}.
 
 \bibitem[{Vassil Panayotov and Daniel Povey}(2015)]{librispeech}
 {Vassil Panayotov and Daniel Povey}.
@@ -97,5 +139,12 @@ Taehan Kim Hyung-Min~Park Ui-Hyeop~Shin, Sangyoun~Lee.
 \newblock Cstr vctk corpus.
 \newblock \url{https://datashare.ed.ac.uk/handle/10283/3443}, 2019.
 \newblock Accessed: 2026-02-14.
+
+\bibitem[Wu~YH(2018)]{wu2018characteristics}
+Chipara O Hasan SS-Welhaven A Oleson~J Wu~YH, Stangl~E.
+\newblock Characteristics of real-world signal to noise ratios and speech
+  listening situations of older adults with mild to moderate hearing loss.
+\newblock \emph{Ear Hear}, 39\penalty0 (2):\penalty0 293--304, March 2018.
+\newblock \doi{10.1097/AUD.0000000000000486}.
 
 \end{thebibliography}

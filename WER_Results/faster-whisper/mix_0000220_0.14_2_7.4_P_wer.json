@@ -1,0 +1,6 @@
+{
+  "clip_id": "mix_0000220_0.14_2_7.4_P",
+  "model_name": "faster-whisper",
+  "status": "error",
+  "error": "Hypothesis not found"
+}

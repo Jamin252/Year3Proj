@@ -1,0 +1,13 @@
+/Data
+*__pycache__/
+/Output
+Data.tar.gz
+/Notes
+/temps
+/archive
+*.zip
+*.pkl
+Code/Fun_ASR
+Code/archive
+/Nemo
+Code/secrets.json

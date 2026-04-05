@@ -1,0 +1,74 @@
+\section{Overview and Principles}
+All statistical analysis is performed at the \emph{clip level}, where each clip is evaluated under
+multiple paired conditions (e.g., preprocessing A vs B) on the \emph{same} audio content. This
+paired design reduces variance and enables stronger inference about the effect of overlap, SNR,
+preprocessing, and model choice. :contentReference[oaicite:1]{index=1}
+
+Unless otherwise stated, all results are reported as mean $\pm$ 95\% confidence interval (CI)
+computed via bootstrap resampling over clips within a condition (Section~\ref{sec:bootstrap_ci}).
+
+\section{Response Variables}
+For each experimental unit (clip $\times$ preprocessing $\times$ embedding setting $\times$ ASR model),
+the following response variables are computed:
+\begin{itemize}
+  \item $y_{WER}$: Word Error Rate (WER) over the full clip reference.
+  \item $y_{oWER}$: overlap-only WER, computed only on words that occur within overlapped regions.
+  \item $y_{cpWER}$: cpWER for multi-speaker reference scoring when applicable.
+\end{itemize}
+Overlap-only scoring uses the overlap mask stored in synthetic mixtures, and overlap annotations/estimates
+for real audio (Chapter~3--4). :contentReference[oaicite:2]{index=2}
+
+\section{Bootstrap Confidence Intervals}
+\label{sec:bootstrap_ci}
+For each condition cell (defined by overlap ratio, $K$, SNR, noise type, preprocessing, and ASR model),
+a stratified bootstrap over clips is used to estimate uncertainty. Let $\{y_i\}_{i=1}^n$ be clip-level
+scores within the cell. We sample with replacement $n$ clips for $B$ resamples (e.g., $B=10{,}000$),
+compute the mean score for each resample, and take the 2.5th and 97.5th percentiles to form a 95\% CI.
+
+\section{Paired Comparisons (Preprocessing Effects)}
+To answer RQ4 and RQ5, preprocessing pipelines are compared \emph{paired} on identical clips:
+\[
+d_i = y_i^{(A)} - y_i^{(B)} ,
+\]
+where $y_i^{(A)}$ and $y_i^{(B)}$ are clip-level scores under pipelines A and B, respectively.
+We report:
+\begin{itemize}
+  \item mean difference $\bar{d}$ and 95\% CI via paired bootstrap;
+  \item a non-parametric paired test (Wilcoxon signed-rank) as a robustness check.
+\end{itemize}
+Because multiple preprocessing comparisons are performed across many conditions and models,
+$p$-values are adjusted using Holm--Bonferroni correction.
+
+\section{Main Effects and Interactions (Model-Based Analysis)}
+To quantify interactions such as preprocessing $\times$ overlap ratio and model $\times$ overlap ratio,
+a regression-style analysis is applied on clip-level scores. Let the design factors be:
+overlap ratio (OR), max concurrent speakers ($K$), SNR, noise type, preprocessing pipeline, ASR model,
+and speaker embedding availability (when relevant). The analysis focuses on:
+\begin{itemize}
+  \item \textbf{main effects}: OR, $K$, SNR, preprocessing, model;
+  \item \textbf{key interactions}: OR$\times$preprocessing, OR$\times$model, preprocessing$\times$model.
+\end{itemize}
+
+A mixed-effects model is used when feasible to account for repeated measurements per clip:
+\[
+y_{i} = \beta_0 + \beta^\top X_i + u_{\text{clip}(i)} + \epsilon_i,
+\]
+where $X_i$ contains fixed effects and interaction terms, $u_{\text{clip}(i)}$ is a random intercept for clip,
+and $\epsilon_i$ is residual error.
+
+If mixed-effects estimation is unstable for WER distributions, the primary inference falls back to:
+(i) paired bootstrap comparisons for effect sizes, and
+(ii) condition-wise aggregated analysis with robust standard errors.
+
+\section{Reporting of Effect Sizes}
+Beyond statistical significance, the following are reported:
+\begin{itemize}
+  \item absolute WER change: $\Delta WER$;
+  \item relative WER reduction: $(WER_B - WER_A)/WER_B$;
+  \item overlap-only improvements $\Delta oWER$ as the primary overlap-focused outcome.
+\end{itemize}
+
+\section{Transferability: Synthetic vs Real (RQ3)}
+To assess transferability, model and preprocessing rankings (by WER and overlap-only WER)
+are computed on synthetic mixtures and real datasets separately. Agreement is quantified using
+rank correlation (Spearman) across systems and key operating points (e.g., OR $\ge 20\%$, SNR $\le 0$ dB).

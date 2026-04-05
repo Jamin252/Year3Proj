@@ -1,0 +1,215 @@
+% Statistics Analysis Plan
+
+All statistical analyses are performed at the \textit{clip level}, where each clip contributes to one datum in the analysis. The analyses are primarily between models across different conditions, focusing on quantifying the effects of OVR and SNR on WER and cpWER. It will also investigate on the transferability of model performance trends from synthetic to real-world data.
+
+The aims of the statistical analysis are:
+\begin{enumerate}
+    \item to quantify the effect of overlap ratio (OVR) on transcription performance while fixing other variables.
+    \item to quantify the effect of signal-to-noise ratio (SNR) on transcription performance while fixing other variables.
+    \item to analyse and compare performance of different ASR models on specific conditions
+    \item to evaluate whether performance trends observed on synthetic data transfer to real-world recordings.
+\end{enumerate}
+
+\subsubsection{Outcome Measurement metrics}
+
+The primary metrics for evaluating ASR performance are Word Error Rate (WER), concatenated permutation WER (cpWER) and Diarization-Invariant cpWER. WER is defined as: 
+\begin{equation}
+    \mathrm{WER} = \frac{S + D + I}{N},
+\end{equation}
+where \(S\), \(D\), and \(I\) are the numbers of substitutions, deletions, and insertions respectively, and \(N\) is total number of words in the reference transcript. This measure the percentage of incorrect words relative to the reference transcript. 
+
+The cpWER is measured using the following method\cite{chime6}:
+\begin{enumerate}
+  \item Group the transcriptions generated and reference transcriptions by speaker.
+  \item Concatenate every transcription parts for each speaker (for both generated and reference) into a single string.
+  \item Compute the WER between the reference and generated transcriptions for all possible permutation of speaker assignments.
+  \item Use the minimum WER as the cpWER.
+\end{enumerate}
+
+DI-cpWER is computed as cpWER if all speaker labels are correct\cite{Word_Error_Rate_Definitions}.
+
+WER is used for clips with no overlap (OVR = 0\%) while cpWER is used for all clips except ones with no overlap (OVR = 0\%) since WER does not apply when there are multiple speakers. DI-cpWER is used as diarization-invariant metric for all clips with overlapping, this is to evaluate the performance of ASR models in isolation from speaker assignment errors.
+
+\subsubsection{General Analysis Principles}
+
+All hypothesis tests will be two-sided with significance level
+\[
+\alpha = 0.05.
+\]
+
+For each analysis, the response variable will be either WER or cpWER or DI-cpWER. Analysis is done with repeated-measures ANOVA.
+
+For each fitted model, the following will be reported:
+\begin{itemize}
+    \item group means and standard deviations;
+    \item medians and interquartile ranges;
+    \item estimated marginal means;
+    \item \(95\%\) confidence intervals;
+    \item \(p\)-values for main effects and interactions; and
+    \item adjusted pairwise comparisons where relevant.
+\end{itemize}
+
+Pairwise comparisons with different models under constant conditions will be corrected using the Holm method.
+
+
+
+Separate analyses will be conducted for WER, cpWER and DI-cpWER. 
+For $\text{WER}$, let $\mathcal S_c$ denote the set of clips in condition $c$ and let $\text{WER}_{i,m}$ denote the WER for clip \(i\) and ASR model \(m\). The model is
+\[
+\overline{\text{WER}}_{c,m}=\frac1{|\mathcal S_c|}\sum_{s\in\mathcal S_c}\text{WER}_{i,m}
+\]
+similarly for $\text{cpWER}$ and $\text{DI-cpWER}$.
+
+
+
+\subsubsection{Analysis of SNR Effect under Fixed Conditions}
+
+To isolate the effect of SNR, the primary analysis will fix:
+\begin{itemize}
+    \item \(\mathrm{OVR} = 14\%\),
+    \item maximum concurrent speakers \(= 2\),
+    \item no preprocessing pipeline
+\end{itemize}
+Here, \(\mathrm{SNR}_j\) is treated as a categorical fixed effect. The main null hypotheses are:
+\begin{align}
+    H_{0,1} &: \text{no main effect of SNR on the metric}, \\
+    H_{0,2} &: \text{no interaction between SNR and ASR model}.
+\end{align}
+
+If either effect is significant, post-hoc pairwise comparisons between SNR levels will be performed with Holm-adjusted \(p\)-values.
+
+\subsubsection{Analysis of OVR Effect under Fixed Conditions}
+
+To isolate the effect of overlap ratio, the primary analysis will fix:
+\begin{itemize}
+    \item \(\mathrm{SNR} = 7.4\ \mathrm{dB}\),
+    \item maximum concurrent speakers \(= 2\),
+    \item a fixed preprocessing pipeline, and
+    \item a fixed noise type.
+\end{itemize}
+
+The overlap levels considered will be \(0\%\), \(14\%\), \(20\%\), and \(40\%\). Let \(y_{ikm}\) denote the metric for clip \(i\), OVR level \(k\), and ASR model \(m\). The model is
+\begin{equation}
+    y_{ikm}
+    =
+    \gamma_0
+    +
+    \gamma_1 \,\mathrm{OVR}_k
+    +
+    \gamma_2 \,\mathrm{Model}_m
+    +
+    \gamma_3 \,(\mathrm{OVR}_k \times \mathrm{Model}_m)
+    +
+    \eta_{ikm}.
+\end{equation}
+
+Again, \(\mathrm{OVR}_k\) is treated as a categorical fixed effect. The null hypotheses are:
+\begin{align}
+    H_{0,3} &: \text{no main effect of OVR on the metric}, \\
+    H_{0,4} &: \text{no interaction between OVR and ASR model}.
+\end{align}
+
+If significant effects are detected, Holm-adjusted post-hoc pairwise comparisons between overlap levels will be performed.
+
+\subsubsection{Distribution Analysis Within Each Condition}
+
+In addition to mean performance, the distribution of evaluation scores within each model-condition combination will be analysed to assess robustness and variability. For each model under each condition, the following descriptive statistics will be reported:
+\begin{itemize}
+    \item mean;
+    \item standard deviation;
+    \item median;
+    \item interquartile range;
+    \item minimum and maximum; and
+    \item selected quantiles.
+\end{itemize}
+
+These distributions will be visualised using boxplots and violin plots. This analysis is intended to identify whether certain conditions lead not only to worse average performance, but also to greater instability or spread in transcription accuracy.
+
+Where relevant, Brown--Forsythe tests will be used as a formal comparison of variance across conditions.
+
+\subsubsection{Transfer to Real-World Data}
+
+Transfer from synthetic to real-world data will be evaluated at selected operating points. The primary operating point will be
+\[
+(\mathrm{OVR}, \mathrm{SNR}) = (14\%, 7.4\ \mathrm{dB}),
+\]
+and a secondary operating point will be
+\[
+(\mathrm{OVR}, \mathrm{SNR}) = (20\%, 0\ \mathrm{dB}).
+\]
+
+For each operating point, ASR models will be evaluated on:
+\begin{enumerate}
+    \item synthetic clips generated under the matched condition; and
+    \item real-world clips whose measured characteristics are closest to that condition.
+\end{enumerate}
+
+For each operating point, transfer will be analysed using the model
+\begin{equation}
+    y_{jdm}
+    =
+    \delta_0
+    +
+    \delta_1 \,\mathrm{Domain}_d
+    +
+    \delta_2 \,\mathrm{Model}_m
+    +
+    \delta_3 \,(\mathrm{Domain}_d \times \mathrm{Model}_m)
+    +
+    \epsilon_{jdm},
+\end{equation}
+where \(\mathrm{Domain}_d \in \{\text{synthetic}, \text{real}\}\).
+
+The main quantities of interest are:
+\begin{itemize}
+    \item the main effect of domain;
+    \item the domain-model interaction; and
+    \item the consistency of model rankings between synthetic and real-world data.
+\end{itemize}
+
+Ranking consistency will be summarised using Spearman rank correlation between model-wise mean scores on synthetic and real-world data.
+
+\subsubsection{Optional Mixed-Effects Extension}
+
+If multiple clips share the same speaker, source recording, or meeting session, a linear mixed-effects model will be used instead of a simple linear model by including a random intercept for the relevant grouping factor. For example, if clips are clustered within recording \(r\),
+\begin{equation}
+    y_{ijmr}
+    =
+    \beta_0
+    +
+    \beta_1 \,\mathrm{Condition}_j
+    +
+    \beta_2 \,\mathrm{Model}_m
+    +
+    \beta_3 \,(\mathrm{Condition}_j \times \mathrm{Model}_m)
+    +
+    u_r
+    +
+    \varepsilon_{ijmr},
+\end{equation}
+where
+\[
+u_r \sim \mathcal{N}(0,\sigma_u^2).
+\]
+
+\subsubsection{Assumption Checks}
+
+Residual plots and normal Q--Q plots will be inspected for each fitted model. Homogeneity of variance will also be assessed. If model assumptions are seriously violated, a non-parametric sensitivity analysis will additionally be reported.
+
+\subsubsection{Reporting}
+
+Results will be reported separately for WER and cpWER. For each experiment, the following will be presented:
+\begin{itemize}
+    \item condition-wise means, standard deviations, medians, and interquartile ranges;
+    \item estimated marginal means from the fitted model;
+    \item \(95\%\) confidence intervals;
+    \item omnibus test results for main effects and interactions; and
+    \item adjusted pairwise comparisons for predefined contrasts.
+\end{itemize}
+
+The primary conclusions will be based on:
+\begin{enumerate}
+    \item whether decreasing SNR significantly increases WER and cpWER at fixed overlap;
+    \item whether increasing OVR significantly increases WER and cpWER at fixed SNR; and
+    \item whether the relative behaviour of ASR models at matched synthetic conditions is preserved on real-world data.
+\end{enumerate}

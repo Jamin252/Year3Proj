@@ -11,33 +11,13 @@ import soundfile as sf
 import yaml
 import librosa
 
+from helper_class import BaseMixture, MixtureMeta
 
 SUPPORTED_AUDIO_EXTS = {".wav", ".flac"}
 EPSILON = 1e-12
 
 
-@dataclass
-class BaseMixture:
-    wave: np.ndarray
-    overlap_mask: np.ndarray
-    source_files: List[Path]
-    transcript: List[tuple[str, str]]
-    overlap_ratio_actual: float
 
-
-@dataclass
-class MixtureMeta:
-    clip_id: str
-    audio_path: str
-    transcript: List[tuple[str, str]]
-    overlap_ratio_target: float
-    overlap_ratio_actual: float
-    max_speakers: int
-    snr_db: Optional[float]
-    noise_type: Optional[str]
-    overlap_mask_path: str
-    source_files: List[str]
-    noise_files: List[str]
 
 
 def load_audio_files(roots: Path) -> Dict[str, list[Path]]:
@@ -206,99 +186,11 @@ def generate_offsets(audios: List[np.ndarray], n_speakers: int, overlap_ratio_ta
     offsets = offsets + [sample_length + 1000] * (len(audios) - len(offsets))  # pad with large offsets for any unused speakers
     return (offsets, actual_or, active, len(active))
 
-def generate_offsets_new(
-    audios: List[np.ndarray],
-    n_speakers: int,
-    overlap_ratio_target: float,
-    sample_rate: int,
-    speaker_spacing: tuple[float, float],
-    sample_length: int,
-    tol: float = 0.02,
-    max_tries: int = 30,
-) -> tuple[List[int], float, np.ndarray]:
 
-    lengths = [len(a) for a in audios]
-    if n_speakers <= 1 or overlap_ratio_target <= 0:
-        offsets = [0]
-        active = np.zeros(sample_length, dtype=np.int32)
-        active[:lengths[0]] += 1
-        p = lengths[0]
-        for a in audios[1:]:
-            gap = int(max(0.0, np.random.normal(*speaker_spacing) * sample_rate))
-            start = min(sample_length - len(a), p + gap)
-            start = max(0, start)
-            offsets.append(start)
-            active[start:start+len(a)] += 1
-            p = start + len(a)
-        actual_or = np.sum(active > 1) / np.sum(active >= 1)
-        return offsets, float(actual_or), active
-
-    # overlap budget based on speaker-time (works best when not too constrained by sample_length)
-    S = int(sum(lengths))
-    r = float(overlap_ratio_target)
-    O_target = int(round((r * S) / (1.0 + r)))
-
-    caps = [min(lengths[i-1], lengths[i]) for i in range(1, len(audios))]
-    if sum(caps) < O_target:
-        # not feasible with these lengths -> caller should oversample/concat utterances
-        raise ValueError("Not enough overlap capacity (caps) for this target ratio.")
-
-    for _ in range(max_tries):
-        # reset every try
-        active = np.zeros(sample_length, dtype=np.int32)
-        offsets = [0]
-
-        # allocate overlaps across boundaries
-        m = len(audios) - 1
-        w = np.random.random(m)
-        w /= w.sum()
-        overlaps = np.floor(w * O_target).astype(int)
-        rem = O_target - int(overlaps.sum())
-        for idx in np.random.permutation(m)[:rem]:
-            overlaps[idx] += 1
-        overlaps = np.minimum(overlaps, np.array(caps))
-
-        # place speaker 0
-        if lengths[0] > sample_length:
-            raise ValueError("First audio longer than sample_length.")
-        active[0:lengths[0]] += 1
-        prev_end = lengths[0]
-
-        ok = True
-        for i, (a, desired_ov) in enumerate(zip(audios[1:], overlaps), start=1):
-            L = len(a)
-            start = prev_end - int(desired_ov)
-            start = max(0, min(start, sample_length - L))
-
-            # enforce max concurrency <= 2 across whole interval
-            while start < sample_length - L and np.any(active[start:start+L] >= 2):
-                start += 1
-
-            if start > sample_length - L:
-                ok = False
-                break
-
-            offsets.append(start)
-            active[start:start+L] += 1
-            prev_end = start + L
-
-        if not ok:
-            continue
-
-        actual_or = np.sum(active > 1) / np.sum(active >= 1)
-        if abs(actual_or - overlap_ratio_target) <= tol:
-            return offsets, float(actual_or), active
-
-    # return best effort (last try)
-    actual_or = np.sum(active > 1) / np.sum(active >= 1)
-    return offsets + [sample_length + 1000] * (len(audios) - len(offsets)), float(actual_or), active
-
-
-def add_noise_for_snr(speech: np.ndarray, noise: np.ndarray, snr_db: float) -> np.ndarray:
-    speech_rms = rms(speech)
+def add_noise_for_snr(speech: np.ndarray, noise: np.ndarray, snr_db: float, base_rms: float) -> np.ndarray:
     noise_rms = rms(noise)
     # print(f"speech shape: {speech.shape}, noise shape: {noise.shape}, speech_rms: {speech_rms:.6f}, noise_rms: {noise_rms:.6f}")
-    alpha = speech_rms / (EPSILON + noise_rms * (10 ** (snr_db / 20)))
+    alpha = base_rms / (EPSILON + noise_rms * (10 ** (snr_db / 20)))
     return speech + alpha * noise
 
 
@@ -314,6 +206,7 @@ def build_base_mixture(
     # mean_length: int,
     speaker_spacing: tuple[float, float],
     long_sample_length: int = 0,
+    mins_lengths: List[float]= [10,20],
 ) -> BaseMixture:
     speakers: List[str] = random.sample(list(speech_files.keys()), n_speakers)
     sample_length = max(sample_length, long_sample_length) if overlap_ratio_target > 0.5 else sample_length
@@ -324,14 +217,17 @@ def build_base_mixture(
     #     raise ValueError("Mean length of audio files must be greater than 0.")
     num_audio = 0
     current_length = 0
-    min_length = 10 if overlap_ratio_target <= 0.5 else 20   
+    min_length = mins_lengths[0] if overlap_ratio_target <= 0.5 else mins_lengths[1]
     last_speaker = None
     speaker_occurrences: Dict[str, int] = {s: 0 for s in speakers}
+    
     while current_length <= sample_length * (1 + overlap_ratio_target):
         speaker = random.choices(speakers, weights=[1.0 / ( speaker_occurrences[s] + EPSILON) if s != last_speaker else 0 for s in speakers], k=1)[0]
         last_speaker = speaker
         speaker_occurrences[speaker] += 1
         speech_path = random.choice(speech_files[speaker])
+        # while speech_path in chosen:
+        #     speech_path = random.choice(speech_files[speaker])
         chosen.append(speech_path)
         
         audio, sr = sf.read(speech_path)
@@ -342,32 +238,43 @@ def build_base_mixture(
         current_length += len(audio)
         num_audio += 1
         utt_id = speech_path.stem
+        if utt_id.endswith("_mic1") or utt_id.endswith("_mic2") or utt_id.endswith("_mic3"):
+            utt_id = utt_id[:-5]
         transcript = transcript_map.get(utt_id)
-        transcript_parts.append((utt_id, transcript)) 
+        if transcript is None or transcript == "None":
+            raise ValueError(f"Transcript not found for {utt_id} (from file {speech_path}).")
+        transcript_parts.append((speaker, transcript)) 
         
         if len(audio) < sample_rate * min_length:
             tLength = len(audio)
             while tLength < sample_rate * min_length:
                 tspeech_path = random.choice(speech_files[speaker])
+                # while tspeech_path in chosen:
+                #     tspeech_path = random.choice(speech_files[speaker])
                 chosen.append(tspeech_path)
                 taudio, sr = sf.read(tspeech_path)
                 if taudio.ndim > 1:
                     taudio = np.mean(taudio, axis=1)
                 taudio = resample(taudio.astype(np.float32), sr, sample_rate)
-                spacing = max(int(0.01 * sample_rate), int(sample_rate * np.random.normal(*speaker_spacing)))
+                spacing = min(0, max(int(0.01 * sample_rate), int(sample_rate * np.random.normal(*speaker_spacing))))
                 audio = np.concatenate([audio, np.zeros(spacing), taudio], axis=0)
                 tLength += len(taudio)
                 current_length += len(taudio) + spacing
                 
                 tutt_id = tspeech_path.stem
+                if tutt_id.endswith("_mic1") or tutt_id.endswith("_mic2") or tutt_id.endswith("_mic3"):
+                    tutt_id = tutt_id[:-5]
                 ttranscript = transcript_map.get(tutt_id)
-                transcript_parts.append((tutt_id, ttranscript))
+                if ttranscript is None or ttranscript == "None":
+                    raise ValueError(f"Transcript not found for {tutt_id} (from file {tspeech_path}).")
+                transcript_parts.append((speaker, ttranscript))
                 num_audio += 1   
         audio_parts.append(audio)
         
-        utt_id = speech_path.stem
-        transcript = transcript_map.get(utt_id)
-        transcript_parts.append((utt_id, transcript))
+        # utt_id = speech_path.stem
+        # transcript = transcript_map.get(utt_id)
+        # transcript_parts.append((speaker, transcript))
+    # print(set([t[0] for t in transcript_parts]))
     # audio_parts = audio_parts[:-1]
     # print(f"actual min length: {min(len(a)/sample_rate for a in audio_parts):.2f}s, current_length: {current_length/sample_rate:.2f}s, num_audio: {num_audio}")
     # num_audio -= 1
@@ -409,13 +316,12 @@ def build_base_mixture(
     mixture = np.zeros(sample_length, dtype=np.float32)
     # print(offsets)
     for i, (w, off) in enumerate(zip(audio_parts, offsets)):
-        if off >= sample_length:
-            transcript_parts = transcript_parts[:i]
-            break
-        end = min(off + len(w), sample_length)
-        # print(end,off, len(w),sample_length)
-        w = w[:end - off]
-        mixture[off:end] += w
+        if off + len(w) >= sample_length:
+            mixture = np.pad(mixture, (0, off + len(w) - len(mixture)), constant_values=0)
+        transcript_parts[i] = (transcript_parts[i][0], transcript_parts[i][1], off / sample_rate, (off + len(w)) / sample_rate)
+        mixture[off:off + len(w)] += w
+    
+    rms_val = rms(np.concatenate(audio_parts))
 
     return BaseMixture(
         wave=mixture,
@@ -423,6 +329,7 @@ def build_base_mixture(
         source_files=chosen,
         transcript=transcript_parts,
         overlap_ratio_actual=actual_or,
+        rms=rms_val,
     )
 
 
@@ -468,9 +375,9 @@ def main() -> None:
     # print(factors["noise_type"])
     # exit()
     out_audio = args.output_root / "audio"
-    out_mask = args.output_root / "masks"
+    # out_mask = args.output_root / "masks"
     out_audio.mkdir(parents=True, exist_ok=True)
-    out_mask.mkdir(parents=True, exist_ok=True)
+    # out_mask.mkdir(parents=True, exist_ok=True)
 
     rows: List[MixtureMeta] = []
     clip_counter = 0
@@ -495,11 +402,13 @@ def main() -> None:
                         # mean_length=mean_length,
                         speaker_spacing=(factors["speaker_spacing"]["mu"], factors["speaker_spacing"]["sigma"]),
                         long_sample_length=int(cfg["long_audio_duration_s"] * sample_rate),
+                        mins_lengths = [cfg["min_length_s"], cfg["min_length_s_0.75"]],
                     )
                 base_mixtures.append(b)
             print(f"For overlap ratio {oratio:.2f} and max speakers {k}, generated {len(base_mixtures)} base mixtures.")
             for base in base_mixtures:
                 # print(f"base mixture {oratio:.2f}, speakers: {k}, actual overlap ratio: {base.overlap_ratio_actual:.4f}")
+                base_rms = base.rms
                 for snr_db in factors["snr_db"]:
                     for noise_type in factors["noise_type"]:
                         mixture = np.copy(base.wave)
@@ -518,17 +427,17 @@ def main() -> None:
                             # print(noise.shape, mixture.shape)
                             noise = noise[:len(mixture)]
                             # noise = pad_or_trim(noise, total_len)
-                            mixture = add_noise_for_snr(mixture, noise, float(snr_db))
+                            mixture = add_noise_for_snr(mixture, noise, float(snr_db), base_rms)
 
                         # mixture = np.clip(mixture, -1.0, 1.0)
-                        clip_id = f"mix_{oratio:.2f}_{k}_{snr_db}_{noise_type}_{clip_counter:07d}"
+                        clip_id = f"mix_{clip_counter:07d}_{oratio:.2f}_{k}_{snr_db}_{noise_type}"
                         clip_counter += 1
                         print(f"Generated mixture {clip_id}")
 
                         apath = out_audio / f"{clip_id}.wav"
-                        mpath = out_mask / f"{clip_id}.npy"
+                        # mpath = out_mask / f"{clip_id}.npy"
                         sf.write(apath, mixture, sample_rate)
-                        np.save(mpath, base.overlap_mask)
+                        # np.save(mpath, base.overlap_mask)
 
                         rows.append(
                             MixtureMeta(
@@ -540,7 +449,7 @@ def main() -> None:
                                 max_speakers=int(k),
                                 snr_db=snr_db,
                                 noise_type=noise_type,
-                                overlap_mask_path=str(mpath),
+                                overlap_mask_path="no mask",
                                 source_files=base.source_files,
                                 noise_files=noise_paths,
                             )

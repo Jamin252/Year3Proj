@@ -1,13 +1,16 @@
 sample_rate: 16000
-clip_duration_s: 120
-long_audio_duration_s: 240
+clip_duration_s: 60
+long_audio_duration_s: 60
 random_seed: 1234
 
 factors:
-  overlap_ratio: [0.0, 0.2, 0.5, 0.75]
+  # overlap_ratio: [0.2]
+  overlap_ratio: [0, 0.14, 0.2, 0.4]
   max_speakers: [2]
-  snr_db: [null, 10, 0, -5]
+  snr_db: [null, 7.4, 0, -5]
+  # snr_db: [null]
   noise_type: [D,P,T]
+  # noise_type: [D]
   audio_type: [synthetic, real]
   preprocessing: [none, enhancement, separation, target_speaker_filter, enhancement_then_separation]
   embedding_available: [false, true]

@@ -18,7 +18,7 @@ If separation methods are constrained to $K=2$ due to model limitations, this is
 \section{ASR Inference Controls}
 To ensure fair comparisons, inference settings are held constant per model:
 \begin{itemize}
-    \item \textbf{Sampling rate:} audio is resampled to each model’s required input rate (typically 16\,kHz), with consistent resampling across conditions.
+    \item \textbf{Sampling rate:} audio is resampled to each model' s required input rate (typically 16\,kHz), with consistent resampling across conditions.
     \item \textbf{Decoding configuration:} beam size / temperature / language constraints are fixed and documented for each model.
     \item \textbf{Chunking/segmentation:} if models require chunked inference, chunk length and overlap are fixed and applied identically across conditions.
 \end{itemize}
@@ -26,16 +26,20 @@ All model versions, checkpoints, and library commits are recorded for reproducib
 
 \section{Evaluation Protocol}
 \subsection{Reference Transcripts}
-For synthetic mixtures, the reference includes the known transcript for each source speaker. For real datasets, references are taken from official annotations. Where multi-speaker references exist, meeting-style scoring is used (Section~\ref{sec:metrics_meeting}).
+For synthetic mixtures, the reference includes the known transcript for each source speaker. For real datasets, references are taken from official annotations. Where multi-speaker references exist, meeting-style scoring is used.
 
 \subsection{Primary and Secondary Metrics}
-\textbf{Primary outcome:} word error rate (WER) on the full clip reference(s).\\
-\textbf{Secondary outcomes:} overlap-aware scores, meeting-style WER (where applicable), and error breakdowns. Metrics are defined formally in Section~\ref{sec:metrics}.
+\textbf{Primary outcome:} concatenated permutation word error rate (cpWER) on the full clip reference(s).\\
+\textbf{Secondary outcomes:} 
+\begin{itemize}
+    \item WER on clips with no overlaps and non-overlapped regions (for clips with OVR > 0\%);
+    \item DI-cpWER for all clips with OVR > 0\% to evaluate ASR performance independent of diarization errors;
+\end{itemize}
 
 \subsection{Overlap-aware Evaluation}
 \label{sec:metrics_overlap}
-To directly answer RQ1 and RQ4, overlap-aware evaluation is performed by restricting scoring to words occurring within overlapped regions (using the overlap mask for synthetic mixtures, and overlap annotations/estimates for real audio). This yields \textbf{overlap-only WER}, which isolates performance under simultaneous speech from non-overlapped regions.
+To directly answer overlap-focus questions, overlap-aware evaluation is performed by cpWER and by restricting scoring to words occurring within overlapped regions (using the overlap mask for synthetic mixtures, and overlap annotations/estimates for real audio). This yields \textbf{overlap-only WER}, which isolates performance under simultaneous speech from non-overlapped regions. 
 
-\subsection{Meeting-style Scoring for Multi-speaker References}
+\subsection{cpWER for Multi-speaker References}
 \label{sec:metrics_meeting}
-When multi-speaker references are available and speaker attribution is not guaranteed in the hypothesis, meeting-style scoring such as concatenated permutation WER (cpWER) is used to reduce sensitivity to speaker ordering.
+When multi-speaker references are available and speaker attribution is not guaranteed in the hypothesis, meeting-style scoring such as concatenated permutation WER (cpWER) is used to reduce sensitivity to speaker ordering.\cite{Word_Error_Rate_Definitions}

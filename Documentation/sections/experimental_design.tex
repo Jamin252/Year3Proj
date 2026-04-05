@@ -29,21 +29,52 @@ Table~\ref{tab:design_factors} summarises the main experimental factors. The ful
 \toprule
 \textbf{Factor} & \textbf{Levels} \\
 \midrule
-Overlap ratio (OR) & $0\%, 10\%, 25\%, 50\%, 75\%, 90\%$ \\
-Max concurrent speakers ($K$) & $2, 3, 4$ (with separation experiments prioritised for $K\leq2$ if needed) \\
-SNR (dB) & clean, 20, 10, 0, $-5$ \\
-Noise type & domestic, nature, office, public, street, transportation\\
-Audio duration & fixed-length clips (e.g., 15--30 s) and a long-form subset (meetings) \\
+Overlap ratios (OVRs) & $0\%, 14\%, 20\%, 40\%$ \\
+Max concurrent speakers ($S$) & $2$ \\
+SNR (dB) & clean, 10, 0, $-5$ \\
+Noise type & domestic,  public, transportation\\
+Audio duration & Synthetic: $0\%, 14\%, 20\%, 40\%$ 120-140s, Real-world: long-form meetings\\
 Preprocessing pipeline & baseline, enhancement, separation, target-speaker filtering and combination of them \\
 Speaker embeddings & provided vs not provided (for target-speaker methods only) \\
 \bottomrule
 \end{tabularx}
 \end{table}
+\subsubsection{Overlap Ratios Choice}
+I have chosen 0\%, 14\%, 20\%, 40\%.
+\begin{itemize}
+    \item 0\% is chosen to be the control where it represent completely clean audio in which there is no overlapping.
+    \item 14\% is chosen to represent the mean overlap ratio for meetings. The percentage of overlapped words (excluding backchannels like "uh-huh") in meetings is 14.1\% \cite{Shriberg2001ObservationsOO}.
+    \item 20\% is chosen to represent the maximum overlap ratio in a natural meeting or casual dinner parties\cite{9053426}\cite{cosentino2020librimixopensourcedatasetgeneralizable}.
+    \item 40\% is chosen as it is supported by the LibriMix benchmark, which chooses 40\% as the maximum overlap ratio. This is chosen to stress-test under high-overlap conditions\cite{9053426}.
+\end{itemize}
+
+\subsubsection{Maximum Concurrent Speakers Choice}
+Maximum concurrent speaker is chosen to be 2 as more than 2 people speaking simultaneously is very rare in real meets\cite{Handling_Trade-Offs_in_Speech_Separation_with_Sparsely-Gated_Mixture_of_Experts}.
+
+\subsubsection{Signal-to-noise Raio Choice}
+I have chosen \textit{clean}, 7.4dB, 0dB, -5 db
+\begin{itemize}
+    \item \textit{clean} is chosen to be the control where it represent clean background with no noise.
+    \item 7.4dB is chosen to represent the noisy environment as it is the mean SNR for noisy environment\cite{wu2018characteristics}.
+    \item 0db is chosen to represent environment where the noise and speech are equally loud, which is a challenging but realistic condition in very noisy environments.
+    \item -5db is chosen to represent environment where the noise is louder than speech in which even human listeners struggle to understand speech, providing a stress-test condition for ASR.
+\end{itemize}
+
+\subsubsection{Noise Type Choice}
+I have chosen three noise types: domestic, public, and transportation. These types represent different real-world scenarios with varying noise characteristics.
+\begin{itemize}
+    \item \textbf{Domestic noise} includes kitchen noise when food is being prepared, living room noise and washing room with front-loading washing machine. These noises are commonly found in home environments that a home-based voice assistant would encounter.
+    \item \textbf{Public noise} includes noise from main transfer area of subway station, office cafeteria, and university restaurants during lunchtime. These noise represent common public environments where ASR like mobile devices may be used in.
+    \item \textbf{Transportation noise} includes noises in subway, public bus and private passenger vehicle. These noises represent common transportation environments where ASR like mobile devices may be used in.
+\end{itemize}
+
+
 \subsection{Performance Metrics}
 The performance of each experimental unit is measured using standard automatic speech recognition (ASR) metrics, including:
 \begin{itemize}
     \item \textbf{Word Error Rate (WER)}: The percentage of words that are incorrectly transcribed relative to the reference transcript.
     \item \textbf{Concatenated minimum-Permutation WER (cpWER)}: It assumes that the system groups its output by speakers and the recognized transcripts, i.e., the concatenation of several utterances, of each speaker are compared to the reference transcripts of each speaker. 
+    \item \textbf{Diarization-Invariant cpWER (DI-cpWER)}: It compute cpWER under the assumption of all speaker labels are correct. This is to evaluate the diarization-invariant performance of ASR models.\cite{Word_Error_Rate_Definitions}
 \end{itemize}
 \subsection{Experimental Units}
 The experimental unity is an pairing of an audio clip (with specific overlap, SNR, noise type), a preprocessing pipeline (including no preprocessing), target-speaker embedding availability (for target-speaker methods), and an ASR model. 
@@ -61,20 +92,23 @@ Each unit is evaluated to produce a set of performance metrics (e.g., WER, overl
 Synthetic mixtures are constructed from clean English speech utterances with high-quality transcripts with accurate timestamps. The source speech is selected from datasets such as LibriSpeech and VCTK, which provide a large number of speakers and utterances to enable the generation of mixtures with varying overlap ratios and speaker combinations.
 
 \subsubsection{Overlap Construction}
-For each mixture, a target overlap ratio (OR) is achieved by controlling the alignment of selected utterances. The overlap ratio is defined as:
+For each mixture, a target overlap ratio (OVR) is achieved by controlling the alignment of selected utterances. The overlap ratio is defined as:
 \[
-\mathrm{OR} = \frac{\text{time with $\geq 2$ active speakers}}{\text{active speech time (time with at least one speaker)}}.
+\mathrm{OVR} = \frac{\text{time with $\geq 2$ active speakers}}{\text{active speech time (time with at least one speaker)}}.
 \]
-For $K>2$, the generator also tracks overlap depth (e.g., time with exactly 2, 3, or 4 simultaneous speakers). Each clip stores an \textbf{overlap mask} (frame-level overlap indicator and depth), enabling overlap-specific evaluation.
+In the controlled design, the maximum number of concurrent speakers is fixed to $K=2$ to isolate the effect of overlap ratio. During generation, an active mask $a(t)$ is produce indicating the number of speaker in any given moment. The actual overlap ratio is then calculated by
+\[
+\mathrm{OVR}_\text{actual}=\frac{\sum_t 1[a(t) > 1]}{\sum_t 1[a(t) \ge 1]} 
+\]
 
 \subsubsection{Noise Addition and SNR Control}
 Additive noise is added to the clean mixtures to achieve target SNR levels. The SNR (RMS) is calculated as:
 \[
-\mathrm{SNR}_{dB} = 20 \log_{10}\left(\frac{\text{A}_\text{speech}}{\text{A}_\text{noise}}\right),
+\mathrm{SNR}_{dB} = 20 \log_{10}\left(\frac{\text{A}_\text{active speech}}{\text{A}_\text{noise}}\right),
 \]
-where $A$ denotes root mean square (RMS) amplitude. The noise is first normalised and rescaled by $\alpha$ to achieve the target SNR (Table \ref{tab:design_factors}).
+where $A$ denotes root mean square (RMS) amplitude. $A_\text{active speech}$ denotes the RMS amplitude of active segments such that the SNR level is silence invariant and closer to human perception. The noise is first normalised and rescaled by $\alpha$ to achieve the target SNR (Table \ref{tab:design_factors}).
 \[
-\alpha = \frac{A_\text{speech}}{A_\text{noise} \times 10^{\mathrm{SNR}_{dB}/20}}.
+\alpha = \frac{A_\text{active speech}}{A_\text{noise} \times 10^{\mathrm{SNR}_{dB}/20}}.
 \]
 Type of noise is varied across conditions, with noise segments selected from dataset DEMAND to represent a range of real-world environments.
 
