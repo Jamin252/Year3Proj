@@ -9,5 +9,6 @@
     "cpwer": 0.9404761904761905,
     "wer": 0.017857142857142856
   },
+  "wer_method": "mrs",
   "metric_type": "segmented"
 }

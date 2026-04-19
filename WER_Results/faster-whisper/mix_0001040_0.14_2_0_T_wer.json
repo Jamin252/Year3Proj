@@ -7,7 +7,8 @@
   "is_segmented": true,
   "metrics": {
     "cpwer": 0.8844621513944223,
-    "wer": 0.08366533864541832
+    "wer": 0.32270916334661354
   },
+  "wer_method": "mrs",
   "metric_type": "segmented"
 }

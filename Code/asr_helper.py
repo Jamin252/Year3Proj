@@ -19,16 +19,18 @@ import pickle
 import gc
 import time
 
-BATCH_SIZE = 100
+BATCH_SIZE = 10
+CHECK_POINT = 100
 TIMINGS = {}
-def clear_gpu_cache():
-    gc.collect()
+def clear_gpu_cache(force_gc: bool = False):
+    if force_gc:
+        gc.collect()
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
     
 def asr_model(func):
-    def wrapper(metas: List[MixtureMeta], dic: Dict[str, MixtureTranscription], ind: int = 0, model_name: str = ""):
-        clear_gpu_cache()
+    def wrapper(metas: List[MixtureMeta], dic: Dict[str, MixtureTranscription], ind: int = 0, model_name: str = "", **kwargs):
+        clear_gpu_cache(ind % CHECK_POINT == 0)  # clear GPU cache every CHECK_POINT batches to prevent memory issues
         start_time = time.perf_counter()
         # print(f"Running {func.__name__} on batch {ind}-{ind+BATCH_SIZE- 1}...")
         # print(f"Initial metas: {[meta.clip_id for meta in metas]}")
@@ -38,9 +40,12 @@ def asr_model(func):
         #     if meta.clip_id in dic and func.__name__ in dic[meta.clip_id].transcript:
         #         print(f"Skipping {meta.clip_id} for {func.__name__} as it already has transcription.")
         metas = [meta for meta in metas if not (dic.get(meta.clip_id) is not None and model_name in dic[meta.clip_id].transcript)]
+        if len(metas) == 0:
+            print(f"All clips in batch {ind}-{ind+BATCH_SIZE-1} already have transcriptions for {model_name}. Skipping this batch.")
+            return
         # print([meta.clip_id for meta in metas])
         try:
-            return func(metas, dic, ind, model_name)
+            return func(metas, dic, ind, model_name, **kwargs)
         except Exception as e:
             print(f"Error occurred while running {func.__name__} on batch {ind}-{ind+BATCH_SIZE-1}. Skipping this batch.")
             raise e
@@ -48,9 +53,8 @@ def asr_model(func):
             end_time = time.perf_counter()
             name = func.__name__+"_"
             for meta in metas:
-                name += f"{meta.clip_id[8:12]}-"
+                name += f"{meta.clip_id[7:12]}-"
             TIMINGS[name] = end_time - start_time
-            clear_gpu_cache()
     return wrapper
 
 def load_mixture_meta(path: Path) -> pd.DataFrame:
@@ -67,7 +71,7 @@ def record_transcription(clip_id:str, model_name: str, transcription: List[Tuple
     else:
         dic[clip_id].transcript[model_name] = transcription
 
-faster_whiper_model = WhisperModel("large-v3", device="cuda", compute_type="int8")
+
 @asr_model
 def transcribe_faster_whisper(metas: List[MixtureMeta], dic: Dict[str, MixtureTranscription], ind: int = 0, model_name: str = ""):
     """
@@ -78,7 +82,7 @@ def transcribe_faster_whisper(metas: List[MixtureMeta], dic: Dict[str, MixtureTr
     # batch_size = 1
     # model = WhisperModel("large-v3", device="cuda", compute_type=compute_type)
     model_name = MODEL_NAMES[0]
-    
+    faster_whiper_model = WhisperModel("large-v3", device="cuda", compute_type="int8")
     for meta in metas:
         segments, info = faster_whiper_model.transcribe(Path(meta.audio_path))
         trascription = [("dummy-speaker", seg.text) for seg in segments]
@@ -86,24 +90,21 @@ def transcribe_faster_whisper(metas: List[MixtureMeta], dic: Dict[str, MixtureTr
     # del model
 
 @asr_model
-def transcribe_wav2vec2(metas: List[MixtureMeta], dic: Dict[str, MixtureTranscription], ind: int = 0, model_name: str = ""):
+def transcribe_wav2vec2(metas: List[MixtureMeta], dic: Dict[str, MixtureTranscription], ind: int = 0, model_name: str = "", asr=None):
     """
     Wav2Vec2 Transcription
     Transcription format: list of text with no speaker labels
     """
     
     model_name = MODEL_NAMES[1]
-    asr = pipeline(
-        "automatic-speech-recognition",
-        model="facebook/wav2vec2-large-960h",
-        device=0,
-    )
-    for meta in metas:
-        audio, sr = load_mixture_audio(Path(meta.audio_path))
-        result = asr(audio)
-        trascription = [("dummy-speaker", result["text"])]
-        record_transcription(meta.clip_id, model_name, trascription, dic)
-    del asr
+    
+    with torch.inference_mode():
+        for meta in metas:
+            audio, sr = load_mixture_audio(Path(meta.audio_path))
+            result = asr(audio)
+            trascription = [("dummy-speaker", result["text"])]
+            record_transcription(meta.clip_id, model_name, trascription, dic)
+            del audio, sr, result
 
 @asr_model
 def transcribe_parakeet(metas: List[MixtureMeta], dic: Dict[str, MixtureTranscription], ind: int = 0, model_name: str = ""):
@@ -192,7 +193,8 @@ def transcribe_funasr(metas: List[MixtureMeta], dic: Dict[str, MixtureTranscript
 
 def main():
     meta_df = load_mixture_meta(Path("Output", "manifest.csv"))
-    meta_df = meta_df[meta_df["clip_id"].str.contains(r"(^mix_[0-9]+_0\.(00|14|20|40)_2_7\.4_T$)|(^mix_[0-9]+_0\.14_2_(None|7\.4|0|-5)_T$)")]
+    # meta_df = meta_df[meta_df["clip_id"].str.contains(r"(^mix_[0-9]+_0\.(00|14|20|40)_2_7\.4_T$)|(^mix_[0-9]+_0\.14_2_(None|7\.4|0|-5)_T$)")]
+    meta_df = meta_df[meta_df["clip_id"].str.contains("mix_0001238_0.14_2_None_T")]
     # print(meta_df.head())
     dic_path = Path("ASR_transcriptions.json")
     dic = {}
@@ -213,7 +215,7 @@ def main():
     # audio_list = [meta_df[meta_df.clip_id.str.startswith("mix_0.14_2_None_D_0000144")].head(1), meta_df[meta_df.clip_id.str.startswith("mix_0.14_2_None_P_0000145")].head(1)]
     # run asr model on all meta rows 100 at a time (every row) and store the transcriptions in a dictionary with clip_id as key and transcription as value and update the json file after every 100 rows
     start_ind = 0
-    num_files = 700
+    num_files = 4000
     ind=start_ind
     # while i < len(meta_df):
     while ind < min(num_files + start_ind, len(meta_df)):
@@ -223,16 +225,24 @@ def main():
         audio_list = [batch.iloc[j] for j in range(len(batch))]
         # transcribe_faster_whisper(audio_list, dic, ind = ind, model_name="faster-whisper")
         # print(dic)
-        # transcribe_wav2vec2(audio_list, dic, ind = ind, model_name="wav2vec2")
-        # transcribe_parakeet(audio_list, dic, ind = ind, model_name="parakeet")
-        transcribe_whisperx(audio_list, dic, ind = ind, model_name="whisperx")
+        # transcribe_wav2vec2(audio_list, dic, ind = ind, model_name="wav2vec2", asr=wav_asr)
+        transcribe_parakeet(audio_list, dic, ind = ind, model_name="parakeet")
+        # transcribe_whisperx(audio_list, dic, ind = ind, model_name="whisperx")
         # transcribe_funasr(audio_list, dic, ind = ind, model_name="funasr")
         # print(dic.keys())
         with open(Path("ASR_transcriptions.json"), "w", encoding="utf-8") as f:
             # print(dic)
-            dic_to_dump = {k: asdict(v) for k, v in dic.items()}
-            # print(f"dic_to_dump: {dic_to_dump}")
-            json.dump(dic_to_dump, f, ensure_ascii=False, indent=4)
+            try:
+                dic_to_dump = {k: asdict(v) for k, v in dic.items()}
+                # print(f"dic_to_dump: {dic_to_dump}")
+                json.dump(dic_to_dump, f, ensure_ascii=False, indent=4)
+            except KeyboardInterrupt:
+                print("KeyboardInterrupt detected. Saving current transcriptions to ASR_transcriptions.json before exiting...")
+                dic_to_dump = {k: asdict(v) for k, v in dic.items()}
+                with open(Path("ASR_transcriptions.json"), "w", encoding="utf-8") as f:
+                    json.dump(dic_to_dump, f, ensure_ascii=False, indent=4)
+                print("Transcriptions saved. Exiting now.")
+                sys.exit(0)
         # save timings after every batch
         temp = {f"{k}": dur for k, dur in TIMINGS.items()}
         

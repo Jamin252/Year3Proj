@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2022/dev/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: unsrtnat.bst
+Database file #1: references.bib
+Warning--empty booktitle in galibert2013methodologies
+You've used 46 entries,
+            2481 wiz_defined-function locations,
+            782 strings with 15662 characters,
+and the built_in function-call counts, 18269 in all, are:
+= -- 1245
+> -- 1520
+< -- 17
++ -- 566
+- -- 470
+* -- 1481
+:= -- 3125
+add.period$ -- 168
+call.type$ -- 46
+change.case$ -- 92
+chr.to.int$ -- 42
+cite$ -- 47
+duplicate$ -- 737
+empty$ -- 1468
+format.name$ -- 518
+if$ -- 3767
+int.to.chr$ -- 5
+int.to.str$ -- 47
+missing$ -- 11
+newline$ -- 267
+num.names$ -- 138
+pop$ -- 515
+preamble$ -- 1
+purify$ -- 46
+quote$ -- 0
+skip$ -- 510
+stack$ -- 0
+substring$ -- 237
+swap$ -- 137
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 322
+warning$ -- 1
+while$ -- 99
+width$ -- 0
+write$ -- 622
+(There was 1 warning)

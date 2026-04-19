@@ -8,11 +8,11 @@
     "cpwer_count": 0,
     "wer_segmented_count": 0,
     "wer_nonsegmented_count": 610,
-    "wer_mean": 0.5444608137523895,
-    "wer_median": 0.5655391931277803,
+    "wer_mean": 0.7384551705123913,
+    "wer_median": 0.7560957696827262,
     "wer_min": 0.024390243902439025,
     "wer_max": 1.0,
-    "wer_std": 0.19452915066800766
+    "wer_std": 0.15406841152429274
   },
   "results": [
     {
@@ -55,6 +55,7 @@
       "metrics": {
         "wer": 0.12837837837837837
       },
+      "wer_method": "wer",
       "metric_type": "wer"
     },
     {
@@ -133,6 +134,7 @@
       "metrics": {
         "wer": 0.13297872340425532
       },
+      "wer_method": "wer",
       "metric_type": "wer"
     },
     {
@@ -211,6 +213,7 @@
       "metrics": {
         "wer": 0.7681159420289855
       },
+      "wer_method": "wer",
       "metric_type": "wer"
     },
     {
@@ -289,6 +292,7 @@
       "metrics": {
         "wer": 0.2608695652173913
       },
+      "wer_method": "wer",
       "metric_type": "wer"
     },
     {
@@ -367,6 +371,7 @@
       "metrics": {
         "wer": 0.514792899408284
       },
+      "wer_method": "wer",
       "metric_type": "wer"
     },
     {
@@ -445,6 +450,7 @@
       "metrics": {
         "wer": 0.1875
       },
+      "wer_method": "wer",
       "metric_type": "wer"
     },
     {
@@ -523,6 +529,7 @@
       "metrics": {
         "wer": 0.4585987261146497
       },
+      "wer_method": "wer",
       "metric_type": "wer"
     },
     {
@@ -601,6 +608,7 @@
       "metrics": {
         "wer": 0.30726256983240224
       },
+      "wer_method": "wer",
       "metric_type": "wer"
     },
     {
@@ -679,6 +687,7 @@
       "metrics": {
         "wer": 0.3392857142857143
       },
+      "wer_method": "wer",
       "metric_type": "wer"
     },
     {
@@ -757,6 +766,7 @@
       "metrics": {
         "wer": 0.024390243902439025
       },
+      "wer_method": "wer",
       "metric_type": "wer"
     },
     {
@@ -815,8 +825,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7548076923076923
+        "wer": 0.8028846153846154
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -839,8 +850,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.14903846153846154
+        "wer": 0.1971153846153846
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -863,8 +875,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4567307692307692
+        "wer": 0.5
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -887,8 +900,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.2548076923076923
+        "wer": 0.4182692307692308
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -911,8 +925,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7905982905982906
+        "wer": 0.8589743589743589
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -935,8 +950,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7991452991452992
+        "wer": 0.8589743589743589
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -959,8 +975,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7905982905982906
+        "wer": 0.8589743589743589
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -983,8 +1000,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7606837606837606
+        "wer": 0.8247863247863247
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1007,8 +1025,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5305164319248826
+        "wer": 0.8309859154929577
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1031,8 +1050,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4131455399061033
+        "wer": 0.7981220657276995
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1055,8 +1075,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6338028169014085
+        "wer": 0.8685446009389671
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1079,8 +1100,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3427230046948357
+        "wer": 0.5023474178403756
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1103,8 +1125,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.47752808988764045
+        "wer": 0.7696629213483146
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1127,8 +1150,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.449438202247191
+        "wer": 0.6629213483146067
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1151,8 +1175,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.2640449438202247
+        "wer": 0.7808988764044944
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1175,8 +1200,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4550561797752809
+        "wer": 0.6404494382022472
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1199,8 +1225,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8726415094339622
+        "wer": 0.9858490566037735
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1225,6 +1252,7 @@
       "metrics": {
         "wer": 0.7358490566037735
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1247,8 +1275,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8726415094339622
+        "wer": 0.9198113207547169
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1271,8 +1300,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5660377358490566
+        "wer": 0.6415094339622641
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1295,8 +1325,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7650273224043715
+        "wer": 0.7814207650273224
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1321,6 +1352,7 @@
       "metrics": {
         "wer": 0.7759562841530054
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1343,8 +1375,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6939890710382514
+        "wer": 0.8032786885245902
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1367,8 +1400,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7540983606557377
+        "wer": 0.7923497267759563
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1391,8 +1425,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6236559139784946
+        "wer": 0.8010752688172043
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1415,8 +1450,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.21505376344086022
+        "wer": 0.5483870967741935
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1439,8 +1475,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.14516129032258066
+        "wer": 0.3387096774193548
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1463,8 +1500,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.543010752688172
+        "wer": 0.7795698924731183
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1487,8 +1525,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.9531914893617022
+        "wer": 0.9957446808510638
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1511,8 +1550,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6042553191489362
+        "wer": 0.7659574468085106
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1535,8 +1575,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7659574468085106
+        "wer": 0.7872340425531915
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1561,6 +1602,7 @@
       "metrics": {
         "wer": 0.6851063829787234
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1583,8 +1625,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.610655737704918
+        "wer": 0.9057377049180327
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1607,8 +1650,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5860655737704918
+        "wer": 0.8524590163934426
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1631,8 +1675,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6352459016393442
+        "wer": 0.7868852459016393
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1655,8 +1700,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.47950819672131145
+        "wer": 0.5901639344262295
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1679,8 +1725,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6342592592592593
+        "wer": 0.8055555555555556
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1703,8 +1750,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5601851851851852
+        "wer": 0.7407407407407407
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1727,8 +1775,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5648148148148148
+        "wer": 0.7268518518518519
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1751,8 +1800,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4444444444444444
+        "wer": 0.7314814814814815
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1777,6 +1827,7 @@
       "metrics": {
         "wer": 0.7874396135265701
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1799,8 +1850,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7004830917874396
+        "wer": 0.927536231884058
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1825,6 +1877,7 @@
       "metrics": {
         "wer": 0.6328502415458938
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1847,8 +1900,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5893719806763285
+        "wer": 0.821256038647343
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1873,6 +1927,7 @@
       "metrics": {
         "wer": 0.8482142857142857
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1895,8 +1950,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6473214285714286
+        "wer": 0.8303571428571429
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1919,8 +1975,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5848214285714286
+        "wer": 0.8303571428571429
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1943,8 +2000,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5491071428571429
+        "wer": 0.8258928571428571
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1969,6 +2027,7 @@
       "metrics": {
         "wer": 0.8657407407407407
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -1991,8 +2050,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7546296296296297
+        "wer": 0.8518518518518519
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2015,8 +2075,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8518518518518519
+        "wer": 0.8703703703703703
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2041,6 +2102,7 @@
       "metrics": {
         "wer": 0.8657407407407407
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2063,8 +2125,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7077625570776256
+        "wer": 0.8036529680365296
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2087,8 +2150,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7214611872146118
+        "wer": 0.776255707762557
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2111,8 +2175,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6484018264840182
+        "wer": 0.730593607305936
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2135,8 +2200,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6484018264840182
+        "wer": 0.730593607305936
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2159,8 +2225,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.9801324503311258
+        "wer": 1.0
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2183,8 +2250,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6026490066225165
+        "wer": 0.8609271523178808
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2207,8 +2275,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7615894039735099
+        "wer": 0.8410596026490066
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2231,8 +2300,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6754966887417219
+        "wer": 0.7682119205298014
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2255,8 +2325,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.572289156626506
+        "wer": 0.9698795180722891
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2279,8 +2350,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.43373493975903615
+        "wer": 0.9457831325301205
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2303,8 +2375,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6204819277108434
+        "wer": 0.9698795180722891
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2327,8 +2400,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.13253012048192772
+        "wer": 0.8253012048192772
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2351,8 +2425,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7217391304347827
+        "wer": 0.8304347826086956
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2375,8 +2450,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6347826086956522
+        "wer": 0.8217391304347826
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2399,8 +2475,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6260869565217392
+        "wer": 0.8565217391304348
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2423,8 +2500,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3521739130434783
+        "wer": 0.6086956521739131
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2447,8 +2525,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3277310924369748
+        "wer": 0.5
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2471,8 +2550,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3949579831932773
+        "wer": 0.5672268907563025
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2495,8 +2575,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.453781512605042
+        "wer": 0.6260504201680672
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2519,8 +2600,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.47058823529411764
+        "wer": 0.7352941176470589
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2543,8 +2625,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.9128205128205128
+        "wer": 0.9333333333333333
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2567,8 +2650,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8102564102564103
+        "wer": 0.8205128205128205
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2593,6 +2677,7 @@
       "metrics": {
         "wer": 0.8205128205128205
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2615,8 +2700,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5384615384615384
+        "wer": 0.6153846153846154
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2639,8 +2725,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5706214689265536
+        "wer": 0.8192090395480226
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2663,8 +2750,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5141242937853108
+        "wer": 0.7909604519774012
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2687,8 +2775,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5028248587570622
+        "wer": 0.8192090395480226
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2711,8 +2800,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4576271186440678
+        "wer": 0.7853107344632768
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2735,8 +2825,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7435897435897436
+        "wer": 0.7794871794871795
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2759,8 +2850,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7435897435897436
+        "wer": 0.7794871794871795
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2783,8 +2875,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7435897435897436
+        "wer": 0.7794871794871795
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2807,8 +2900,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5897435897435898
+        "wer": 0.7846153846153846
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2831,8 +2925,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8134715025906736
+        "wer": 0.9844559585492227
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2855,8 +2950,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5025906735751295
+        "wer": 0.8393782383419689
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2879,8 +2975,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5129533678756477
+        "wer": 0.8186528497409327
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2903,8 +3000,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6010362694300518
+        "wer": 0.8031088082901554
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2927,8 +3025,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6983240223463687
+        "wer": 0.8491620111731844
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2951,8 +3050,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5418994413407822
+        "wer": 0.8435754189944135
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2975,8 +3075,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7374301675977654
+        "wer": 0.8379888268156425
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -2999,8 +3100,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.12290502793296089
+        "wer": 0.5251396648044693
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3023,8 +3125,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5705882352941176
+        "wer": 0.6470588235294118
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3047,8 +3150,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.12352941176470589
+        "wer": 0.5882352941176471
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3071,8 +3175,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5764705882352941
+        "wer": 0.6058823529411764
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3095,8 +3200,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.12941176470588237
+        "wer": 0.5882352941176471
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3119,8 +3225,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.423728813559322
+        "wer": 0.7838983050847458
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3143,8 +3250,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3559322033898305
+        "wer": 0.7076271186440678
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3167,8 +3275,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3728813559322034
+        "wer": 0.7033898305084746
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3191,8 +3300,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3813559322033898
+        "wer": 0.6991525423728814
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3217,6 +3327,7 @@
       "metrics": {
         "wer": 0.8986175115207373
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3239,8 +3350,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6774193548387096
+        "wer": 0.880184331797235
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3263,8 +3375,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6912442396313364
+        "wer": 0.8847926267281107
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3287,8 +3400,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5852534562211982
+        "wer": 0.8847926267281107
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3311,8 +3425,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.898876404494382
+        "wer": 0.9887640449438202
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3335,8 +3450,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.9382022471910112
+        "wer": 0.9943820224719101
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3359,8 +3475,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6910112359550562
+        "wer": 0.8426966292134831
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3383,8 +3500,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6123595505617978
+        "wer": 0.8314606741573034
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3407,8 +3525,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6716417910447762
+        "wer": 0.8009950248756219
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3431,8 +3550,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6716417910447762
+        "wer": 0.8009950248756219
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3455,8 +3575,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4925373134328358
+        "wer": 0.7910447761194029
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3479,8 +3600,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6417910447761194
+        "wer": 0.8009950248756219
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3503,8 +3625,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5394736842105263
+        "wer": 0.7302631578947368
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3527,8 +3650,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4407894736842105
+        "wer": 0.6644736842105263
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3551,8 +3675,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3815789473684211
+        "wer": 0.7039473684210527
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3575,8 +3700,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3815789473684211
+        "wer": 0.7039473684210527
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3601,6 +3727,7 @@
       "metrics": {
         "wer": 0.7475247524752475
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3625,6 +3752,7 @@
       "metrics": {
         "wer": 0.7475247524752475
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3647,8 +3775,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.2524752475247525
+        "wer": 0.46534653465346537
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3671,8 +3800,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.297029702970297
+        "wer": 0.5891089108910891
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3695,8 +3825,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5942028985507246
+        "wer": 0.782608695652174
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3719,8 +3850,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.25120772946859904
+        "wer": 0.7439613526570048
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3743,8 +3875,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3285024154589372
+        "wer": 0.714975845410628
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3767,8 +3900,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.2318840579710145
+        "wer": 0.7391304347826086
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3791,8 +3925,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3942307692307692
+        "wer": 0.6298076923076923
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3815,8 +3950,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.125
+        "wer": 0.4567307692307692
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3839,8 +3975,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3942307692307692
+        "wer": 0.6298076923076923
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3863,8 +4000,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.1201923076923077
+        "wer": 0.4567307692307692
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3887,8 +4025,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7688172043010753
+        "wer": 0.8602150537634409
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3911,8 +4050,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.45161290322580644
+        "wer": 0.8709677419354839
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3935,8 +4075,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7688172043010753
+        "wer": 0.8602150537634409
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3959,8 +4100,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.23118279569892472
+        "wer": 0.7150537634408602
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -3983,8 +4125,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6086956521739131
+        "wer": 0.75
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4007,8 +4150,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7336956521739131
+        "wer": 0.7554347826086957
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4031,8 +4175,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.358695652173913
+        "wer": 0.5380434782608695
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4055,8 +4200,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3858695652173913
+        "wer": 0.5760869565217391
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4079,8 +4225,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6342857142857142
+        "wer": 0.68
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4105,6 +4252,7 @@
       "metrics": {
         "wer": 0.6628571428571428
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4127,8 +4275,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.2857142857142857
+        "wer": 0.64
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4151,8 +4300,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.14285714285714285
+        "wer": 0.17142857142857143
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4175,8 +4325,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7346938775510204
+        "wer": 0.782312925170068
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4201,6 +4352,7 @@
       "metrics": {
         "wer": 0.8027210884353742
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4225,6 +4377,7 @@
       "metrics": {
         "wer": 0.8027210884353742
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4249,6 +4402,7 @@
       "metrics": {
         "wer": 0.54421768707483
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4271,8 +4425,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8579545454545454
+        "wer": 0.9715909090909091
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4295,8 +4450,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7727272727272727
+        "wer": 0.9943181818181818
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4319,8 +4475,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6931818181818182
+        "wer": 0.9772727272727273
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4343,8 +4500,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5
+        "wer": 0.6931818181818182
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4367,8 +4525,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6571428571428571
+        "wer": 0.7428571428571429
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4391,8 +4550,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6571428571428571
+        "wer": 0.7428571428571429
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4415,8 +4575,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5028571428571429
+        "wer": 0.7657142857142857
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4439,8 +4600,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5942857142857143
+        "wer": 0.7485714285714286
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4463,8 +4625,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.42105263157894735
+        "wer": 0.7315789473684211
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4487,8 +4650,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.41578947368421054
+        "wer": 0.7368421052631579
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4511,8 +4675,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.15789473684210525
+        "wer": 0.4789473684210526
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4535,8 +4700,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.23157894736842105
+        "wer": 0.49473684210526314
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4559,8 +4725,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6363636363636364
+        "wer": 0.6868686868686869
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4583,8 +4750,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6363636363636364
+        "wer": 0.6868686868686869
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4607,8 +4775,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6363636363636364
+        "wer": 0.6868686868686869
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4631,8 +4800,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6363636363636364
+        "wer": 0.6868686868686869
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4655,8 +4825,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.20535714285714285
+        "wer": 0.6205357142857143
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4679,8 +4850,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.17410714285714285
+        "wer": 0.6696428571428571
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4703,8 +4875,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.375
+        "wer": 0.65625
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4727,8 +4900,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.29464285714285715
+        "wer": 0.6517857142857143
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4751,8 +4925,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.593939393939394
+        "wer": 0.7393939393939394
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4777,6 +4952,7 @@
       "metrics": {
         "wer": 0.5818181818181818
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4799,8 +4975,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5393939393939394
+        "wer": 0.5757575757575758
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4823,8 +5000,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3939393939393939
+        "wer": 0.5636363636363636
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4847,8 +5025,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4797297297297297
+        "wer": 0.5135135135135135
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4871,8 +5050,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.46621621621621623
+        "wer": 0.527027027027027
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4895,8 +5075,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.30405405405405406
+        "wer": 0.722972972972973
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4919,8 +5100,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.25
+        "wer": 0.5405405405405406
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4943,8 +5125,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.16470588235294117
+        "wer": 0.5882352941176471
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4967,8 +5150,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.15294117647058825
+        "wer": 0.6431372549019608
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -4991,8 +5175,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.16862745098039217
+        "wer": 0.47058823529411764
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5015,8 +5200,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.1450980392156863
+        "wer": 0.48627450980392156
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5039,8 +5225,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7954545454545454
+        "wer": 0.875
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5063,8 +5250,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7386363636363636
+        "wer": 0.9659090909090909
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5087,8 +5275,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6761363636363636
+        "wer": 0.8579545454545454
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5111,8 +5300,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6306818181818182
+        "wer": 0.6988636363636364
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5135,8 +5325,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6858407079646017
+        "wer": 0.7123893805309734
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5159,8 +5350,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5221238938053098
+        "wer": 0.6504424778761062
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5183,8 +5375,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.19469026548672566
+        "wer": 0.46017699115044247
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5207,8 +5400,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.15486725663716813
+        "wer": 0.4469026548672566
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5231,8 +5425,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.18888888888888888
+        "wer": 0.6055555555555555
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5255,8 +5450,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5388888888888889
+        "wer": 0.7277777777777777
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5279,8 +5475,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.26666666666666666
+        "wer": 0.6333333333333333
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5303,8 +5500,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.26666666666666666
+        "wer": 0.6333333333333333
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5327,8 +5525,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.9787234042553191
+        "wer": 1.0
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5351,8 +5550,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.48936170212765956
+        "wer": 0.6223404255319149
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5375,8 +5575,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.26595744680851063
+        "wer": 0.4946808510638298
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5399,8 +5600,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7393617021276596
+        "wer": 0.824468085106383
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5423,8 +5625,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7822222222222223
+        "wer": 0.8088888888888889
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5447,8 +5650,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7555555555555555
+        "wer": 0.8
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5471,8 +5675,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5555555555555556
+        "wer": 0.7911111111111111
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5495,8 +5700,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.49777777777777776
+        "wer": 0.7866666666666666
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5519,8 +5725,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6243386243386243
+        "wer": 0.7777777777777778
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5543,8 +5750,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5661375661375662
+        "wer": 0.8042328042328042
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5567,8 +5775,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7566137566137566
+        "wer": 0.8201058201058201
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5591,8 +5800,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5661375661375662
+        "wer": 0.783068783068783
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5615,8 +5825,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6060606060606061
+        "wer": 0.7056277056277056
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5639,8 +5850,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6017316017316018
+        "wer": 0.696969696969697
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5663,8 +5875,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.15151515151515152
+        "wer": 0.6363636363636364
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5687,8 +5900,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.48484848484848486
+        "wer": 0.7012987012987013
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5711,8 +5925,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8796680497925311
+        "wer": 0.991701244813278
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5735,8 +5950,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7551867219917012
+        "wer": 0.979253112033195
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5759,8 +5975,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4979253112033195
+        "wer": 0.970954356846473
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5783,8 +6000,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5767634854771784
+        "wer": 0.970954356846473
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5807,8 +6025,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7213930348258707
+        "wer": 0.681592039800995
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5831,8 +6050,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6318407960199005
+        "wer": 0.5970149253731343
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5855,8 +6075,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6318407960199005
+        "wer": 0.5970149253731343
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5879,8 +6100,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.21393034825870647
+        "wer": 0.40298507462686567
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5903,8 +6125,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6550218340611353
+        "wer": 0.8253275109170306
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5927,8 +6150,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6200873362445415
+        "wer": 0.8253275109170306
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5951,8 +6175,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6157205240174672
+        "wer": 0.8078602620087336
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5975,8 +6200,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5982532751091703
+        "wer": 0.7947598253275109
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -5999,8 +6225,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5813953488372093
+        "wer": 0.9767441860465116
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6023,8 +6250,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.586046511627907
+        "wer": 0.9767441860465116
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6047,8 +6275,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5813953488372093
+        "wer": 0.9767441860465116
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6071,8 +6300,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7534883720930232
+        "wer": 0.9813953488372092
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6095,8 +6325,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7038834951456311
+        "wer": 0.7087378640776699
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6119,8 +6350,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6990291262135923
+        "wer": 0.7038834951456311
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6143,8 +6375,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7621359223300971
+        "wer": 0.7475728155339806
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6167,8 +6400,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.48058252427184467
+        "wer": 0.6699029126213593
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6193,6 +6427,7 @@
       "metrics": {
         "wer": 0.6747572815533981
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6215,8 +6450,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.49514563106796117
+        "wer": 0.6796116504854369
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6239,8 +6475,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.28640776699029125
+        "wer": 0.5145631067961165
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6263,8 +6500,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.49514563106796117
+        "wer": 0.6747572815533981
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6287,8 +6525,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3855421686746988
+        "wer": 0.6184738955823293
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6311,8 +6550,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.13253012048192772
+        "wer": 0.5983935742971888
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6335,8 +6575,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.1285140562248996
+        "wer": 0.2971887550200803
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6359,8 +6600,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.1285140562248996
+        "wer": 0.5983935742971888
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6383,8 +6625,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.675
+        "wer": 0.74
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6407,8 +6650,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.565
+        "wer": 0.71
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6431,8 +6675,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.575
+        "wer": 0.71
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6455,8 +6700,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.565
+        "wer": 0.715
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6479,8 +6725,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5605381165919282
+        "wer": 0.7399103139013453
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6503,8 +6750,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3632286995515695
+        "wer": 0.695067264573991
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6527,8 +6775,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5426008968609866
+        "wer": 0.7130044843049327
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6551,8 +6800,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4663677130044843
+        "wer": 0.7085201793721974
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6575,8 +6825,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5904761904761905
+        "wer": 0.8238095238095238
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6599,8 +6850,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7476190476190476
+        "wer": 0.7666666666666667
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6623,8 +6875,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6238095238095238
+        "wer": 0.7857142857142857
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6647,8 +6900,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5571428571428572
+        "wer": 0.7571428571428571
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6671,8 +6925,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6622222222222223
+        "wer": 0.6933333333333334
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6695,8 +6950,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4666666666666667
+        "wer": 0.8755555555555555
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6719,8 +6975,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.29333333333333333
+        "wer": 0.7822222222222223
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6743,8 +7000,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4488888888888889
+        "wer": 0.9466666666666667
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6767,8 +7025,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7239583333333334
+        "wer": 0.75
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6791,8 +7050,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6927083333333334
+        "wer": 0.703125
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6815,8 +7075,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5572916666666666
+        "wer": 0.6666666666666666
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6839,8 +7100,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5104166666666666
+        "wer": 0.640625
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6863,8 +7125,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6
+        "wer": 0.6416666666666667
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6887,8 +7150,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6041666666666666
+        "wer": 0.6458333333333334
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6911,8 +7175,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6125
+        "wer": 0.6583333333333333
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6935,8 +7200,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.55
+        "wer": 0.6708333333333333
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6959,8 +7225,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5650406504065041
+        "wer": 0.8333333333333334
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -6983,8 +7250,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5365853658536586
+        "wer": 0.7886178861788617
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7007,8 +7275,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3943089430894309
+        "wer": 0.6260162601626016
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7031,8 +7300,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.2926829268292683
+        "wer": 0.6178861788617886
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7055,8 +7325,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.441025641025641
+        "wer": 0.7333333333333333
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7079,8 +7350,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.441025641025641
+        "wer": 0.7487179487179487
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7103,8 +7375,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3282051282051282
+        "wer": 0.6205128205128205
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7127,8 +7400,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.441025641025641
+        "wer": 0.7333333333333333
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7151,8 +7425,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6320754716981132
+        "wer": 0.7547169811320755
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7177,6 +7452,7 @@
       "metrics": {
         "wer": 0.7735849056603774
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7199,8 +7475,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5
+        "wer": 0.7405660377358491
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7223,8 +7500,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6745283018867925
+        "wer": 0.7547169811320755
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7247,8 +7525,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4435146443514644
+        "wer": 0.8242677824267782
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7271,8 +7550,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3305439330543933
+        "wer": 0.7322175732217573
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7295,8 +7575,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.26778242677824265
+        "wer": 0.8158995815899581
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7319,8 +7600,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.22594142259414227
+        "wer": 0.6694560669456067
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7343,8 +7625,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7263681592039801
+        "wer": 0.8407960199004975
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7367,8 +7650,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7263681592039801
+        "wer": 0.8407960199004975
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7391,8 +7675,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5472636815920398
+        "wer": 0.845771144278607
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7415,8 +7700,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.2835820895522388
+        "wer": 0.8258706467661692
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7439,8 +7725,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.2054794520547945
+        "wer": 0.541095890410959
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7463,8 +7750,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.1643835616438356
+        "wer": 0.1917808219178082
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7489,6 +7777,7 @@
       "metrics": {
         "wer": 0.03424657534246575
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7511,8 +7800,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.22602739726027396
+        "wer": 0.589041095890411
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7537,6 +7827,7 @@
       "metrics": {
         "wer": 0.6648936170212766
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7561,6 +7852,7 @@
       "metrics": {
         "wer": 0.6861702127659575
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7583,8 +7875,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5478723404255319
+        "wer": 0.6595744680851063
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7607,8 +7900,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3670212765957447
+        "wer": 0.7553191489361702
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7631,8 +7925,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5487804878048781
+        "wer": 0.6097560975609756
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7655,8 +7950,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4634146341463415
+        "wer": 0.823170731707317
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7679,8 +7975,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.22560975609756098
+        "wer": 0.5792682926829268
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7703,8 +8000,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.2804878048780488
+        "wer": 0.5792682926829268
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7729,6 +8027,7 @@
       "metrics": {
         "wer": 0.6203208556149733
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7751,8 +8050,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.37433155080213903
+        "wer": 0.5240641711229946
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7775,8 +8075,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3315508021390374
+        "wer": 0.48663101604278075
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7799,8 +8100,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5614973262032086
+        "wer": 0.6149732620320856
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7823,8 +8125,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5307692307692308
+        "wer": 0.8153846153846154
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7847,8 +8150,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.13076923076923078
+        "wer": 0.5153846153846153
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7871,8 +8175,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.41923076923076924
+        "wer": 0.8153846153846154
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7895,8 +8200,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.34615384615384615
+        "wer": 0.8038461538461539
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7919,8 +8225,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4975124378109453
+        "wer": 0.8208955223880597
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7943,8 +8250,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.44776119402985076
+        "wer": 0.6716417910447762
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7967,8 +8275,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3383084577114428
+        "wer": 0.7711442786069652
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -7991,8 +8300,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.39800995024875624
+        "wer": 0.5422885572139303
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8015,8 +8325,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7575757575757576
+        "wer": 0.8080808080808081
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8039,8 +8350,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.41919191919191917
+        "wer": 0.7474747474747475
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8063,8 +8375,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.22727272727272727
+        "wer": 0.6767676767676768
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8087,8 +8400,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7828282828282829
+        "wer": 0.8131313131313131
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8111,8 +8425,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6254980079681275
+        "wer": 0.8406374501992032
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8135,8 +8450,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6892430278884463
+        "wer": 0.8605577689243028
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8159,8 +8475,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.749003984063745
+        "wer": 0.8725099601593626
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8183,8 +8500,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6733067729083665
+        "wer": 0.8605577689243028
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8207,8 +8525,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.698019801980198
+        "wer": 0.7128712871287128
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8231,8 +8550,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5544554455445545
+        "wer": 0.6732673267326733
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8255,8 +8575,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5
+        "wer": 0.6534653465346535
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8279,8 +8600,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7079207920792079
+        "wer": 0.7128712871287128
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8303,8 +8625,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.48936170212765956
+        "wer": 0.5904255319148937
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8327,8 +8650,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5478723404255319
+        "wer": 0.7074468085106383
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8351,8 +8675,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.30319148936170215
+        "wer": 0.5531914893617021
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8375,8 +8700,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.14893617021276595
+        "wer": 0.48936170212765956
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8399,8 +8725,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.31868131868131866
+        "wer": 0.4340659340659341
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8423,8 +8750,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.45604395604395603
+        "wer": 0.7032967032967034
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8447,8 +8775,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.37362637362637363
+        "wer": 0.7362637362637363
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8471,8 +8800,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.46153846153846156
+        "wer": 0.7582417582417582
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8495,8 +8825,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8315217391304348
+        "wer": 0.9891304347826086
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8519,8 +8850,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6467391304347826
+        "wer": 0.9619565217391305
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8543,8 +8875,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8315217391304348
+        "wer": 0.9891304347826086
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8567,8 +8900,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7934782608695652
+        "wer": 0.9836956521739131
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8593,6 +8927,7 @@
       "metrics": {
         "wer": 0.9444444444444444
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8617,6 +8952,7 @@
       "metrics": {
         "wer": 0.7722222222222223
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8641,6 +8977,7 @@
       "metrics": {
         "wer": 0.7888888888888889
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8665,6 +9002,7 @@
       "metrics": {
         "wer": 0.7722222222222223
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8687,8 +9025,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.375886524822695
+        "wer": 0.49645390070921985
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8711,8 +9050,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3333333333333333
+        "wer": 0.723404255319149
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8735,8 +9075,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.24113475177304963
+        "wer": 0.3191489361702128
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8759,8 +9100,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3333333333333333
+        "wer": 0.723404255319149
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8783,8 +9125,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.1652892561983471
+        "wer": 0.49173553719008267
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8807,8 +9150,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.16942148760330578
+        "wer": 0.5082644628099173
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8831,8 +9175,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.25206611570247933
+        "wer": 0.5909090909090909
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8855,8 +9200,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.25206611570247933
+        "wer": 0.512396694214876
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8879,8 +9225,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.35784313725490197
+        "wer": 0.5049019607843137
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8903,8 +9250,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4068627450980392
+        "wer": 0.4264705882352941
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8927,8 +9275,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.47058823529411764
+        "wer": 0.8235294117647058
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8951,8 +9300,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.24509803921568626
+        "wer": 0.4264705882352941
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8975,8 +9325,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6309523809523809
+        "wer": 0.6726190476190477
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -8999,8 +9350,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5892857142857143
+        "wer": 0.6309523809523809
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9025,6 +9377,7 @@
       "metrics": {
         "wer": 0.6607142857142857
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9047,8 +9400,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5119047619047619
+        "wer": 0.7797619047619048
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9071,8 +9425,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5441860465116279
+        "wer": 0.7627906976744186
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9095,8 +9450,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5255813953488372
+        "wer": 0.7627906976744186
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9119,8 +9475,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.49767441860465117
+        "wer": 0.8465116279069768
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9143,8 +9500,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5162790697674419
+        "wer": 0.7441860465116279
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9167,8 +9525,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7297297297297297
+        "wer": 0.745945945945946
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9191,8 +9550,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.41621621621621624
+        "wer": 0.6216216216216216
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9215,8 +9575,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7351351351351352
+        "wer": 0.7513513513513513
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9239,8 +9600,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5945945945945946
+        "wer": 0.7351351351351352
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9263,8 +9625,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6425531914893617
+        "wer": 0.7829787234042553
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9287,8 +9650,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6212765957446809
+        "wer": 0.7276595744680852
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9313,6 +9677,7 @@
       "metrics": {
         "wer": 0.6595744680851063
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9337,6 +9702,7 @@
       "metrics": {
         "wer": 0.6595744680851063
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9359,8 +9725,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6820512820512821
+        "wer": 0.7230769230769231
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9383,8 +9750,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5743589743589743
+        "wer": 0.6564102564102564
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9407,8 +9775,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4666666666666667
+        "wer": 0.6410256410256411
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9431,8 +9800,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5282051282051282
+        "wer": 0.6102564102564103
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9455,8 +9825,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.9505494505494505
+        "wer": 0.9945054945054945
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9479,8 +9850,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7747252747252747
+        "wer": 0.9505494505494505
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9503,8 +9875,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7692307692307693
+        "wer": 0.8296703296703297
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9527,8 +9900,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6318681318681318
+        "wer": 0.8241758241758241
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9551,8 +9925,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7663551401869159
+        "wer": 0.8177570093457944
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9575,8 +9950,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7663551401869159
+        "wer": 0.8177570093457944
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9599,8 +9975,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.794392523364486
+        "wer": 0.8177570093457944
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9623,8 +10000,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.42990654205607476
+        "wer": 0.7523364485981309
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9647,8 +10025,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.47126436781609193
+        "wer": 0.6724137931034483
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9671,8 +10050,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3218390804597701
+        "wer": 0.5804597701149425
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9695,8 +10075,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.13218390804597702
+        "wer": 0.40229885057471265
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9719,8 +10100,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5517241379310345
+        "wer": 0.6896551724137931
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9745,6 +10127,7 @@
       "metrics": {
         "wer": 1.0
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9767,8 +10150,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3146551724137931
+        "wer": 0.7413793103448276
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9791,8 +10175,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7025862068965517
+        "wer": 0.8620689655172413
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9815,8 +10200,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5086206896551724
+        "wer": 0.896551724137931
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9839,8 +10225,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.272
+        "wer": 0.7
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9863,8 +10250,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.308
+        "wer": 0.58
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9887,8 +10275,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.276
+        "wer": 0.564
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9911,8 +10300,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.28
+        "wer": 0.548
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9935,8 +10325,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.42528735632183906
+        "wer": 0.6206896551724138
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9959,8 +10350,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.16091954022988506
+        "wer": 0.5804597701149425
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -9983,8 +10375,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.47126436781609193
+        "wer": 0.6379310344827587
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10007,8 +10400,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.27011494252873564
+        "wer": 0.5229885057471264
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10031,8 +10425,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7407407407407407
+        "wer": 0.8095238095238095
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10055,8 +10450,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6931216931216931
+        "wer": 0.7883597883597884
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10079,8 +10475,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6878306878306878
+        "wer": 0.7936507936507936
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10103,8 +10500,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7037037037037037
+        "wer": 0.8042328042328042
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10129,6 +10527,7 @@
       "metrics": {
         "wer": 0.8844221105527639
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10153,6 +10552,7 @@
       "metrics": {
         "wer": 0.8844221105527639
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10175,8 +10575,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7889447236180904
+        "wer": 0.9798994974874372
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10199,8 +10600,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7487437185929648
+        "wer": 0.864321608040201
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10223,8 +10625,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5705521472392638
+        "wer": 0.6993865030674846
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10247,8 +10650,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.36809815950920244
+        "wer": 0.6503067484662577
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10271,8 +10675,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.43558282208588955
+        "wer": 0.6932515337423313
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10295,8 +10700,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4233128834355828
+        "wer": 0.6932515337423313
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10319,8 +10725,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6787564766839378
+        "wer": 0.7098445595854922
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10343,8 +10750,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6580310880829016
+        "wer": 0.8341968911917098
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10367,8 +10775,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6994818652849741
+        "wer": 0.8186528497409327
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10393,6 +10802,7 @@
       "metrics": {
         "wer": 0.8238341968911918
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10433,8 +10843,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7121212121212122
+        "wer": 0.803030303030303
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10511,8 +10922,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.32764505119453924
+        "wer": 0.6825938566552902
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10589,8 +11001,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3333333333333333
+        "wer": 0.7252252252252253
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10667,8 +11080,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.28421052631578947
+        "wer": 0.4263157894736842
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10745,8 +11159,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4788732394366197
+        "wer": 0.676056338028169
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10823,8 +11238,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5625
+        "wer": 0.828125
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10901,8 +11317,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8597285067873304
+        "wer": 0.9773755656108597
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -10979,8 +11396,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3317972350230415
+        "wer": 0.8755760368663594
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -11057,8 +11475,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5813953488372093
+        "wer": 0.7069767441860465
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -11135,8 +11554,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5913461538461539
+        "wer": 0.7307692307692307
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -11213,8 +11633,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7289719626168224
+        "wer": 0.9065420560747663
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -11291,8 +11712,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5159574468085106
+        "wer": 0.6170212765957447
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -11369,8 +11791,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.654275092936803
+        "wer": 0.7509293680297398
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -11447,8 +11870,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.46963562753036436
+        "wer": 0.8825910931174089
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -11525,8 +11949,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6363636363636364
+        "wer": 0.9841897233201581
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -11603,8 +12028,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.36893203883495146
+        "wer": 0.8058252427184466
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -11681,8 +12107,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3063583815028902
+        "wer": 0.6994219653179191
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -11759,8 +12186,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.15625
+        "wer": 0.42410714285714285
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -11837,8 +12265,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.42201834862385323
+        "wer": 0.7431192660550459
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -11915,8 +12344,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5450643776824035
+        "wer": 0.5536480686695279
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -11993,8 +12423,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7638190954773869
+        "wer": 0.7839195979899497
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -12071,8 +12502,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7186147186147186
+        "wer": 0.8051948051948052
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -12149,8 +12581,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5930232558139535
+        "wer": 0.9806201550387597
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -12227,8 +12660,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.708029197080292
+        "wer": 0.7591240875912408
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -12305,8 +12739,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7829787234042553
+        "wer": 0.8638297872340426
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -12383,8 +12818,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.41832669322709165
+        "wer": 0.5936254980079682
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -12461,8 +12897,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.47844827586206895
+        "wer": 0.7887931034482759
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -12539,8 +12976,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8994413407821229
+        "wer": 0.9888268156424581
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -12617,8 +13055,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6347517730496454
+        "wer": 0.7021276595744681
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -12695,8 +13134,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.41784037558685444
+        "wer": 0.676056338028169
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -12773,8 +13213,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.23113207547169812
+        "wer": 0.3915094339622642
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -12851,8 +13292,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.41798941798941797
+        "wer": 0.6190476190476191
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -12929,8 +13371,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7682926829268293
+        "wer": 0.9695121951219512
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -13007,8 +13450,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.762962962962963
+        "wer": 0.8740740740740741
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -13085,8 +13529,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.42021276595744683
+        "wer": 0.8138297872340425
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -13163,8 +13608,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7969543147208121
+        "wer": 0.8020304568527918
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -13241,8 +13687,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.48466257668711654
+        "wer": 0.6012269938650306
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -13319,8 +13766,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5221238938053098
+        "wer": 0.7522123893805309
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -13397,8 +13845,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7577092511013216
+        "wer": 0.8061674008810573
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -13475,8 +13924,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.33136094674556216
+        "wer": 0.5798816568047337
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -13553,8 +14003,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5490196078431373
+        "wer": 0.696078431372549
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -13631,8 +14082,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5528846153846154
+        "wer": 0.7019230769230769
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -13709,8 +14161,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.41964285714285715
+        "wer": 0.6830357142857143
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -13787,8 +14240,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.35185185185185186
+        "wer": 0.7777777777777778
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -13865,8 +14319,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6891891891891891
+        "wer": 0.7837837837837838
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -13943,8 +14398,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.19907407407407407
+        "wer": 0.5370370370370371
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -14021,8 +14477,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.47368421052631576
+        "wer": 0.5939849624060151
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -14099,8 +14556,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7169811320754716
+        "wer": 0.8716981132075472
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -14177,8 +14635,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3943089430894309
+        "wer": 0.7154471544715447
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -14255,8 +14714,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.49523809523809526
+        "wer": 0.8047619047619048
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -14333,8 +14793,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5
+        "wer": 0.8404255319148937
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -14411,8 +14872,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.448
+        "wer": 0.772
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -14489,8 +14951,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5906432748538012
+        "wer": 0.7192982456140351
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -14567,8 +15030,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4489795918367347
+        "wer": 0.6326530612244898
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -14645,8 +15109,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7381974248927039
+        "wer": 0.8025751072961373
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -14723,8 +15188,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4344262295081967
+        "wer": 0.7254098360655737
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -14801,8 +15267,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5634920634920635
+        "wer": 0.8055555555555556
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -14879,8 +15346,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4898989898989899
+        "wer": 0.8939393939393939
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -14957,8 +15425,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.46987951807228917
+        "wer": 0.7269076305220884
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -15035,8 +15504,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6091370558375635
+        "wer": 0.8223350253807107
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -15113,8 +15583,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.39555555555555555
+        "wer": 0.7155555555555555
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -15191,8 +15662,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.43005181347150256
+        "wer": 0.6787564766839378
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -15269,8 +15741,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5235849056603774
+        "wer": 0.9528301886792453
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -15347,8 +15820,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7967914438502673
+        "wer": 0.8877005347593583
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -15425,8 +15899,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.48046875
+        "wer": 0.8359375
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -15503,8 +15978,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4146341463414634
+        "wer": 0.5756097560975609
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -15581,8 +16057,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5046728971962616
+        "wer": 0.7102803738317757
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -15659,8 +16136,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5920398009950248
+        "wer": 0.7412935323383084
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -15737,8 +16215,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8390243902439024
+        "wer": 0.9121951219512195
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -15815,8 +16294,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6554621848739496
+        "wer": 0.8781512605042017
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -15893,8 +16373,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6574074074074074
+        "wer": 0.8009259259259259
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -15971,8 +16452,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8092783505154639
+        "wer": 0.8195876288659794
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -16049,8 +16531,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5096153846153846
+        "wer": 0.7884615384615384
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -16127,8 +16610,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6881720430107527
+        "wer": 0.7096774193548387
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -16207,6 +16691,7 @@
       "metrics": {
         "wer": 0.6017316017316018
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -16283,8 +16768,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6699029126213593
+        "wer": 0.7184466019417476
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -16361,8 +16847,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5025125628140703
+        "wer": 0.8291457286432161
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -16439,8 +16926,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.33067729083665337
+        "wer": 0.6533864541832669
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -16517,8 +17005,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.13529411764705881
+        "wer": 0.5705882352941176
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -16595,8 +17084,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7219251336898396
+        "wer": 0.8074866310160428
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -16673,8 +17163,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5534883720930233
+        "wer": 0.7162790697674418
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -16751,8 +17242,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.39805825242718446
+        "wer": 0.7378640776699029
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -16829,8 +17321,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.696969696969697
+        "wer": 0.8333333333333334
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -16907,8 +17400,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6904761904761905
+        "wer": 0.819047619047619
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -16985,8 +17479,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5714285714285714
+        "wer": 0.8907563025210085
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -17063,8 +17558,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.48695652173913045
+        "wer": 0.8521739130434782
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -17141,8 +17637,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5069767441860465
+        "wer": 0.8604651162790697
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -17219,8 +17716,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.48936170212765956
+        "wer": 0.8212765957446808
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -17297,8 +17795,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3316062176165803
+        "wer": 0.5440414507772021
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -17375,8 +17874,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6666666666666666
+        "wer": 0.8833333333333333
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -17453,8 +17953,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.42790697674418604
+        "wer": 0.6046511627906976
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -17533,6 +18034,7 @@
       "metrics": {
         "wer": 0.7567567567567568
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -17609,8 +18111,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6111111111111112
+        "wer": 0.6712962962962963
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -17687,8 +18190,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.25870646766169153
+        "wer": 0.4975124378109453
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -17765,8 +18269,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.22488038277511962
+        "wer": 0.7464114832535885
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -17843,8 +18348,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7581395348837209
+        "wer": 0.8511627906976744
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -17921,8 +18427,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.30603448275862066
+        "wer": 0.8232758620689655
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -17999,8 +18506,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4166666666666667
+        "wer": 0.4868421052631579
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -18079,6 +18587,7 @@
       "metrics": {
         "wer": 0.7854077253218884
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -18155,8 +18664,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7068062827225131
+        "wer": 0.7643979057591623
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -18233,8 +18743,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6326530612244898
+        "wer": 0.7244897959183674
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -18311,8 +18822,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6836363636363636
+        "wer": 0.8145454545454546
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -18389,8 +18901,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.817351598173516
+        "wer": 0.8904109589041096
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -18467,8 +18980,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.42738589211618255
+        "wer": 0.7219917012448133
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -18545,8 +19059,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.609375
+        "wer": 0.8515625
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -18623,8 +19138,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6901408450704225
+        "wer": 0.8732394366197183
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -18701,8 +19217,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6877192982456141
+        "wer": 0.9789473684210527
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -18779,8 +19296,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4339622641509434
+        "wer": 0.7028301886792453
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -18857,8 +19375,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6548223350253807
+        "wer": 0.7055837563451777
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -18935,8 +19454,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7219917012448133
+        "wer": 0.7385892116182573
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -19015,6 +19535,7 @@
       "metrics": {
         "wer": 0.7525773195876289
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -19091,8 +19612,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4279835390946502
+        "wer": 0.8189300411522634
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -19169,8 +19691,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5876288659793815
+        "wer": 0.865979381443299
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -19249,6 +19772,7 @@
       "metrics": {
         "wer": 0.6823529411764706
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -19325,8 +19849,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.44545454545454544
+        "wer": 0.7863636363636364
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -19403,8 +19928,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5142857142857142
+        "wer": 0.926530612244898
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -19481,8 +20007,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.44871794871794873
+        "wer": 0.6239316239316239
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -19559,8 +20086,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8818897637795275
+        "wer": 0.905511811023622
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -19637,8 +20165,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7445887445887446
+        "wer": 0.922077922077922
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -19715,8 +20244,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7450980392156863
+        "wer": 0.8352941176470589
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -19793,8 +20323,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6691449814126395
+        "wer": 0.8141263940520446
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -19871,8 +20402,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7747035573122529
+        "wer": 0.9130434782608695
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -19949,8 +20481,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6341463414634146
+        "wer": 0.9581881533101045
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -20027,8 +20560,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6556016597510373
+        "wer": 0.9626556016597511
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -20105,8 +20639,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5909090909090909
+        "wer": 0.8068181818181818
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -20183,8 +20718,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6307692307692307
+        "wer": 0.7307692307692307
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -20261,8 +20797,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7066115702479339
+        "wer": 0.8512396694214877
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -20339,8 +20876,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5476190476190477
+        "wer": 0.8673469387755102
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -20417,8 +20955,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6972477064220184
+        "wer": 0.8348623853211009
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -20495,8 +21034,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6311111111111111
+        "wer": 0.7111111111111111
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -20573,8 +21113,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5343137254901961
+        "wer": 0.8382352941176471
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -20651,8 +21192,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.41935483870967744
+        "wer": 0.7419354838709677
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -20729,8 +21271,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6222222222222222
+        "wer": 0.7155555555555555
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -20807,8 +21350,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.422680412371134
+        "wer": 0.7783505154639175
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -20885,8 +21429,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3925233644859813
+        "wer": 0.5841121495327103
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -20963,8 +21508,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6620370370370371
+        "wer": 0.7777777777777778
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -21041,8 +21587,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5842105263157895
+        "wer": 0.8
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -21119,8 +21666,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.30416666666666664
+        "wer": 0.5541666666666667
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -21197,8 +21745,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7481203007518797
+        "wer": 0.9135338345864662
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -21275,8 +21824,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5076923076923077
+        "wer": 0.9076923076923077
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -21353,8 +21903,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7419354838709677
+        "wer": 0.9032258064516129
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -21431,8 +21982,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5335968379446641
+        "wer": 0.5968379446640316
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -21509,8 +22061,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7136929460580913
+        "wer": 0.9585062240663901
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -21587,8 +22140,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.34798534798534797
+        "wer": 0.5824175824175825
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -21665,8 +22219,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.42953020134228187
+        "wer": 0.7986577181208053
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -21743,8 +22298,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8653846153846154
+        "wer": 0.9807692307692307
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -21821,8 +22377,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.643598615916955
+        "wer": 0.8166089965397924
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -21899,8 +22456,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5577689243027888
+        "wer": 0.8047808764940239
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -21977,8 +22535,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8127208480565371
+        "wer": 0.9399293286219081
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -22055,8 +22614,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7489878542510121
+        "wer": 0.8461538461538461
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -22133,8 +22693,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6461538461538462
+        "wer": 0.9
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -22211,8 +22772,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5687022900763359
+        "wer": 0.8549618320610687
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -22289,8 +22851,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7551020408163265
+        "wer": 0.9020408163265307
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -22367,8 +22930,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7015503875968992
+        "wer": 0.813953488372093
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -22445,8 +23009,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.34801762114537443
+        "wer": 0.6916299559471366
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -22523,8 +23088,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6407407407407407
+        "wer": 0.7407407407407407
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -22601,8 +23167,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7697594501718213
+        "wer": 0.8831615120274914
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -22679,8 +23246,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6255506607929515
+        "wer": 0.8237885462555066
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -22757,8 +23325,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5719557195571956
+        "wer": 0.7601476014760148
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -22835,8 +23404,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5709090909090909
+        "wer": 0.9745454545454545
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -22913,8 +23483,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8846153846153846
+        "wer": 0.9743589743589743
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -22991,8 +23562,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7857142857142857
+        "wer": 0.9841269841269841
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -23069,8 +23641,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.31718061674008813
+        "wer": 0.5110132158590308
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -23147,8 +23720,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6718146718146718
+        "wer": 0.9073359073359073
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -23225,8 +23799,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6410256410256411
+        "wer": 0.8162393162393162
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -23303,8 +23878,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.37623762376237624
+        "wer": 0.6138613861386139
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -23381,8 +23957,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6811023622047244
+        "wer": 0.889763779527559
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -23459,8 +24036,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6341463414634146
+        "wer": 0.8333333333333334
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -23537,8 +24115,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.34285714285714286
+        "wer": 0.9619047619047619
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -23615,8 +24194,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5434782608695652
+        "wer": 0.7782608695652173
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -23693,8 +24273,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7781818181818182
+        "wer": 0.9054545454545454
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -23771,8 +24352,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.60546875
+        "wer": 0.8359375
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -23849,8 +24431,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5541666666666667
+        "wer": 0.9708333333333333
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -23927,8 +24510,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5282051282051282
+        "wer": 0.6
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -24005,8 +24589,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7294520547945206
+        "wer": 0.7842465753424658
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -24083,8 +24668,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6097560975609756
+        "wer": 0.926829268292683
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -24161,8 +24747,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6302521008403361
+        "wer": 0.819327731092437
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -24239,8 +24826,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6544117647058824
+        "wer": 0.8125
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -24317,8 +24905,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.45
+        "wer": 0.5384615384615384
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -24395,8 +24984,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8084415584415584
+        "wer": 0.9902597402597403
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -24473,8 +25063,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.4878048780487805
+        "wer": 0.8989547038327527
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -24551,8 +25142,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.8484848484848485
+        "wer": 0.9783549783549783
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -24629,8 +25221,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6018099547511312
+        "wer": 0.7782805429864253
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -24707,8 +25300,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.34545454545454546
+        "wer": 0.740909090909091
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -24785,8 +25379,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6311787072243346
+        "wer": 0.8859315589353612
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -24863,8 +25458,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5
+        "wer": 0.731404958677686
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -24941,8 +25537,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7028112449799196
+        "wer": 0.8634538152610441
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -25019,8 +25616,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6431226765799256
+        "wer": 0.895910780669145
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -25097,8 +25695,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.37117903930131
+        "wer": 0.7205240174672489
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -25175,8 +25774,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5418326693227091
+        "wer": 0.8366533864541833
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -25253,8 +25853,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.6681034482758621
+        "wer": 0.896551724137931
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -25331,8 +25932,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.601123595505618
+        "wer": 0.7134831460674157
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -25409,8 +26011,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7241379310344828
+        "wer": 0.9693486590038314
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -25487,8 +26090,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.7436823104693141
+        "wer": 0.8303249097472925
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -25565,8 +26169,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.38198757763975155
+        "wer": 0.8664596273291926
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -25643,8 +26248,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.5437956204379562
+        "wer": 0.9124087591240876
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -25721,8 +26327,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.29615384615384616
+        "wer": 0.5884615384615385
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -25799,8 +26406,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.47058823529411764
+        "wer": 0.7521008403361344
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -25877,8 +26485,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3776824034334764
+        "wer": 0.8154506437768241
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -25955,8 +26564,9 @@
       "hyp_segments": 1,
       "is_segmented": false,
       "metrics": {
-        "wer": 0.3786008230452675
+        "wer": 0.831275720164609
       },
+      "wer_method": "mrs",
       "metric_type": "wer"
     },
     {
@@ -25996,5 +26606,5 @@
       "error": "Hypothesis not found"
     }
   ],
-  "timestamp": "2026-04-05T23:15:33.618335"
+  "timestamp": "2026-04-06T17:46:06.676968"
 }

@@ -1,14 +1,14 @@
 # Fdb version 3
-["bibtex main"] 1775083303 "main.aux" "main.bbl" "main" 1775083903
-  "/usr/share/texlive/texmf-dist/bibtex/bst/natbib/plainnat.bst" 1233624470 26816 ffe5423d2019860bad9f54bc402fac15 ""
-  "main.aux" 1775083903 10710 20b7d59b4e595159bae06c23fc99f6ba "pdflatex"
-  "references.bib" 1774280779 6706 ae9eb72565cdffa70043897801df605a ""
+["bibtex main"] 1776562246 "main.aux" "main.bbl" "main" 1776563710
+  "/usr/share/texlive/texmf-dist/bibtex/bst/natbib/unsrtnat.bst" 1233624470 24550 a41a6405f4de768c43e871d9fbce2bc8 ""
+  "main.aux" 1776563710 18918 0407b5fee7f2fd0f76064a26e4874668 "pdflatex"
+  "references.bib" 1776558403 23035 62fb7f4464ef8c66fdebb2bd90e1d10c ""
   (generated)
   "main.bbl"
   "main.blg"
-["pdflatex"] 1775083903 "/home/jamin/Year3Proj/Documentation/main.tex" "main.pdf" "main" 1775083903
+["pdflatex"] 1776563709 "/home/jamin/Year3Proj/Documentation/main.tex" "main.pdf" "main" 1776563710
   "/etc/texmf/web2c/texmf.cnf" 1737969379 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/jamin/Year3Proj/Documentation/main.tex" 1774260312 1320 badb8bd6037750352482cc8c2b975f51 ""
+  "/home/jamin/Year3Proj/Documentation/main.tex" 1776561099 1330 a4020e16c16a7aca8d524a1e72e0b311 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecrm1095.tfm" 1136768653 3584 929cdff2b7a8c11bd4d49fd68cb0ae70 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1246382020 916 f87d7c45f9c908e672703b83b72241a3 ""
@@ -152,16 +152,18 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1737969839 165012 f177baa1c39a3ebd62c3096a43521a0d ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1771084525 1435803 e55afbfcb83c11c768f65db6d0de32a8 ""
-  "main.aux" 1775083903 10710 20b7d59b4e595159bae06c23fc99f6ba "pdflatex"
-  "main.bbl" 1775083303 6004 d75b5014efcc6e17ca61ebdf9f8cffb6 "bibtex main"
-  "main.out" 1775083903 6539 0864329b98f9fdd5504281f35ee4b577 "pdflatex"
-  "main.tex" 1774260312 1320 badb8bd6037750352482cc8c2b975f51 ""
-  "main.toc" 1775083903 4255 0a923214f0310ef158b887d5432dd48f "pdflatex"
-  "sections/datasets_models.tex" 1771156418 3638 6ed4e2d58554be09f7a0e9c02f5ce4c8 ""
-  "sections/experimental_design.tex" 1774305938 10430 cadfd076660f304a04b7d34ff66dc58f ""
+  "main.aux" 1776563710 18918 0407b5fee7f2fd0f76064a26e4874668 "pdflatex"
+  "main.bbl" 1776562246 17404 32bda929bbc253e52985644574efe30a "bibtex main"
+  "main.out" 1776563710 9439 16bbd5669728e17289c3427e32043cbf "pdflatex"
+  "main.tex" 1776561099 1330 a4020e16c16a7aca8d524a1e72e0b311 ""
+  "main.toc" 1776563710 5432 123274804c2861b3a1f866a6207b1ca0 "pdflatex"
+  "sections/01_introduction.tex" 1776563709 4526 fcb49e16eca2892109b304dd295db5a1 ""
+  "sections/02_literature_review.tex" 1776562245 17426 991fc76863b8b5bf399aaffc3e33624b ""
+  "sections/datasets_models.tex" 1776443423 3639 02124d9c973e44e1ef87f00c3452de21 ""
+  "sections/experimental_design.tex" 1776443423 10504 a1a1e434d443133e6881e4973581436a ""
   "sections/metrics.tex" 1774283784 4160 b32961a2cdccdb04019ac43ff90f901c ""
-  "sections/preprocessing.tex" 1774305744 3430 62f684a64cf070668e25369cab053c64 ""
-  "sections/statistics.tex" 1775083903 9253 ba07a463cf9091a73661f1583053308d ""
+  "sections/preprocessing.tex" 1776443409 3431 48d21a7a9177aff5895dc754f9a8ab69 ""
+  "sections/statistics.tex" 1776443409 9006 1fd175464c7f4119dda2f64b090afbee ""
   (generated)
   "main.aux"
   "main.log"

@@ -1,4 +1,4 @@
-\begin{thebibliography}{20}
+\begin{thebibliography}{46}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -11,20 +11,90 @@
 \newblock \url{https://www.openslr.org/16/}, 2007.
 \newblock Accessed: 2026-02-14.
 
-\bibitem[Chen et~al.(2020)Chen, Yoshioka, Lu, Zhou, Meng, Luo, Wu, Xiao, and
-  Li]{9053426}
-Zhuo Chen, Takuya Yoshioka, Liang Lu, Tianyan Zhou, Zhong Meng, Yi~Luo, Jian
-  Wu, Xiong Xiao, and Jinyu Li.
-\newblock Continuous speech separation: Dataset and analysis.
-\newblock In \emph{ICASSP 2020 - 2020 IEEE International Conference on
-  Acoustics, Speech and Signal Processing (ICASSP)}, pages 7284--7288, 2020.
-\newblock \doi{10.1109/ICASSP40776.2020.9053426}.
-
 \bibitem[{CHiME}(2020)]{chime6}
 {CHiME}.
 \newblock Chime-6 challenge.
 \newblock \url{https://www.openslr.org/150/}, 2020.
 \newblock Accessed: 2026-02-14.
+
+\bibitem[Chen et~al.(2020{\natexlab{a}})Chen, Yoshioka, Lu, Zhou, Meng, Luo,
+  Wu, Xiao, and Li]{chen2020continuousspeechseparationdataset}
+Zhuo Chen, Takuya Yoshioka, Liang Lu, Tianyan Zhou, Zhong Meng, Yi~Luo, Jian
+  Wu, Xiong Xiao, and Jinyu Li.
+\newblock Continuous speech separation: dataset and analysis,
+  2020{\natexlab{a}}.
+\newblock URL \url{https://arxiv.org/abs/2001.11482}.
+
+\bibitem[Hadley et~al.(2020)Hadley, Whitmer, Brimijoin, and
+  Naylor]{Conversation_in_small_groups}
+Lauren Hadley, William Whitmer, W.~Brimijoin, and Graham Naylor.
+\newblock Conversation in small groups: Speaking and listening strategies
+  depend on the complexities of the environment and group.
+\newblock \emph{Psychonomic Bulletin \& Review}, 28, 10 2020.
+\newblock \doi{10.3758/s13423-020-01821-9}.
+
+\bibitem[Ellis et~al.(2026)Ellis, Joselowitz, Deo, He, Kalygina, Higham,
+  Rahimzadeh, Jia, Habli, and Lim]{ellis2026werunawareassessingasr}
+Zachary Ellis, Jared Joselowitz, Yash Deo, Yajie He, Anna Kalygina, Aisling
+  Higham, Mana Rahimzadeh, Yan Jia, Ibrahim Habli, and Ernest Lim.
+\newblock Wer is unaware: Assessing how asr errors distort clinical
+  understanding in patient facing dialogue, 2026.
+\newblock URL \url{https://arxiv.org/abs/2511.16544}.
+
+\bibitem[Hughes(2025)]{hughes2025problemwithwer}
+John Hughes.
+\newblock The problem with word error rate (wer).
+\newblock Speechmatics blog, 2025.
+\newblock URL
+  \url{https://www.speechmatics.com/company/articles-and-news/the-problem-with-word-error-rate-wer}.
+\newblock Updated: 2025-09-22, accessed: 2026-04-17.
+
+\bibitem[von Neumann et~al.(2025{\natexlab{a}})von Neumann, Boeddeker,
+  Delcroix, and Haeb-Umbach]{Word_Error_Rate_Definitions}
+Thilo von Neumann, Christoph Boeddeker, Marc Delcroix, and Reinhold
+  Haeb-Umbach.
+\newblock Word error rate definitions and algorithms for long-form multi-talker
+  speech recognition.
+\newblock \emph{arXiv:2508.02112}, 2025{\natexlab{a}}.
+\newblock URL \url{https://arxiv.org/pdf/2508.02112}.
+
+\bibitem[Carletta et~al.(2005)Carletta, Ashby, Bourban, Flynn, Guillemot, Hain,
+  Kadlec, Karaiskos, Kraaij, Kronenthal, Lathoud, Lincoln, Lisowska~Masson,
+  McCowan, Post, Reidsma, and Wellner]{carletta2005ami}
+Jean Carletta, Simone Ashby, Sebastien Bourban, Mike Flynn, Mael Guillemot,
+  Thomas Hain, Jaroslav Kadlec, Vasilis Karaiskos, Wessel Kraaij, Melissa
+  Kronenthal, Guillaume Lathoud, Mike Lincoln, Agnes Lisowska~Masson, Iain
+  McCowan, Wilfried Post, Dennis Reidsma, and Pierre Wellner.
+\newblock The ami meeting corpus: A pre-announcement.
+\newblock In \emph{Lecture Notes in Computer Science}, 07 2005.
+\newblock ISBN 978-3-540-32549-9.
+\newblock \doi{10.1007/11677482_3}.
+
+\bibitem[Watanabe et~al.(2020)Watanabe, Mandel, Barker, Vincent, Arora, Chang,
+  Khudanpur, Manohar, Povey, Raj, Snyder, Subramanian, Trmal, Yair, Boeddeker,
+  Ni, Fujita, Horiguchi, Kanda, Yoshioka, and
+  Ryant]{watanabe2020chime6challengetacklingmultispeakerspeech}
+Shinji Watanabe, Michael Mandel, Jon Barker, Emmanuel Vincent, Ashish Arora,
+  Xuankai Chang, Sanjeev Khudanpur, Vimal Manohar, Daniel Povey, Desh Raj,
+  David Snyder, Aswin~Shanmugam Subramanian, Jan Trmal, Bar~Ben Yair, Christoph
+  Boeddeker, Zhaoheng Ni, Yusuke Fujita, Shota Horiguchi, Naoyuki Kanda, Takuya
+  Yoshioka, and Neville Ryant.
+\newblock Chime-6 challenge:tackling multispeaker speech recognition for
+  unsegmented recordings, 2020.
+\newblock URL \url{https://arxiv.org/abs/2004.09249}.
+
+\bibitem[Wichern et~al.(2019)Wichern, Antognini, Flynn, Zhu, McQuinn, Crow,
+  Manilow, and Roux]{wichern2019whamextendingspeechseparation}
+Gordon Wichern, Joe Antognini, Michael Flynn, Licheng~Richard Zhu, Emmett
+  McQuinn, Dwight Crow, Ethan Manilow, and Jonathan~Le Roux.
+\newblock Wham!: Extending speech separation to noisy environments, 2019.
+\newblock URL \url{https://arxiv.org/abs/1907.01160}.
+
+\bibitem[Maciejewski et~al.(2020)Maciejewski, Wichern, McQuinn, and
+  Roux]{maciejewski2020whamrnoisyreverberantsinglechannel}
+Matthew Maciejewski, Gordon Wichern, Emmett McQuinn, and Jonathan~Le Roux.
+\newblock Whamr!: Noisy and reverberant single-channel speech separation, 2020.
+\newblock URL \url{https://arxiv.org/abs/1910.10279}.
 
 \bibitem[Cosentino et~al.(2020)Cosentino, Pariente, Cornell, Deleforge, and
   Vincent]{cosentino2020librimixopensourcedatasetgeneralizable}
@@ -34,99 +104,158 @@ Joris Cosentino, Manuel Pariente, Samuele Cornell, Antoine Deleforge, and
   2020.
 \newblock URL \url{https://arxiv.org/abs/2005.11262}.
 
-\bibitem[Cosentino et~al.(2023)Cosentino, Pariente, Cornell, Deleforge, and
-  Vincent]{Handling_Trade-Offs_in_Speech_Separation_with_Sparsely-Gated_Mixture_of_Experts}
-Joris Cosentino, Manuel Pariente, Samuele Cornell, Antoine Deleforge, and
-  Emmanuel Vincent.
-\newblock Handling trade-offs in speech separation with sparsely-gated mixture
-  of experts, 2023.
-\newblock URL \url{https://arxiv.org/abs/2211.06493}.
+\bibitem[Özgür Çetin and Shriberg(2006)]{cetin06_interspeech}
+Özgür Çetin and Elizabeth Shriberg.
+\newblock {Analysis of overlaps in meetings by dialog factors, hot spots,
+  speakers, and collection site: insights for automatic speech recognition}.
+\newblock In \emph{{Interspeech 2006}}, pages paper 1915--Mon2A2O.6, 2006.
+\newblock \doi{10.21437/Interspeech.2006-91}.
 
-\bibitem[{ESPnet}(2024)]{ESPnet}
-{ESPnet}.
-\newblock Espnet.
-\newblock
-  \url{https://github.com/espnet/espnet?tab=readme-ov-file#se-speech-enhancement-and-separation},
-  2024.
-\newblock Accessed: 2026-02-14.
+\bibitem[Yang et~al.(2022)Yang, Kanda, Wang, Wu, Sivasankaran, Chen, Li, and
+  Yoshioka]{yang2022simulatingrealisticspeechoverlaps}
+Muqiao Yang, Naoyuki Kanda, Xiaofei Wang, Jian Wu, Sunit Sivasankaran, Zhuo
+  Chen, Jinyu Li, and Takuya Yoshioka.
+\newblock Simulating realistic speech overlaps improves multi-talker asr, 2022.
+\newblock URL \url{https://arxiv.org/abs/2210.15715}.
 
-\bibitem[{IBM Research}(2025)]{ibm-granite/granite-speech-3.3-8b}
-{IBM Research}.
-\newblock ibm-granite/granite-speech-3.3-8b.
-\newblock \url{https://huggingface.co/granite-speech-3.3-8b}, 2025.
-\newblock Accessed: 2026-02-14.
+\bibitem[Galibert(2013)]{galibert2013methodologies}
+Olivier Galibert.
+\newblock Methodologies for the evaluation of speaker diarization and automatic
+  speech recognition in the presence of overlapping speech.
+\newblock 08 2013.
+\newblock \doi{10.21437/Interspeech.2013-303}.
 
-\bibitem[{Joachim Thiemann (IRISA-CNRS), Nobutaka Ito (University of Tokyo),
-  and Emmanuel Vincent (Inria Rennes - Bretagne Atlantique)}(2013)]{demand}
-{Joachim Thiemann (IRISA-CNRS), Nobutaka Ito (University of Tokyo), and
-  Emmanuel Vincent (Inria Rennes - Bretagne Atlantique)}.
-\newblock Demand: a collection of multi-channel recordings of acoustic noise in
-  diverse environments.
-\newblock \url{https://zenodo.org/records/1227121}, 2013.
-\newblock Accessed: 2026-02-14.
+\bibitem[von Neumann et~al.(2023)von Neumann, Boeddeker, Kinoshita, Delcroix,
+  and Haeb-Umbach]{von_Neumann_2023}
+Thilo von Neumann, Christoph Boeddeker, Keisuke Kinoshita, Marc Delcroix, and
+  Reinhold Haeb-Umbach.
+\newblock On word error rate definitions and their efficient computation for
+  multi-speaker speech recognition systems.
+\newblock In \emph{ICASSP 2023 - 2023 IEEE International Conference on
+  Acoustics, Speech and Signal Processing (ICASSP)}, pages 1--5. IEEE, June
+  2023.
+\newblock \doi{10.1109/icassp49357.2023.10094784}.
+\newblock URL \url{http://dx.doi.org/10.1109/ICASSP49357.2023.10094784}.
 
-\bibitem[{Meta AI}(2020)]{facebook_wav2vec2-large-960h}
-{Meta AI}.
-\newblock facebook/wav2vec2-large-960h.
-\newblock \url{https://huggingface.co/facebook/wav2vec2-large-960h}, 2020.
-\newblock Accessed: 2026-02-14.
+\bibitem[von Neumann et~al.(2024{\natexlab{a}})von Neumann, Boeddeker,
+  Delcroix, and Haeb-Umbach]{vonneumann2024meetevaltoolkitcomputationword}
+Thilo von Neumann, Christoph Boeddeker, Marc Delcroix, and Reinhold
+  Haeb-Umbach.
+\newblock Meeteval: A toolkit for computation of word error rates for meeting
+  transcription systems, 2024{\natexlab{a}}.
+\newblock URL \url{https://arxiv.org/abs/2307.11394}.
 
-\bibitem[{Microsoft}(2025)]{microsoft/phi-4-multimodal-instruct}
-{Microsoft}.
-\newblock microsoft/phi-4-multimodal-instruct.
-\newblock \url{https://huggingface.co/microsoft/Phi-4-multimodal-instruct},
-  2025.
-\newblock Accessed: 2026-02-14.
+\bibitem[Baevski et~al.(2020)Baevski, Zhou, Mohamed, and
+  Auli]{baevski2020wav2vec20frameworkselfsupervised}
+Alexei Baevski, Henry Zhou, Abdelrahman Mohamed, and Michael Auli.
+\newblock wav2vec 2.0: A framework for self-supervised learning of speech
+  representations, 2020.
+\newblock URL \url{https://arxiv.org/abs/2006.11477}.
 
-\bibitem[{NVIDIA}(2025{\natexlab{a}})]{nvidia/canary-qwen-2.5b}
-{NVIDIA}.
-\newblock nvidia/canary-qwen-2.5b.
-\newblock \url{https://huggingface.co/nvidia/canary-qwen-2.5b},
-  2025{\natexlab{a}}.
-\newblock Accessed: 2026-02-14.
+\bibitem[Radford et~al.(2022)Radford, Kim, Xu, Brockman, McLeavey, and
+  Sutskever]{radford2022robustspeechrecognitionlargescale}
+Alec Radford, Jong~Wook Kim, Tao Xu, Greg Brockman, Christine McLeavey, and
+  Ilya Sutskever.
+\newblock Robust speech recognition via large-scale weak supervision, 2022.
+\newblock URL \url{https://arxiv.org/abs/2212.04356}.
 
-\bibitem[{NVIDIA}(2025{\natexlab{b}})]{nvidia/parakeet-tdt-0.6b-v3}
-{NVIDIA}.
-\newblock nvidia/parakeet-tdt-0.6b-v3.
-\newblock \url{https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3},
-  2025{\natexlab{b}}.
-\newblock Accessed: 2026-02-14.
+\bibitem[Sekoyan et~al.(2025)Sekoyan, Koluguri, Tadevosyan, Zelasko, Bartley,
+  Karpov, Balam, and Ginsburg]{sekoyan2025canary1bv2parakeettdt06bv3efficient}
+Monica Sekoyan, Nithin~Rao Koluguri, Nune Tadevosyan, Piotr Zelasko, Travis
+  Bartley, Nikolay Karpov, Jagadeesh Balam, and Boris Ginsburg.
+\newblock Canary-1b-v2 \& parakeet-tdt-0.6b-v3: Efficient and high-performance
+  models for multilingual asr and ast, 2025.
+\newblock URL \url{https://arxiv.org/abs/2509.14128}.
 
-\bibitem[{OpenAI}(2024)]{github_openai_faster-whisper}
-{OpenAI}.
-\newblock openai/faster-whisper.
-\newblock \url{https://github.com/SYSTRAN/faster-whisper}, 2024.
-\newblock Accessed: 2026-02-14.
+\bibitem[Raj et~al.(2020)Raj, Denisov, Chen, Erdogan, Huang, He, Watanabe, Du,
+  Yoshioka, Luo, Kanda, Li, Wisdom, and
+  Hershey]{raj2020integrationspeechseparationdiarization}
+Desh Raj, Pavel Denisov, Zhuo Chen, Hakan Erdogan, Zili Huang, Maokui He,
+  Shinji Watanabe, Jun Du, Takuya Yoshioka, Yi~Luo, Naoyuki Kanda, Jinyu Li,
+  Scott Wisdom, and John~R. Hershey.
+\newblock Integration of speech separation, diarization, and recognition for
+  multi-speaker meetings: System description, comparison, and analysis, 2020.
+\newblock URL \url{https://arxiv.org/abs/2011.02014}.
 
-\bibitem[Quan~Wang(2019)]{VoiceFilter}
-Kevin Wilson Prashant Sridhar Zelin Wu John Hershey Rif A. Saurous Ron J. Weiss
-  Ye Jia Ignacio Lopez~Moreno Quan~Wang, Hannah~Muckenhirn.
-\newblock Voicefilter: Targeted voice separation by speaker-conditioned
-  spectrogram masking.
-\newblock \emph{arXiv:1810.04826}, 2019.
-\newblock URL \url{https://arxiv.org/pdf/1810.04826}.
+\bibitem[von Neumann et~al.(2024{\natexlab{b}})von Neumann, Boeddeker,
+  Cord-Landwehr, Delcroix, and
+  Haeb-Umbach]{vonneumann2024meetingrecognitioncontinuousspeech}
+Thilo von Neumann, Christoph Boeddeker, Tobias Cord-Landwehr, Marc Delcroix,
+  and Reinhold Haeb-Umbach.
+\newblock Meeting recognition with continuous speech separation and
+  transcription-supported diarization, 2024{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2309.16482}.
 
-\bibitem[Shriberg et~al.(2001)Shriberg, Stolcke, and
-  Baron]{Shriberg2001ObservationsOO}
-Elizabeth Shriberg, Andreas Stolcke, and Don Baron.
-\newblock Observations on overlap: findings and implications for automatic
-  processing of multi-party conversation.
-\newblock In \emph{Interspeech}, 2001.
-\newblock URL \url{https://api.semanticscholar.org/CorpusID:11947676}.
-
-\bibitem[Thilo~von Neumann(2025)]{Word_Error_Rate_Definitions}
-Marc Delcroix Reinhold Haeb-Umbach Thilo~von Neumann, Christoph~Boeddeker.
+\bibitem[von Neumann et~al.(2025{\natexlab{b}})von Neumann, Boeddeker,
+  Delcroix, and Haeb-Umbach]{von_Neumann_2025}
+Thilo von Neumann, Christoph Boeddeker, Marc Delcroix, and Reinhold
+  Haeb-Umbach.
 \newblock Word error rate definitions and algorithms for long-form multi-talker
   speech recognition.
-\newblock \emph{arXiv:2508.02112}, 2025.
-\newblock URL \url{https://arxiv.org/pdf/2508.02112}.
+\newblock \emph{IEEE Transactions on Audio, Speech and Language Processing},
+  33:\penalty0 3174--3188, 2025{\natexlab{b}}.
+\newblock ISSN 2998-4173.
+\newblock \doi{10.1109/taslpro.2025.3589862}.
+\newblock URL \url{http://dx.doi.org/10.1109/TASLPRO.2025.3589862}.
 
-\bibitem[Ui-Hyeop~Shin(2024)]{SepReformer}
-Taehan Kim Hyung-Min~Park Ui-Hyeop~Shin, Sangyoun~Lee.
-\newblock Separate and reconstruct: Asymmetric encoder-decoder for speech
-  separation.
-\newblock \emph{arXiv:2406.05983}, 2024.
-\newblock URL \url{https://arxiv.org/pdf/2406.05983}.
+\bibitem[Cornell et~al.(2024)Cornell, Park, Huang, Boeddeker, Chang,
+  Maciejewski, Wiesner, Garcia, and
+  Watanabe]{cornell2024chime8dasrchallengegeneralizable}
+Samuele Cornell, Taejin Park, Steve Huang, Christoph Boeddeker, Xuankai Chang,
+  Matthew Maciejewski, Matthew Wiesner, Paola Garcia, and Shinji Watanabe.
+\newblock The chime-8 dasr challenge for generalizable and array agnostic
+  distant automatic speech recognition and diarization, 2024.
+\newblock URL \url{https://arxiv.org/abs/2407.16447}.
+
+\bibitem[Chen et~al.(2020{\natexlab{b}})Chen, Wu, Chen, Wu, Li, Yoshioka, Wang,
+  Liu, and Zhou]{chen2020continuousspeechseparationconformer}
+Sanyuan Chen, Yu~Wu, Zhuo Chen, Jian Wu, Jinyu Li, Takuya Yoshioka, Chengyi
+  Wang, Shujie Liu, and Ming Zhou.
+\newblock Continuous speech separation with conformer, 2020{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2008.05773}.
+
+\bibitem[Kanda et~al.(2021)Kanda, Ye, Gaur, Wang, Meng, Chen, and
+  Yoshioka]{kanda2021endtoendspeakerattributedasrtransformer}
+Naoyuki Kanda, Guoli Ye, Yashesh Gaur, Xiaofei Wang, Zhong Meng, Zhuo Chen, and
+  Takuya Yoshioka.
+\newblock End-to-end speaker-attributed asr with transformer, 2021.
+\newblock URL \url{https://arxiv.org/abs/2104.02128}.
+
+\bibitem[Chang et~al.(2021)Chang, Kanda, Gaur, Wang, Meng, and
+  Yoshioka]{chang2021hypothesisstitcherendtoendspeakerattributed}
+Xuankai Chang, Naoyuki Kanda, Yashesh Gaur, Xiaofei Wang, Zhong Meng, and
+  Takuya Yoshioka.
+\newblock Hypothesis stitcher for end-to-end speaker-attributed asr on
+  long-form multi-talker recordings, 2021.
+\newblock URL \url{https://arxiv.org/abs/2101.01853}.
+
+\bibitem[Kanda et~al.(2022)Kanda, Xiao, Gaur, Wang, Meng, Chen, and
+  Yoshioka]{kanda2022transcribetodiarizeneuralspeakerdiarization}
+Naoyuki Kanda, Xiong Xiao, Yashesh Gaur, Xiaofei Wang, Zhong Meng, Zhuo Chen,
+  and Takuya Yoshioka.
+\newblock Transcribe-to-diarize: Neural speaker diarization for unlimited
+  number of speakers using end-to-end speaker-attributed asr, 2022.
+\newblock URL \url{https://arxiv.org/abs/2110.03151}.
+
+\bibitem[Cui et~al.(2024)Cui, Sheikh, Sadeghi, and
+  Vincent]{cui2024improvingspeakerassignmentspeakerattributed}
+Can Cui, Imran~Ahamad Sheikh, Mostafa Sadeghi, and Emmanuel Vincent.
+\newblock Improving speaker assignment in speaker-attributed asr for real
+  meeting applications, 2024.
+\newblock URL \url{https://arxiv.org/abs/2403.06570}.
+
+\bibitem[Raj et~al.(2024)Raj, Wiesner, Maciejewski, Garcia-Perera, Povey, and
+  Khudanpur]{raj2024speakerattributionsurt}
+Desh Raj, Matthew Wiesner, Matthew Maciejewski, Leibny~Paola Garcia-Perera,
+  Daniel Povey, and Sanjeev Khudanpur.
+\newblock On speaker attribution with surt, 2024.
+\newblock URL \url{https://arxiv.org/abs/2401.15676}.
+
+\bibitem[Zheng et~al.(2025)Zheng, Zhang, and
+  Woodland]{zheng2025dncasrendtoendtrainingspeakerattributed}
+Xianrui Zheng, Chao Zhang, and Philip~C. Woodland.
+\newblock Dncasr: End-to-end training for speaker-attributed asr, 2025.
+\newblock URL \url{https://arxiv.org/abs/2506.01916}.
 
 \bibitem[{Vassil Panayotov and Daniel Povey}(2015)]{librispeech}
 {Vassil Panayotov and Daniel Povey}.
@@ -140,8 +269,96 @@ Taehan Kim Hyung-Min~Park Ui-Hyeop~Shin, Sangyoun~Lee.
 \newblock \url{https://datashare.ed.ac.uk/handle/10283/3443}, 2019.
 \newblock Accessed: 2026-02-14.
 
-\bibitem[Wu~YH(2018)]{wu2018characteristics}
-Chipara O Hasan SS-Welhaven A Oleson~J Wu~YH, Stangl~E.
+\bibitem[{Joachim Thiemann (IRISA-CNRS), Nobutaka Ito (University of Tokyo),
+  and Emmanuel Vincent (Inria Rennes - Bretagne Atlantique)}(2013)]{demand}
+{Joachim Thiemann (IRISA-CNRS), Nobutaka Ito (University of Tokyo), and
+  Emmanuel Vincent (Inria Rennes - Bretagne Atlantique)}.
+\newblock Demand: a collection of multi-channel recordings of acoustic noise in
+  diverse environments.
+\newblock \url{https://zenodo.org/records/1227121}, 2013.
+\newblock Accessed: 2026-02-14.
+
+\bibitem[{OpenAI}(2024)]{github_openai_faster-whisper}
+{OpenAI}.
+\newblock openai/faster-whisper.
+\newblock \url{https://github.com/SYSTRAN/faster-whisper}, 2024.
+\newblock Accessed: 2026-02-14.
+
+\bibitem[{Meta AI}(2020)]{facebook_wav2vec2-large-960h}
+{Meta AI}.
+\newblock facebook/wav2vec2-large-960h.
+\newblock \url{https://huggingface.co/facebook/wav2vec2-large-960h}, 2020.
+\newblock Accessed: 2026-02-14.
+
+\bibitem[{NVIDIA}(2025{\natexlab{a}})]{nvidia/parakeet-tdt-0.6b-v3}
+{NVIDIA}.
+\newblock nvidia/parakeet-tdt-0.6b-v3.
+\newblock \url{https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3},
+  2025{\natexlab{a}}.
+\newblock Accessed: 2026-02-14.
+
+\bibitem[{NVIDIA}(2025{\natexlab{b}})]{nvidia/canary-qwen-2.5b}
+{NVIDIA}.
+\newblock nvidia/canary-qwen-2.5b.
+\newblock \url{https://huggingface.co/nvidia/canary-qwen-2.5b},
+  2025{\natexlab{b}}.
+\newblock Accessed: 2026-02-14.
+
+\bibitem[{IBM Research}(2025)]{ibm-granite/granite-speech-3.3-8b}
+{IBM Research}.
+\newblock ibm-granite/granite-speech-3.3-8b.
+\newblock \url{https://huggingface.co/granite-speech-3.3-8b}, 2025.
+\newblock Accessed: 2026-02-14.
+
+\bibitem[{Microsoft}(2025)]{microsoft/phi-4-multimodal-instruct}
+{Microsoft}.
+\newblock microsoft/phi-4-multimodal-instruct.
+\newblock \url{https://huggingface.co/microsoft/Phi-4-multimodal-instruct},
+  2025.
+\newblock Accessed: 2026-02-14.
+
+\bibitem[{ESPnet}(2024)]{ESPnet}
+{ESPnet}.
+\newblock Espnet.
+\newblock
+  \url{https://github.com/espnet/espnet?tab=readme-ov-file#se-speech-enhancement-and-separation},
+  2024.
+\newblock Accessed: 2026-02-14.
+
+\bibitem[Shin et~al.(2024)Shin, Lee, Kim, and Park]{SepReformer}
+Ui-Hyeop Shin, Sangyoun Lee, Taehan Kim, and Hyung-Min Park.
+\newblock Separate and reconstruct: Asymmetric encoder-decoder for speech
+  separation.
+\newblock \emph{arXiv:2406.05983}, 2024.
+\newblock URL \url{https://arxiv.org/pdf/2406.05983}.
+
+\bibitem[Wang et~al.(2019)Wang, Muckenhirn, Wilson, Sridhar, Wu, Hershey,
+  Saurous, Weiss, Jia, and Moreno]{VoiceFilter}
+Quan Wang, Hannah Muckenhirn, Kevin Wilson, Prashant Sridhar, Zelin Wu, John
+  Hershey, Rif~A. Saurous, Ron~J. Weiss, Ye~Jia, and Ignacio~Lopez Moreno.
+\newblock Voicefilter: Targeted voice separation by speaker-conditioned
+  spectrogram masking.
+\newblock \emph{arXiv:1810.04826}, 2019.
+\newblock URL \url{https://arxiv.org/pdf/1810.04826}.
+
+\bibitem[Shriberg et~al.(2001)Shriberg, Stolcke, and
+  Baron]{Shriberg2001ObservationsOO}
+Elizabeth Shriberg, Andreas Stolcke, and Don Baron.
+\newblock Observations on overlap: findings and implications for automatic
+  processing of multi-party conversation.
+\newblock In \emph{Interspeech}, 2001.
+\newblock URL \url{https://api.semanticscholar.org/CorpusID:11947676}.
+
+\bibitem[Cosentino et~al.(2023)Cosentino, Pariente, Cornell, Deleforge, and
+  Vincent]{Handling_Trade-Offs_in_Speech_Separation_with_Sparsely-Gated_Mixture_of_Experts}
+Joris Cosentino, Manuel Pariente, Samuele Cornell, Antoine Deleforge, and
+  Emmanuel Vincent.
+\newblock Handling trade-offs in speech separation with sparsely-gated mixture
+  of experts, 2023.
+\newblock URL \url{https://arxiv.org/abs/2211.06493}.
+
+\bibitem[YH et~al.(2018)YH, E, O, SS, A, and J]{wu2018characteristics}
+Wu~YH, Stangl E, Chipara O, Hasan SS, Welhaven A, and Oleson J.
 \newblock Characteristics of real-world signal to noise ratios and speech
   listening situations of older adults with mild to moderate hearing loss.
 \newblock \emph{Ear Hear}, 39\penalty0 (2):\penalty0 293--304, March 2018.

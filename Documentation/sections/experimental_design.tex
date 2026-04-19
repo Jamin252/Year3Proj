@@ -44,18 +44,18 @@ I have chosen 0\%, 14\%, 20\%, 40\%.
 \begin{itemize}
     \item 0\% is chosen to be the control where it represent completely clean audio in which there is no overlapping.
     \item 14\% is chosen to represent the mean overlap ratio for meetings. The percentage of overlapped words (excluding backchannels like "uh-huh") in meetings is 14.1\% \cite{Shriberg2001ObservationsOO}.
-    \item 20\% is chosen to represent the maximum overlap ratio in a natural meeting or casual dinner parties\cite{9053426}\cite{cosentino2020librimixopensourcedatasetgeneralizable}.
-    \item 40\% is chosen as it is supported by the LibriMix benchmark, which chooses 40\% as the maximum overlap ratio. This is chosen to stress-test under high-overlap conditions\cite{9053426}.
+    \item 20\% is chosen to represent the maximum overlap ratio in a natural meeting or casual dinner parties \cite{chen2020continuousspeechseparationdataset} \cite{cosentino2020librimixopensourcedatasetgeneralizable}.
+    \item 40\% is chosen as it is supported by the LibriMix benchmark, which chooses 40\% as the maximum overlap ratio. This is chosen to stress-test under high-overlap conditions \cite{chen2020continuousspeechseparationdataset}.
 \end{itemize}
 
 \subsubsection{Maximum Concurrent Speakers Choice}
-Maximum concurrent speaker is chosen to be 2 as more than 2 people speaking simultaneously is very rare in real meets\cite{Handling_Trade-Offs_in_Speech_Separation_with_Sparsely-Gated_Mixture_of_Experts}.
+Maximum concurrent speaker is chosen to be 2 as more than 2 people speaking simultaneously is very rare in real meets \cite{Handling_Trade-Offs_in_Speech_Separation_with_Sparsely-Gated_Mixture_of_Experts}.
 
 \subsubsection{Signal-to-noise Raio Choice}
 I have chosen \textit{clean}, 7.4dB, 0dB, -5 db
 \begin{itemize}
     \item \textit{clean} is chosen to be the control where it represent clean background with no noise.
-    \item 7.4dB is chosen to represent the noisy environment as it is the mean SNR for noisy environment\cite{wu2018characteristics}.
+    \item 7.4dB is chosen to represent the noisy environment as it is the mean SNR for noisy environment \cite{wu2018characteristics}.
     \item 0db is chosen to represent environment where the noise and speech are equally loud, which is a challenging but realistic condition in very noisy environments.
     \item -5db is chosen to represent environment where the noise is louder than speech in which even human listeners struggle to understand speech, providing a stress-test condition for ASR.
 \end{itemize}
@@ -74,7 +74,7 @@ The performance of each experimental unit is measured using standard automatic s
 \begin{itemize}
     \item \textbf{Word Error Rate (WER)}: The percentage of words that are incorrectly transcribed relative to the reference transcript.
     \item \textbf{Concatenated minimum-Permutation WER (cpWER)}: It assumes that the system groups its output by speakers and the recognized transcripts, i.e., the concatenation of several utterances, of each speaker are compared to the reference transcripts of each speaker. 
-    \item \textbf{Diarization-Invariant cpWER (DI-cpWER)}: It compute cpWER under the assumption of all speaker labels are correct. This is to evaluate the diarization-invariant performance of ASR models.\cite{Word_Error_Rate_Definitions}
+    \item \textbf{Diarization-Invariant cpWER (DI-cpWER)}: It compute cpWER under the assumption of all speaker labels are correct. This is to evaluate the diarization-invariant performance of ASR models. \cite{Word_Error_Rate_Definitions}
 \end{itemize}
 \subsection{Experimental Units}
 The experimental unity is an pairing of an audio clip (with specific overlap, SNR, noise type), a preprocessing pipeline (including no preprocessing), target-speaker embedding availability (for target-speaker methods), and an ASR model. 

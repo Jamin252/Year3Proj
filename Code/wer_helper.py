@@ -1,9 +1,10 @@
 import itertools
 from typing import Dict, List, Optional
 import copy
+import numpy as np
 
 
-def WER(ref: str, hyp:str, abs:bool = False, sub_cost:int = 1) -> float:
+def wer(ref: str, hyp:str, abs:bool = False, sub_cost:int = 1) -> float:
     ref = ref.lower()
     
     ref = ''.join(c for c in ref if c.isalnum() or c.isspace())
@@ -58,30 +59,30 @@ def cpWER(ref: List[tuple[str, str]],hyp: List[tuple[str, str]], DI = False) -> 
     min_perm = None
     t = {}
     for ref_spks in itertools.permutations(ref_keys):
-        wer = 0
+        total_wer = 0
         # print(ref_spks, hyp_keys)
         for ref_spk, hyp_spk in zip(ref_spks, hyp_keys):
             # print(f"Comparing {ref_spk} with {hyp_spk}")
             if ref_spk == "dummy":
                 # print(f"Reference speaker {ref_spk} is dummy")
-                wer += len(hyp_copy[hyp_spk].split())
+                total_wer += len(hyp_copy[hyp_spk].split())
             elif hyp_spk == "dummy":
                 # print(f"Hypothesis speaker {hyp_spk} is dummy")
-                wer += len(ref_copy[ref_spk].split())
+                total_wer += len(ref_copy[ref_spk].split())
             else:
                 # print(f"Calculating WER for {ref_spk} and {hyp_spk}")
                 # print(f"Comparing {ref_copy[ref_spk]} with {hyp_copy[hyp_spk]}")
                 if (ref_spk, hyp_spk) in t:
                     twer = t[(ref_spk, hyp_spk)]
                 else:
-                    twer= WER(ref_copy[ref_spk], hyp_copy[hyp_spk], abs = True)
+                    twer= wer(ref_copy[ref_spk], hyp_copy[hyp_spk], abs = True)
                     t[(ref_spk, hyp_spk)] = twer
                 # print(f"WER for {ref_spk} and {hyp_spk}: {twer}")
-                wer += twer
+                total_wer += twer
                 
         # print(wer)
-        if wer < min_wer:
-            min_wer = wer
+        if total_wer < min_wer:
+            min_wer = total_wer
             min_perm = ref_spks
     # print(f"Minimum WER: {min_wer} with permutation {min_perm}")
     # print(sum(len(ref_copy[spk].split()) for spk in ref_copy.keys()))
@@ -96,22 +97,22 @@ def spk_WER(ref: List[tuple[str, str]],hyp: List[tuple[str, str]], ref_spk:str, 
         return len([sen for spk, sen in ref if spk == ref_spk])
     ref_sen = ' '.join([sen for spk, sen in ref if spk == ref_spk])
     hyp_sen = ' '.join([sen for spk, sen in hyp if spk == hyp_spk])
-    return WER(ref_sen, hyp_sen, abs = True)
+    return wer(ref_sen, hyp_sen, abs = True)
 def lev_dist(ref: List[tuple[str, str]], hyp: List[tuple[str, str]], ref_spks: List[str], hyp_spks: List[str], sub_cost: int) -> int:
     # print(f"Calculating Levenshtein distance for permutation {ref_spks} and hyp keys {hyp_spks} with sub cost {sub_cost}")
     # print(f"Reference: {ref}, Hypothesis: {hyp}")
     ref_dict = transcript_to_dict(ref)
     hyp_dict = transcript_to_dict(hyp)
-    wer = 0
+    total_dist = 0
     # print(f"Reference dictionary: {ref_dict}, Hypothesis dictionary: {hyp_dict}")
     for r,h in zip(ref_spks, hyp_spks):
         if r == "dummy" or ref_dict.get(r, "") == "":
-            wer += len(hyp_dict[h])
+            total_dist += len(hyp_dict[h])
         elif h == "dummy" or hyp_dict.get(h, "") == "":
-            wer += len(ref_dict[r])
+            total_dist += len(ref_dict[r])
         else:
-            wer += WER(" ".join(ref_dict[r]), " ".join(hyp_dict[h]), abs = True, sub_cost = sub_cost)
-    return wer
+            total_dist += wer(" ".join(ref_dict[r]), " ".join(hyp_dict[h]), abs = True, sub_cost = sub_cost)
+    return total_dist
 
 def DIcpWER(ref: List[tuple[str, str]],hyp: List[tuple[str, str]]) -> float:
     

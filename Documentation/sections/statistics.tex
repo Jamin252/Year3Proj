@@ -18,7 +18,7 @@ The primary metrics for evaluating ASR performance are Word Error Rate (WER), co
 \end{equation}
 where \(S\), \(D\), and \(I\) are the numbers of substitutions, deletions, and insertions respectively, and \(N\) is total number of words in the reference transcript. This measure the percentage of incorrect words relative to the reference transcript. 
 
-The cpWER is measured using the following method\cite{chime6}:
+The cpWER is measured using the following method \cite{chime6}:
 \begin{enumerate}
   \item Group the transcriptions generated and reference transcriptions by speaker.
   \item Concatenate every transcription parts for each speaker (for both generated and reference) into a single string.
@@ -26,7 +26,7 @@ The cpWER is measured using the following method\cite{chime6}:
   \item Use the minimum WER as the cpWER.
 \end{enumerate}
 
-DI-cpWER is computed as cpWER if all speaker labels are correct\cite{Word_Error_Rate_Definitions}.
+DI-cpWER is computed as cpWER if all speaker labels are correct \cite{Word_Error_Rate_Definitions}.
 
 WER is used for clips with no overlap (OVR = 0\%) while cpWER is used for all clips except ones with no overlap (OVR = 0\%) since WER does not apply when there are multiple speakers. DI-cpWER is used as diarization-invariant metric for all clips with overlapping, this is to evaluate the performance of ASR models in isolation from speaker assignment errors.
 
@@ -70,11 +70,6 @@ To isolate the effect of SNR, the primary analysis will fix:
     \item maximum concurrent speakers \(= 2\),
     \item no preprocessing pipeline
 \end{itemize}
-Here, \(\mathrm{SNR}_j\) is treated as a categorical fixed effect. The main null hypotheses are:
-\begin{align}
-    H_{0,1} &: \text{no main effect of SNR on the metric}, \\
-    H_{0,2} &: \text{no interaction between SNR and ASR model}.
-\end{align}
 
 If either effect is significant, post-hoc pairwise comparisons between SNR levels will be performed with Holm-adjusted \(p\)-values.
 

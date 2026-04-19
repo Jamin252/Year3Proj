@@ -2,50 +2,32 @@ import json
 import csv
 import ast
 import sys
+import argparse
+import re
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 
 # Add Code directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-from wer_helper import WER, cpWER
+from wer_helper import cpWER, wer
+from mrs_beam_wer import mrs_wer_beam_2chain
 
 
 def load_asr_transcriptions(asr_json_path: str = "ASR_transcriptions.json") -> Dict:
-    """
-    Load ASR transcriptions from JSON file.
-    
-    Args:
-        asr_json_path: Path to ASR_transcriptions.json
-        
-    Returns:
-        Dictionary with structure: {clip_id: {model_name: [[speaker, text], ...]}}
-    """
     with open(asr_json_path, 'r') as f:
         res = json.load(f)
-        print(res.keys())
     return res
 
 
 def load_manifest(manifest_path: str = "Output/manifest.csv") -> Dict:
-    """
-    Load manifest CSV and parse transcripts.
-    
-    Args:
-        manifest_path: Path to manifest.csv
-        
-    Returns:
-        Dictionary with structure: {clip_id: [(speaker, text, start, end), ...]}
-    """
     manifest = {}
     with open(manifest_path, 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
             clip_id = row['clip_id']
-            # Parse the transcript column which is a string representation of list of tuples
             transcript_str = row['transcript']
             try:
-                # Use ast.literal_eval to safely parse the string representation
                 transcript = ast.literal_eval(transcript_str)
                 manifest[clip_id] = transcript
             except (ValueError, SyntaxError) as e:
@@ -59,23 +41,12 @@ def get_hypothesis_transcription(
     clip_id: str,
     model_name: str
 ) -> Optional[List[Tuple[str, str]]]:
-    """
-    Extract hypothesis transcription from ASR data for a specific model.
-    
-    Args:
-        asr_data: ASR transcriptions dictionary
-        clip_id: The clip ID to retrieve
-        model_name: Name of the ASR model (e.g., 'faster-whisper', 'nemo', etc.)
-        
-    Returns:
-        List of [speaker, text] pairs or None if not found
-    """
     if clip_id not in asr_data:
-        print(f"Warning: {clip_id} not found in ASR data")
+        # print(f"Warning: {clip_id} not found in ASR data")
         return None
     
     if model_name not in asr_data[clip_id].get('transcript', {}):
-        print(f"Warning: {model_name} not found for {clip_id}")
+        # print(f"Warning: {model_name} not found for {clip_id}")
         return None
     
     hyp_data = asr_data[clip_id]['transcript'][model_name]
@@ -93,21 +64,57 @@ def get_reference_transcription(
     manifest_data: Dict,
     clip_id: str
 ) -> Optional[List[Tuple[str, str, float, float]]]:
-    """
-    Extract reference transcription from manifest.
-    
-    Args:
-        manifest_data: Manifest dictionary
-        clip_id: The clip ID to retrieve
-        
-    Returns:
-        List of (speaker, text, start_time, end_time) tuples or None if not found
-    """
     if clip_id not in manifest_data:
         print(f"Warning: {clip_id} not found in manifest")
         return None
     
     return manifest_data[clip_id]
+
+
+def _split_into_two_chains(segments: List[Tuple[str, str]]) -> Tuple[List[str], List[str]]:
+    if isinstance(segments, str):
+        segments = ast.literal_eval(segments)
+
+    speaker_order: List[str] = []
+    speaker_words: Dict[str, List[str]] = {}
+    for seg in segments:
+        if len(seg) < 2:
+            continue
+        spk = seg[0]
+        if spk not in speaker_words:
+            speaker_words[spk] = []
+            speaker_order.append(spk)
+        speaker_words[spk].extend(_normalize_words_from_text(seg[1]))
+
+    if not speaker_order:
+        return [], []
+    if len(speaker_order) == 1:
+        return speaker_words[speaker_order[0]], []
+
+    first_speaker = speaker_order[0]
+    second_speaker = speaker_order[1]
+    chain_a = speaker_words[first_speaker]
+    chain_b = speaker_words[second_speaker]
+    return chain_a, chain_b
+
+
+def _normalize_words_from_text(text: str) -> List[str]:
+    clean_text = re.sub(r"[^\w\s]", "", str(text).lower())
+    return [tok for tok in clean_text.split() if tok]
+
+
+def _flatten_transcript_words(segments: List[Tuple[str, str]]) -> List[str]:
+    words: List[str] = []
+    for segment in segments:
+        if len(segment) < 2:
+            continue
+        words.extend(_normalize_words_from_text(segment[1]))
+    return words
+
+
+def _is_no_overlap_clip(clip_id: str) -> bool:
+    parts = clip_id.split("_")
+    return len(parts) >= 3 and parts[2] == "0.00"
 
 
 def evaluate_wer_for_clip(
@@ -117,21 +124,8 @@ def evaluate_wer_for_clip(
     manifest_data: Dict,
     normalize_ref: bool = True
 ) -> Dict:
-    """
-    Evaluate WER for a single clip against a specific ASR model.
-    Uses cpWER for segmented transcriptions, WER for non-segmented.
-    
-    Args:
-        clip_id: The clip ID to evaluate
-        model_name: Name of the ASR model
-        asr_data: ASR transcriptions dictionary
-        manifest_data: Manifest dictionary
-        normalize_ref: If True, normalize reference to (speaker, text) tuples
-        
-    Returns:
-        Dictionary with WER metrics and components
-    """
     # Get hypothesis
+    print(f"Evaluating {clip_id} with model {model_name}...")
     hyp = get_hypothesis_transcription(asr_data, clip_id, model_name)
     if hyp is None:
         return {
@@ -170,18 +164,56 @@ def evaluate_wer_for_clip(
         'metrics': {}
     }
 
-    ref_text = ' '.join([text for spk, text in ref_normalized])
-    hyp_text = ' '.join([text for spk, text in hyp])
+    ref_words = _flatten_transcript_words(ref_normalized)
+    hyp_words = _flatten_transcript_words(hyp)
+    ref_text = ' '.join(ref_words)
+    hyp_text = ' '.join(hyp_words)
+    use_plain_wer = _is_no_overlap_clip(clip_id)
     
     try:
         if is_segmented:
             # Use cpWER for segmented transcriptions
             result['metrics']['cpwer'] = cpWER(ref_normalized, hyp)
-            result['metrics']['wer'] = WER(ref_text, hyp_text)
+            # Original concatenated-WER evaluation kept for reference.
+            # result['metrics']['wer'] = wer(ref_text, hyp_text)
+
+            if use_plain_wer:
+                result['metrics']['wer'] = wer(ref_text, hyp_text)
+                result['wer_method'] = 'wer'
+            else:
+                ref_chain_a, ref_chain_b = _split_into_two_chains(ref_normalized)
+                beam_result = mrs_wer_beam_2chain(
+                    ref_chain_a,
+                    ref_chain_b,
+                    hyp_words,
+                    beam_width=64,
+                    heuristic_weight=1.0,
+                    normalize=True,
+                    return_alignment=False,
+                )
+                result['metrics']['wer'] = beam_result['wer']
+                result['wer_method'] = 'mrs'
             result['metric_type'] = 'segmented'  # Both cpWER and concatenated WER
         else:
-            # Use regular WER for non-segmented transcriptions
-            result['metrics']['wer'] = WER(ref_text, hyp_text)
+            # Original concatenated-WER evaluation kept for reference.
+            # result['metrics']['wer'] = wer(ref_text, hyp_text)
+
+            if use_plain_wer:
+                result['metrics']['wer'] = wer(ref_text, hyp_text)
+                result['wer_method'] = 'wer'
+            else:
+                ref_chain_a, ref_chain_b = _split_into_two_chains(ref_normalized)
+                beam_result = mrs_wer_beam_2chain(
+                    ref_chain_a,
+                    ref_chain_b,
+                    hyp_words,
+                    beam_width=64,
+                    heuristic_weight=1.0,
+                    normalize=True,
+                    return_alignment=False,
+                )
+                result['metrics']['wer'] = beam_result['wer']
+                result['wer_method'] = 'mrs'
             result['metric_type'] = 'wer'  # Simple WER for single segment
         
         return result
@@ -199,19 +231,6 @@ def evaluate_wer_batch(
     manifest_data: Dict,
     verbose: bool = True
 ) -> List[Dict]:
-    """
-    Evaluate WER for multiple clips.
-    
-    Args:
-        clip_ids: List of clip IDs to evaluate
-        model_name: Name of the ASR model
-        asr_data: ASR transcriptions dictionary
-        manifest_data: Manifest dictionary
-        verbose: Print progress information
-        
-    Returns:
-        List of WER evaluation results
-    """
     results = []
     
     for i, clip_id in enumerate(clip_ids):
@@ -225,15 +244,6 @@ def evaluate_wer_batch(
 
 
 def get_model_names(asr_data: Dict) -> List[str]:
-    """
-    Get list of available ASR models from the data.
-    
-    Args:
-        asr_data: ASR transcriptions dictionary
-        
-    Returns:
-        List of model names
-    """
     models = set()
     for clip_data in asr_data.values():
         if 'transcript' in clip_data:
@@ -247,18 +257,6 @@ def evaluate_all_models(
     manifest_data: Dict,
     verbose: bool = True
 ) -> Dict[str, List[Dict]]:
-    """
-    Evaluate WER for all available ASR models.
-    
-    Args:
-        clip_ids: List of clip IDs to evaluate
-        asr_data: ASR transcriptions dictionary
-        manifest_data: Manifest dictionary
-        verbose: Print progress information
-        
-    Returns:
-        Dictionary mapping model names to list of WER results
-    """
     models = get_model_names(asr_data)
     results_by_model = {}
     
@@ -273,16 +271,6 @@ def evaluate_all_models(
 
 
 def compute_summary_statistics(results: List[Dict]) -> Dict:
-    """
-    Compute summary statistics from evaluation results.
-    Separates statistics for WER and cpWER metrics.
-    
-    Args:
-        results: List of WER evaluation results
-        
-    Returns:
-        Dictionary with summary statistics separated by metric type
-    """
     successful = [r for r in results if r['status'] == 'success']
     failed = [r for r in results if r['status'] == 'error']
     
@@ -340,16 +328,6 @@ def save_wer_results_by_clip(
     results: List[Dict],
     output_dir: str = "WER_Results"
 ) -> Dict[str, Path]:
-    """
-    Save WER evaluation results to individual JSON files per clip.
-    
-    Args:
-        results: List of WER evaluation results
-        output_dir: Directory to save results (will be created if it doesn't exist)
-        
-    Returns:
-        Dictionary mapping clip_ids to saved file paths
-    """
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
     
@@ -378,16 +356,6 @@ def save_wer_results_batch(
     results: List[Dict],
     output_file: str = "WER_results_batch.json"
 ) -> Path:
-    """
-    Save all WER evaluation results to a single JSON file.
-    
-    Args:
-        results: List of WER evaluation results
-        output_file: Output JSON file path
-        
-    Returns:
-        Path to saved file
-    """
     output_path = Path(output_file)
     
     # Add summary statistics to results
@@ -409,16 +377,6 @@ def save_wer_results_by_model(
     results_by_model: Dict[str, List[Dict]],
     output_dir: str = "WER_Results_by_Model"
 ) -> Dict[str, Path]:
-    """
-    Save WER results organized by model into separate JSON files.
-    
-    Args:
-        results_by_model: Dictionary mapping model names to results lists
-        output_dir: Directory to save results
-        
-    Returns:
-        Dictionary mapping model names to saved file paths
-    """
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
     
@@ -445,7 +403,29 @@ def save_wer_results_by_model(
 
 
 if __name__ == "__main__":
-    # Example usage
+    parser = argparse.ArgumentParser(
+        description="Evaluate WER for ASR models",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n"
+               "  python wer_evaluation.py                          # Evaluate all models\n"
+               "  python wer_evaluation.py --model faster-whisper   # Evaluate specific model\n"
+               "  python wer_evaluation.py --list                   # List available models"
+    )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default=None,
+        help="Specific model name to evaluate (e.g., 'faster-whisper'). If not specified, evaluates all models."
+    )
+    parser.add_argument(
+        "--list",
+        action="store_true",
+        help="List available models and exit"
+    )
+    
+    args = parser.parse_args()
+    
+    # Load data
     asr_data = load_asr_transcriptions()
     manifest_data = load_manifest()
     
@@ -456,14 +436,33 @@ if __name__ == "__main__":
     models = get_model_names(asr_data)
     print(f"Available models: {models}")
     
-    # Evaluate a single model and save results
-    if models:
-        model_name = models[0]
+    # If --list flag is used, just print models and exit
+    if args.list:
+        print("\nAvailable models:")
+        for model in models:
+            print(f"  - {model}")
+        sys.exit(0)
+    
+    # Determine which models to evaluate
+    if args.model:
+        # Evaluate specific model
+        if args.model not in models:
+            print(f"Error: Model '{args.model}' not found in available models: {models}")
+            sys.exit(1)
+        models_to_eval = [args.model]
+    else:
+        # Evaluate all models
+        models_to_eval = models
+    
+    # Evaluate selected model(s)
+    results_by_model = {}
+    for model_name in models_to_eval:
         print(f"\nEvaluating {model_name} on {len(clip_ids)} clips...")
         results = evaluate_wer_batch(clip_ids, model_name, asr_data, manifest_data, verbose=False)
+        results_by_model[model_name] = results
         
         # Save results by clip in individual JSON files
-        print("\nSaving individual clip results...")
+        print("Saving individual clip results...")
         saved_files = save_wer_results_by_clip(results, output_dir="WER_Results")
         print(f"✓ Saved {len(saved_files)} clip result files")
         
@@ -503,15 +502,10 @@ if __name__ == "__main__":
             for key in ['wer_segmented_mean', 'wer_segmented_median', 'wer_segmented_min', 'wer_segmented_max', 'wer_segmented_std']:
                 if key in stats:
                     print(f"  {key}: {stats[key]:.4f}")
-    
-    # Optional: Evaluate all models and save results by model
-    print("\n" + "="*60)
-    print("Evaluating all models...")
-    results_by_model = evaluate_all_models(clip_ids, asr_data, manifest_data, verbose=False)
-    
-    # Save results organized by model
-    print("Saving results by model...")
+
+    # Always write the grouped-by-model JSON files for the models that were evaluated.
+    print("\nSaving results by model...")
     model_files = save_wer_results_by_model(results_by_model, output_dir="WER_Results_by_Model")
-    print(f"✓ Saved results for {len(model_files)} models:")
+    print(f"✓ Saved results for {len(model_files)} model(s):")
     for model_name, file_path in model_files.items():
         print(f"  - {model_name}: {file_path}")

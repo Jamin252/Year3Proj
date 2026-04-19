@@ -1,6 +1,14 @@
 {
   "clip_id": "mix_0000092_0.00_2_0_T",
   "model_name": "faster-whisper",
-  "status": "error",
-  "error": "Hypothesis not found"
+  "status": "success",
+  "ref_segments": 9,
+  "hyp_segments": 7,
+  "is_segmented": true,
+  "metrics": {
+    "cpwer": 0.5810055865921788,
+    "wer": 0.01675977653631285
+  },
+  "wer_method": "wer",
+  "metric_type": "segmented"
 }
