@@ -121,9 +121,7 @@ Muqiao Yang, Naoyuki Kanda, Xiaofei Wang, Jian Wu, Sunit Sivasankaran, Zhuo
 \bibitem[Galibert(2013)]{galibert2013methodologies}
 Olivier Galibert.
 \newblock Methodologies for the evaluation of speaker diarization and automatic
-  speech recognition in the presence of overlapping speech.
-\newblock 08 2013.
-\newblock \doi{10.21437/Interspeech.2013-303}.
+  speech recognition in the presence of overlapping speech, 08 2013.
 
 \bibitem[von Neumann et~al.(2023)von Neumann, Boeddeker, Kinoshita, Delcroix,
   and Haeb-Umbach]{von_Neumann_2023}

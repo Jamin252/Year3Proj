@@ -3,37 +3,37 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: unsrtnat.bst
 Database file #1: references.bib
-Warning--empty booktitle in galibert2013methodologies
+Warning--I didn't find a database entry for "gulati2020conformer"
 You've used 46 entries,
             2481 wiz_defined-function locations,
-            782 strings with 15662 characters,
-and the built_in function-call counts, 18269 in all, are:
-= -- 1245
+            783 strings with 15681 characters,
+and the built_in function-call counts, 18218 in all, are:
+= -- 1240
 > -- 1520
 < -- 17
 + -- 566
 - -- 470
-* -- 1481
-:= -- 3125
-add.period$ -- 168
+* -- 1477
+:= -- 3116
+add.period$ -- 166
 call.type$ -- 46
 change.case$ -- 92
 chr.to.int$ -- 42
-cite$ -- 47
-duplicate$ -- 737
-empty$ -- 1468
+cite$ -- 46
+duplicate$ -- 730
+empty$ -- 1462
 format.name$ -- 518
-if$ -- 3767
+if$ -- 3756
 int.to.chr$ -- 5
 int.to.str$ -- 47
-missing$ -- 11
-newline$ -- 267
+missing$ -- 10
+newline$ -- 265
 num.names$ -- 138
 pop$ -- 515
 preamble$ -- 1
 purify$ -- 46
 quote$ -- 0
-skip$ -- 510
+skip$ -- 511
 stack$ -- 0
 substring$ -- 237
 swap$ -- 137
@@ -41,8 +41,8 @@ text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 322
-warning$ -- 1
+warning$ -- 0
 while$ -- 99
 width$ -- 0
-write$ -- 622
+write$ -- 619
 (There was 1 warning)

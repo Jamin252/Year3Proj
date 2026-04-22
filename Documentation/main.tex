@@ -13,9 +13,29 @@
 \usepackage{multirow}
 \usepackage{siunitx}
 \usepackage{amsmath, amssymb}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,shapes.symbols,calc}
 \usepackage{enumitem}
 \usepackage{hyperref}
 \usepackage[nameinlink,noabbrev]{cleveref}
+
+
+\lstdefinestyle{codeblock}{
+	basicstyle=\ttfamily\small,
+	frame=single,
+	float=htbp,
+	breaklines=true,
+	breakatwhitespace=true,
+	columns=fullflexible,
+	keepspaces=true,
+	showstringspaces=false,
+	xleftmargin=0.5em,
+	xrightmargin=0.5em,
+	aboveskip=0.8em,
+	belowskip=0.8em
+}
 
 % Citations (BibTeX)
 \usepackage[numbers]{natbib}
@@ -32,6 +52,11 @@
 \input{sections/01_introduction}
 
 \input{sections/02_literature_review}
+
+\input{sections/03_architectural_design}
+\input{sections/c3}
+
+\input{sections/04_experimental_design}
 
 \chapter{Datasets, ASR Models and Preprocessing Strategies}
 \input{sections/datasets_models.tex}

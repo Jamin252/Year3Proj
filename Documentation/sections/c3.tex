@@ -1,0 +1,329 @@
+\chapter{System and Data Flow}
+Figure~\ref{fig:dataflow} shows the high-level data flow of the system.  The inputs are folders of \textbf{speaker audio} (clean speech WAVs with transcripts) and \textbf{noise audio} (e.g. environmental sounds).  A configuration YAML file specifies parameters (target overlap ratios, SNR values, clip length, speaker count, etc.).  The \emph{Mixture Generator} module loads all audio files and transcripts, and repeatedly constructs mixtures using the \texttt{generate\_audio.py} script.  Each mixture is passed to ASR \emph{Evaluation} (the \texttt{asr\_helper.py} pipeline), which runs several models to produce hypotheses.  The \emph{Metrics} module (using \texttt{wer\_helper.py}) computes WER, cpWER, DI-cpWER, etc. for each transcription.  Finally, results (scores and logs) are collated for analysis.
+
+\begin{figure}[ht]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+    font=\sffamily,
+    >=Latex,
+    node distance=12mm and 16mm,
+    block/.style={
+        rectangle,
+        rounded corners=2pt,
+        draw=blue!55!black,
+        very thick,
+        minimum height=10mm,
+        text width=34mm,
+        align=center,
+        fill=blue!6
+    },
+    process/.style={
+        rectangle,
+        rounded corners=2pt,
+        draw=teal!60!black,
+        very thick,
+        minimum height=10mm,
+        text width=34mm,
+        align=center,
+        fill=teal!8
+    },
+    model/.style={
+        rectangle,
+        rounded corners=2pt,
+        draw=violet!70!black,
+        very thick,
+        minimum height=10mm,
+        text width=34mm,
+        align=center,
+        fill=violet!8
+    },
+    output/.style={
+        rectangle,
+        rounded corners=2pt,
+        draw=orange!80!black,
+        very thick,
+        minimum height=10mm,
+        text width=36mm,
+        align=center,
+        fill=orange!10
+    },
+    line/.style={
+        -{Latex[length=3mm,width=2mm]},
+        very thick,
+        draw=gray!75!black
+    }
+]
+\node[block] (A) {Speaker Audio\\Transcripts};
+\node[block, below=18mm of A] (C) {Noise Audio};
+\node[process, right=28mm of $(A)!0.5!(C)$] (B) {Mixture Generator};
+
+\node[output, right=24mm of B] (D) {Mixed Audio + Manifest};
+
+\node[model, right=26mm of D, yshift=18mm] (E) {ASR Model 1\\(e.g. Whisper)};
+\node[model, right=26mm of D] (F) {ASR Model 2\\(Wav2Vec2)};
+\node[model, right=26mm of D, yshift=-18mm] (G) {ASR Model 3\\(Parakeet)};
+
+\node[process, right=26mm of F] (H) {Scoring:\\WER, cpWER};
+\node[output, right=24mm of H] (I) {Results and Analysis};
+
+\draw[line] (A) -- (B);
+\draw[line] (C) -- (B);
+\draw[line] (B) -- (D);
+\draw[line] (D) -- (E);
+\draw[line] (D) -- (F);
+\draw[line] (D) -- (G);
+\draw[line] (E) -- (H);
+\draw[line] (F) -- (H);
+\draw[line] (G) -- (H);
+\draw[line] (H) -- (I);
+\end{tikzpicture}%
+}
+\caption{System data flow: input speech and noise are combined into mixtures, which are then transcribed by multiple ASR models; transcripts are scored with WER and overlap-aware metrics.}
+\label{fig:dataflow}
+\end{figure}
+
+In more detail, the mixture generation component comprises three steps: (1) \textbf{Selecting speakers and clips}: randomly choose $n$ speakers and their utterances; (2) \textbf{Offset scheduling}: compute time offsets to position each utterance so that the overall overlap ratio approaches the target; (3) \textbf{Noise addition}: mix in noise at a specified SNR. These steps yield a single mixed waveform plus metadata (transcripts aligned to mixture times). Table~\ref{tab:tools} lists the main software tools and libraries used.
+
+\begin{table}[ht]
+\centering
+\caption{Main tools and libraries in the system.}
+\label{tab:tools}
+\begin{tabular}{ll}
+\toprule
+Component / Library & Purpose \\
+\midrule
+Python 3.x & Implementation language \\
+NumPy, SciPy & Numerical computing, resampling \\
+SoundFile (PySoundFile) & Audio I/O (WAV/FLAC) \\
+Librosa & Audio processing (resampling, padding) \\
+Pandas & Metadata (CSV manifest) \\
+PyTorch & Model inference engine (ASR models) \\
+NVIDIA NeMo & ASR and audio processing toolkit \\
+Hugging Face Transformers & Faster-Whisper, Wav2Vec2 pipelines \\
+WhisperX & Whisper with timestamp alignment \\
+FunASR & End-to-end ASR models (Nano-T, etc.) \\
+Jupyter / CLI & Experiment control \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Mixture Generation Algorithm}
+The core mixture generation algorithm is implemented in \texttt{generate\_audio.py}.
+First, the script loads all clean speech files (grouped by speaker) and noise files.
+A transcript map is built from available transcripts (e.g.\ LibriSpeech or VCTK labels)
+keyed by utterance ID.
+
+The main function \texttt{build\_base\_mixture} selects $n$ speakers and samples
+utterances (potentially concatenating multiple segments per speaker to reach minimum
+length). It then calls \texttt{generate\_offsets} to compute start times:
+
+\begin{lstlisting}[style=codeblock,language=Python]
+def generate_offsets(
+    audios: List[np.ndarray],
+    n_speakers: int,
+    overlap_ratio_target: float,
+    sample_rate: int,
+    speaker_spacing: tuple,
+    sample_length: int,
+) -> Tuple[List[int], float, np.ndarray, int]:
+    offsets = [0]
+    p = len(audios[0])
+    active = np.zeros(sample_length, dtype=np.int32)
+    active[: len(audios[0])] += 1
+
+    if n_speakers == 1 or overlap_ratio_target <= 0:
+        for a in audios[1:]:
+            p += max(0, np.random.normal(*speaker_spacing) * sample_rate)
+            offsets.append(int(p))
+            active[int(p): int(p) + len(a)] += 1
+            p += len(a)
+        return offsets, overlap_ratio_target, active, len(active)
+
+    # ... otherwise allocate overlapping offsets ...
+\end{lstlisting}
+
+This function attempts to align the chosen utterances so that the fraction of
+overlapping samples matches \texttt{overlap\_ratio\_target}. It does so by random
+sampling of overlap extents and iterative adjustment. In the no-overlap case, it
+simply spaces speakers apart by a random gap.
+
+Once offsets are determined, \texttt{build\_base\_mixture} sums the waveforms at those
+offsets:
+
+\begin{lstlisting}[style=codeblock,language=Python]
+mixture = np.zeros(sample_length, dtype=np.float32)
+
+for i, (wave, off) in enumerate(zip(audio_parts, offsets)):
+    if off + len(wave) > len(mixture):
+        mixture = np.pad(mixture, (0, off + len(wave) - len(mixture)), "constant")
+
+    # Record transcript segment timing
+    speaker, text = transcript_parts[i][:2]
+    transcript_parts[i] = (
+        speaker,
+        text,
+        off / sample_rate,
+        (off + len(wave)) / sample_rate,
+    )
+
+    # Add waveform
+    mixture[off: off + len(wave)] += wave
+
+rms_val = rms(np.concatenate(audio_parts))
+return BaseMixture(
+    wave=mixture,
+    overlap_mask=active,
+    source_files=chosen,
+    transcript=transcript_parts,
+    overlap_ratio_actual=actual_or,
+    rms=rms_val,
+)
+\end{lstlisting}
+
+This produces a \texttt{BaseMixture} object containing the mixed audio and metadata
+(actual overlap, RMS value, transcripts with time). Finally, in the main loop the
+code iterates over conditions (overlap ratios, max speakers, SNR values, noise
+types) and generates final mixtures by adding noise:
+
+\begin{lstlisting}[style=codeblock,language=Python]
+noise = []
+
+# Concatenate random noise clips until mixture length is reached
+while len(noise) < len(mixture):
+    npath = random.choice(noise_files[noise_type])
+    tnoise, nsr = sf.read(npath)
+    tnoise = resample(tnoise, nsr, sample_rate)
+    noise = np.concatenate([noise, tnoise.astype(np.float32)])
+
+noise = noise[: len(mixture)]
+mixture_noisy = add_noise_for_snr(mixture, noise, snr_db, base_rms)
+sf.write(out_audio / f"{clip_id}.wav", mixture_noisy, sample_rate)
+
+rows.append(
+    MixtureMeta(
+        ...,  # other fields
+        transcript=base.transcript,
+        snr_db=snr_db,
+        noise_type=noise_type,
+        source_files=base.source_files,
+        noise_files=noise_paths,
+    )
+)
+\end{lstlisting}
+
+Here \texttt{add\_noise\_for\_snr} (from \texttt{generate\_audio.py}) scales the noise
+to achieve the target SNR:
+
+\begin{lstlisting}[style=codeblock,language=Python]
+def add_noise_for_snr(speech, noise, snr_db, base_rms):
+    noise_rms = rms(noise)
+    alpha = base_rms / (noise_rms * (10 ** (snr_db / 20)) + EPSILON)
+    return speech + alpha * noise
+\end{lstlisting}
+
+By saving each noisy mixture and its metadata (clip ID, transcripts, overlap,
+noise paths, etc.) to a CSV manifest, the system ensures reproducibility of every
+parameter.
+
+\section{Representative ASR Models} We evaluate several pre-trained ASR models to cover different architectures and training regimes. Table~\ref{tab:models} compares their key properties. The selection includes large sequence-to-sequence models and smaller streaming ones: \begin{itemize} \item \textbf{Whisper (large-v3)} – an encoder-decoder model trained on multilingual weakly supervised data
+; known for robustness to noise and disfluencies. \item \textbf{Wav2Vec2} – a self-supervised convolutional-Transformer model (e.g.\ base or large from Facebook)
+, fine-tuned on English data. \item \textbf{Parakeet-RNNT} – an NVIDIA NeMo multilingual RNN-Transducer (1.1B) model
+ trained on extensive data, used for robust transcription and language identification. \item \textbf{WhisperX} – a variant of Whisper with timestamp refinement (for forced alignment of transcripts). \item \textbf{FunASR} – lightweight end-to-end ASR models (e.g.\ Nano-T) from the FunASR toolkit, enabling fast decoding. \end{itemize} We justify these choices as follows: Whisper and Wav2Vec2 are leading open-source ASR models, representing large-scale and self-supervised approaches respectively
+. NVIDIA’s Parakeet RNN-T provides a state-of-the-art industrial model for multilingual ASR. WhisperX and FunASR add variety in capabilities (alignment, low-latency models). Each model has published results attesting to competitive WER performance under noise (e.g.\ Whisper
+ and Wav2Vec2
+). We do not use proprietary services, focusing on open or academic systems.
+
+\begin{table}[ht]
+\centering
+\caption{ASR models evaluated on the synthetic mixtures.}
+\label{tab:models}
+\begin{tabular}{lll}
+\toprule
+Model & Type & Comments \\
+\midrule
+Whisper (large-v3) & Seq2Seq Transformer & Multilingual, robust to noise \\
+Wav2Vec2 (base/large) & Transformer (CTC) & Self-supervised, fine-tuned on LibriSpeech \\
+Parakeet-RNNT & RNN-Transducer & Large (1.1B) multilingual model (NVIDIA NeMo) \\
+WhisperX & Seq2Seq + alignment & Whisper with improved timestamping \\
+FunASR (Nano-T) & Conformer (CTC) & Small model for low-latency ASR \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Each model is run on every generated audio file via \texttt{asr\_helper.py}. The outputs are collected into a \texttt{MixtureTranscription} structure (mapping clip IDs and speaker IDs to hypothesis text). This uniform format simplifies downstream scoring. No fine-tuning is performed; we evaluate the zero-shot performance of these off-the-shelf models on the synthetic data, and also test their transfer to real recordings (using a reserved real multi-speaker corpus).
+
+\section{Evaluation Metrics} We use standard and overlap-aware metrics to quantify transcription accuracy. The basic measure is \emph{Word Error Rate (WER)}, the Levenshtein distance normalized by reference length. For multi-speaker outputs, we compute \emph{concatenated minimum-permutation WER (cpWER)}
+: all utterances of each speaker are concatenated, and the speaker labels are optimally permuted to minimize total WER
+. This was introduced for CHiME 2020 and captures both ASR and diarization errors
+. We implement cpWER as in CHiME and Meeteval, and also compute a \emph{diarization-informed cpWER (DI-cpWER)} by penalizing misaligned word-timestamps (as in our code’s \texttt{DIcpWER} function). Additionally, we record \emph{Character Error Rate (CER)} and \emph{Insertion-Deletion-Substitution rates} for completeness. We do not use perceptual metrics (e.g.\ PESQ) as we focus on transcription. All metrics are averaged across mixtures with the same conditions to analyze trends.
+\chapter{System Architecture and Implementation}
+The system is implemented in Python and consists of three stages: \textit{mixture generation}, \textit{ASR decoding}, and \textit{metric computation}. Figure~\ref{fig:dataflow} shows the high-level data flow. First, input audio files (clean speech from each speaker, and optional background noise) are read. The \texttt{generate\_audio.py} script computes random time offsets for each speaker to achieve a target overlap ratio, then sums the signals and noise at those offsets to create the synthetic mixture. The synthetic waveform and reference transcripts (with speaker labels) are then passed to the ASR stage.
+
+\subsection{Libraries and Tools}
+Key software includes Python 3.8+, with \texttt{numpy}, \texttt{soundfile}/\texttt{librosa} for audio I/O, \texttt{pandas} for metadata tables, and \texttt{torch}/\texttt{transformers} for ASR models. We also use the \texttt{whisperx} package for OpenAI Whisper models. The baseline ASR systems are representative neural models: wav2vec\,2.0 \cite{baevski2020wav2vec20frameworkselfsupervised}, Whisper \cite{radford2022robustspeechrecognitionlargescale}, and Conformer \cite{gulati2020conformer}. Table~\ref{tab:asrmodels} summarizes their architectures.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{p{3cm} p{4cm} p{5cm}}
+\toprule
+\textbf{Model} & \textbf{Architecture} & \textbf{Pretraining / Data} \\
+\midrule
+Wav2Vec\,2.0 \cite{baevski2020wav2vec20frameworkselfsupervised} & CNN + Transformer (self-supervised) & Pretrained on LibriSpeech (960\,h) \\
+Whisper \cite{radford2022robustspeechrecognitionlargescale} & Encoder-decoder Transformer & Trained on 680\,k hours of diverse audio \\
+Conformer \cite{gulati2020conformer} & Convolution-augmented Transformer & Trained on Librispeech (10\,k h) \\
+\bottomrule
+\end{tabular}
+\caption{ASR models evaluated.}
+\label{tab:asrmodels}
+\end{table}
+
+\section{Synthetic Mixture Generation}
+\label{sec:mixture}
+The \texttt{generate\_audio.py} script creates controlled multi-speaker mixtures. After loading individual speaker waveforms, it calls \texttt{generate\_offsets} to determine start times. For example, the first speaker is placed at $t=0$; subsequent speakers are placed at random delays sampled from a normal distribution. The code snippet below (simplified) shows this offset scheduling:
+
+\begin{lstlisting}[language=Python, caption={Offset scheduling algorithm (simplified).},label={lst:genoffsets}]
+def generate_offsets(audios: List[np.ndarray], n_speakers: int,
+                     overlap_ratio_target: float, sample_rate: int,
+                     speaker_spacing: tuple, sample_length: int):
+    offsets = [0]
+    p = len(audios[0])
+    active = np.zeros(sample_length, dtype=np.int32)
+    active[:len(audios[0])] += 1
+    
+    if n_speakers == 1 or overlap_ratio_target <= 0:
+        for a in audios[1:]:
+            p += max(0, np.random.normal(*speaker_spacing) * sample_rate)
+            offsets.append(int(p))
+            active[int(p):int(p)+len(a)] += 1
+            p += len(a)
+        return (offsets, overlap_ratio_target, active, len(active))
+    # Otherwise, allocate overlap duration across speakers (omitted)
+\end{lstlisting}
+
+Each speaker signal is added to the mixture at its offset, and noise is scaled to reach the specified SNR. Metadata (speaker IDs, offsets, transcripts) is recorded in a Pandas DataFrame (see \texttt{helper\_class.py}).
+
+\section{ASR Decoding}
+\label{sec:decoding}
+In \texttt{asr\_helper.py}, each mixture is passed to selected ASR models. HuggingFace models use \texttt{pipeline("automatic-speech-recognition")}. Whisper models use \texttt{whisperx.load\_model}. The output transcripts may include special tokens marking speaker changes (e.g.\ serialized output). We parse each hypothesis into (speaker, text) pairs for scoring.
+
+\section{Error Metrics: WER, cpWER, DI-cpWER}
+\label{sec:wer}
+Standard word error rate (WER) is computed per speaker by aligning hypothesis vs. reference words. For overlapping speech, we implement {\em concatenated-permutation WER} (cpWER) as defined by von Neumann et al.\ \cite{von_Neumann_2025}. This finds the best mapping of hypothesis speakers to reference speakers to minimize total errors. The code below sketches the calculation; setting \texttt{DI=True} computes the DI-cpWER variant (ignoring speaker labels):
+
+\begin{lstlisting}[language=Python,caption={Computing cpWER (with optional DI mode).},label={lst:cpwer}]
+def cpWER(ref: List[tuple[str, str]], hyp: List[tuple[str, str]], DI=False) -> float:
+    # Convert (speaker, text) lists to dict of full utterances
+    ref_dict = transcript_to_dict(ref)
+    hyp_dict = transcript_to_dict(hyp)
+    for spk in ref_dict:
+        ref_dict[spk] = ' '.join(ref_dict[spk])
+    for spk in hyp_dict:
+        hyp_dict[spk] = ' '.join(hyp_dict[spk])
+    # If DI=True, ignore speaker IDs (diarization-invariant)
+    # Find optimal assignment (permutation search or greedy)
+    ...
+\end{lstlisting}
+
+The \texttt{wer\_evaluation.py} script computes and reports WER, cpWER, and DI-cpWER for each evaluation set.
+

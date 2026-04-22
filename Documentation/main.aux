@@ -77,6 +77,74 @@
 \citation{von_Neumann_2025}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Unified Metrics for Multi-Speaker ASR Evaluation}{8}{subsection.2.3.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Summary}{9}{subsection.2.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Architectural Design}{10}{chapter.3}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}System Overview}{10}{section.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces System data flow: input speech and noise files (.wav or .flac) are combined into mixtures, which are then transcribed by ASR models. The transcripts are scored against the reference with WER and overlap-aware metrics.}}{10}{figure.3.1}\protected@file@percent }
+\newlabel{fig:general_flow}{{3.1}{10}{System data flow: input speech and noise files (.wav or .flac) are combined into mixtures, which are then transcribed by ASR models. The transcripts are scored against the reference with WER and overlap-aware metrics}{figure.3.1}{}}
+\newlabel{fig:general_flow@cref}{{[figure][1][3]3.1}{[1][10][]10}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Synthetic Mixture Generation}{10}{section.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Speaker and Clip Selection}{11}{subsection.3.2.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Speaker and Clip Selection Process}}{11}{figure.3.2}\protected@file@percent }
+\newlabel{fig:clip_selection}{{3.2}{11}{Speaker and Clip Selection Process}{figure.3.2}{}}
+\newlabel{fig:clip_selection@cref}{{[figure][2][3]3.2}{[1][10][]11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Offset Scheduling}{11}{subsection.3.2.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Overlap allocation process when overlap ratio $> 0$}}{11}{figure.3.3}\protected@file@percent }
+\newlabel{fig:overlap_allocation}{{3.3}{11}{Overlap allocation process when overlap ratio $> 0$}{figure.3.3}{}}
+\newlabel{fig:overlap_allocation@cref}{{[figure][3][3]3.3}{[1][11][]11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Offset Scheduling Process}}{11}{figure.3.4}\protected@file@percent }
+\newlabel{fig:offset_scheduling}{{3.4}{11}{Offset Scheduling Process}{figure.3.4}{}}
+\newlabel{fig:offset_scheduling@cref}{{[figure][4][3]3.4}{[1][11][]11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}Noise Addition}{12}{subsection.3.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.4}Manifest Structure}{12}{subsection.3.2.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Manifest schema used to store synthetic mixture metadata and transcripts.}}{13}{table.3.1}\protected@file@percent }
+\newlabel{tab:manifest_schema}{{3.1}{13}{Manifest schema used to store synthetic mixture metadata and transcripts}{table.3.1}{}}
+\newlabel{tab:manifest_schema@cref}{{[table][1][3]3.1}{[1][12][]13}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}System and Data Flow}{14}{chapter.4}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces System data flow: input speech and noise are combined into mixtures, which are then transcribed by multiple ASR models; transcripts are scored with WER and overlap-aware metrics.}}{14}{figure.4.1}\protected@file@percent }
+\newlabel{fig:dataflow}{{4.1}{14}{System data flow: input speech and noise are combined into mixtures, which are then transcribed by multiple ASR models; transcripts are scored with WER and overlap-aware metrics}{figure.4.1}{}}
+\newlabel{fig:dataflow@cref}{{[figure][1][4]4.1}{[1][14][]14}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Mixture Generation Algorithm}{14}{section.4.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Main tools and libraries in the system.}}{16}{table.4.1}\protected@file@percent }
+\newlabel{tab:tools}{{4.1}{16}{Main tools and libraries in the system}{table.4.1}{}}
+\newlabel{tab:tools@cref}{{[table][1][4]4.1}{[1][14][]16}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Representative ASR Models}{17}{section.4.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces ASR models evaluated on the synthetic mixtures.}}{17}{table.4.2}\protected@file@percent }
+\newlabel{tab:models}{{4.2}{17}{ASR models evaluated on the synthetic mixtures}{table.4.2}{}}
+\newlabel{tab:models@cref}{{[table][2][4]4.2}{[1][17][]17}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Evaluation Metrics}{17}{section.4.3}\protected@file@percent }
+\citation{baevski2020wav2vec20frameworkselfsupervised}
+\citation{radford2022robustspeechrecognitionlargescale}
+\citation{gulati2020conformer}
+\citation{baevski2020wav2vec20frameworkselfsupervised}
+\citation{radford2022robustspeechrecognitionlargescale}
+\citation{gulati2020conformer}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}System Architecture and Implementation}{19}{chapter.5}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.0.1}Libraries and Tools}{19}{subsection.5.0.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Synthetic Mixture Generation}{19}{section.5.1}\protected@file@percent }
+\newlabel{sec:mixture}{{5.1}{19}{Synthetic Mixture Generation}{section.5.1}{}}
+\newlabel{sec:mixture@cref}{{[section][1][5]5.1}{[1][19][]19}}
+\newlabel{lst:genoffsets}{{5.1}{19}{Offset scheduling algorithm (simplified)}{lstlisting.5.1}{}}
+\newlabel{lst:genoffsets@cref}{{[listing][1][5]5.1}{[1][19][]19}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {5.1}Offset scheduling algorithm (simplified).}{19}{lstlisting.5.1}\protected@file@percent }
+\citation{von_Neumann_2025}
+\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces ASR models evaluated.}}{20}{table.5.1}\protected@file@percent }
+\newlabel{tab:asrmodels}{{5.1}{20}{ASR models evaluated}{table.5.1}{}}
+\newlabel{tab:asrmodels@cref}{{[table][1][5]5.1}{[1][19][]20}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}ASR Decoding}{20}{section.5.2}\protected@file@percent }
+\newlabel{sec:decoding}{{5.2}{20}{ASR Decoding}{section.5.2}{}}
+\newlabel{sec:decoding@cref}{{[section][2][5]5.2}{[1][20][]20}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}Error Metrics: WER, cpWER, DI-cpWER}{20}{section.5.3}\protected@file@percent }
+\newlabel{sec:wer}{{5.3}{20}{Error Metrics: WER, cpWER, DI-cpWER}{section.5.3}{}}
+\newlabel{sec:wer@cref}{{[section][3][5]5.3}{[1][20][]20}}
+\newlabel{lst:cpwer}{{5.2}{20}{Computing cpWER (with optional DI mode)}{lstlisting.5.2}{}}
+\newlabel{lst:cpwer@cref}{{[listing][2][5]5.2}{[1][20][]20}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {5.2}Computing cpWER (with optional DI mode).}{20}{lstlisting.5.2}\protected@file@percent }
 \citation{librispeech}
 \citation{voxceleb}
 \citation{chime6}
@@ -85,11 +153,13 @@
 \citation{github_openai_faster-whisper}
 \citation{facebook_wav2vec2-large-960h}
 \citation{nvidia/parakeet-tdt-0.6b-v3}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}Datasets, ASR Models and Preprocessing Strategies}{10}{chapter.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}Datasets, ASR Models and Preprocessing Strategies}{21}{chapter.6}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Datasets}{10}{section.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}Baseline Models under Evaluation}{10}{section.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.1}Datasets}{21}{section.6.1}\protected@file@percent }
+\newlabel{sec:dataset}{{6.1}{21}{Datasets}{section.6.1}{}}
+\newlabel{sec:dataset@cref}{{[section][1][6]6.1}{[1][21][]21}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.2}Baseline Models under Evaluation}{21}{section.6.2}\protected@file@percent }
 \citation{nvidia/canary-qwen-2.5b}
 \citation{ibm-granite/granite-speech-3.3-8b}
 \citation{microsoft/phi-4-multimodal-instruct}
@@ -97,80 +167,80 @@
 \citation{ESPnet}
 \citation{SepReformer}
 \citation{VoiceFilter}
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Preprocessing Strategies}{11}{section.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Experimental Design}{12}{chapter.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.3}Preprocessing Strategies}{22}{section.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {7}Experimental Design}{23}{chapter.7}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}Objective and Scope}{12}{section.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}Research Questions}{12}{section.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}Experimental Design Overview}{12}{section.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7.1}Objective and Scope}{23}{section.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7.2}Research Questions}{23}{section.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7.3}Experimental Design Overview}{23}{section.7.3}\protected@file@percent }
 \citation{Shriberg2001ObservationsOO}
 \citation{chen2020continuousspeechseparationdataset}
 \citation{cosentino2020librimixopensourcedatasetgeneralizable}
 \citation{chen2020continuousspeechseparationdataset}
 \citation{Handling_Trade-Offs_in_Speech_Separation_with_Sparsely-Gated_Mixture_of_Experts}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Factors and Levels}{13}{subsection.4.3.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Experimental factors and planned levels.}}{13}{table.4.1}\protected@file@percent }
-\newlabel{tab:design_factors}{{4.1}{13}{Experimental factors and planned levels}{table.4.1}{}}
-\newlabel{tab:design_factors@cref}{{[table][1][4]4.1}{[1][13][]13}}
-\@writefile{toc}{\contentsline {subsubsection}{Overlap Ratios Choice}{13}{section*.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Maximum Concurrent Speakers Choice}{13}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3.1}Factors and Levels}{24}{subsection.7.3.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {7.1}{\ignorespaces Experimental factors and planned levels.}}{24}{table.7.1}\protected@file@percent }
+\newlabel{tab:design_factors}{{7.1}{24}{Experimental factors and planned levels}{table.7.1}{}}
+\newlabel{tab:design_factors@cref}{{[table][1][7]7.1}{[1][24][]24}}
+\@writefile{toc}{\contentsline {subsubsection}{Overlap Ratios Choice}{24}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Maximum Concurrent Speakers Choice}{24}{section*.3}\protected@file@percent }
 \citation{wu2018characteristics}
 \citation{Word_Error_Rate_Definitions}
-\@writefile{toc}{\contentsline {subsubsection}{Signal-to-noise Raio Choice}{14}{section*.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Noise Type Choice}{14}{section*.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Performance Metrics}{14}{subsection.4.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Experimental Units}{14}{subsection.4.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}Datasets and Data Splits}{15}{section.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Track A: Synthetic Mixture Dataset (Controlled Overlap)}{15}{subsection.4.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Source Speech Selection}{15}{section*.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Overlap Construction}{15}{section*.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Noise Addition and SNR Control}{15}{section*.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Track B: Real Overlapped Speech Dataset}{15}{subsection.4.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Preprocessing Pipelines}{16}{chapter.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Signal-to-noise Raio Choice}{25}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Noise Type Choice}{25}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3.2}Performance Metrics}{25}{subsection.7.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3.3}Experimental Units}{25}{subsection.7.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7.4}Datasets and Data Splits}{26}{section.7.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4.1}Track A: Synthetic Mixture Dataset (Controlled Overlap)}{26}{subsection.7.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Source Speech Selection}{26}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Overlap Construction}{26}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Noise Addition and SNR Control}{26}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4.2}Track B: Real Overlapped Speech Dataset}{26}{subsection.7.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {8}Preprocessing Pipelines}{27}{chapter.8}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}Preprocessing Structure}{16}{section.5.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}Pipeline Definition}{16}{subsection.5.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}Experimental Plan}{16}{subsection.5.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}ASR Inference Controls}{16}{section.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8.1}Preprocessing Structure}{27}{section.8.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.1}Pipeline Definition}{27}{subsection.8.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1.2}Experimental Plan}{27}{subsection.8.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8.2}ASR Inference Controls}{27}{section.8.2}\protected@file@percent }
 \citation{Word_Error_Rate_Definitions}
-\@writefile{toc}{\contentsline {section}{\numberline {5.3}Evaluation Protocol}{17}{section.5.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.1}Reference Transcripts}{17}{subsection.5.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.2}Primary and Secondary Metrics}{17}{subsection.5.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.3}Overlap-aware Evaluation}{17}{subsection.5.3.3}\protected@file@percent }
-\newlabel{sec:metrics_overlap}{{5.3.3}{17}{Overlap-aware Evaluation}{subsection.5.3.3}{}}
-\newlabel{sec:metrics_overlap@cref}{{[subsection][3][5,3]5.3.3}{[1][17][]17}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.4}cpWER for Multi-speaker References}{17}{subsection.5.3.4}\protected@file@percent }
-\newlabel{sec:metrics_meeting}{{5.3.4}{17}{cpWER for Multi-speaker References}{subsection.5.3.4}{}}
-\newlabel{sec:metrics_meeting@cref}{{[subsection][4][5,3]5.3.4}{[1][17][]17}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {6}Evaluation Metrics}{18}{chapter.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8.3}Evaluation Protocol}{28}{section.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.1}Reference Transcripts}{28}{subsection.8.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.2}Primary and Secondary Metrics}{28}{subsection.8.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.3}Overlap-aware Evaluation}{28}{subsection.8.3.3}\protected@file@percent }
+\newlabel{sec:metrics_overlap}{{8.3.3}{28}{Overlap-aware Evaluation}{subsection.8.3.3}{}}
+\newlabel{sec:metrics_overlap@cref}{{[subsection][3][8,3]8.3.3}{[1][28][]28}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.4}cpWER for Multi-speaker References}{28}{subsection.8.3.4}\protected@file@percent }
+\newlabel{sec:metrics_meeting}{{8.3.4}{28}{cpWER for Multi-speaker References}{subsection.8.3.4}{}}
+\newlabel{sec:metrics_meeting@cref}{{[subsection][4][8,3]8.3.4}{[1][28][]28}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {9}Evaluation Metrics}{29}{chapter.9}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {6.1}Overview and Principles}{18}{section.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.2}Response Variables}{18}{section.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.3}Bootstrap Confidence Intervals}{18}{section.6.3}\protected@file@percent }
-\newlabel{sec:bootstrap_ci}{{6.3}{18}{Bootstrap Confidence Intervals}{section.6.3}{}}
-\newlabel{sec:bootstrap_ci@cref}{{[section][3][6]6.3}{[1][18][]18}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.4}Paired Comparisons (Preprocessing Effects)}{18}{section.6.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.5}Main Effects and Interactions (Model-Based Analysis)}{19}{section.6.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.6}Reporting of Effect Sizes}{19}{section.6.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.7}Transferability: Synthetic vs Real (RQ3)}{19}{section.6.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9.1}Overview and Principles}{29}{section.9.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9.2}Response Variables}{29}{section.9.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9.3}Bootstrap Confidence Intervals}{29}{section.9.3}\protected@file@percent }
+\newlabel{sec:bootstrap_ci}{{9.3}{29}{Bootstrap Confidence Intervals}{section.9.3}{}}
+\newlabel{sec:bootstrap_ci@cref}{{[section][3][9]9.3}{[1][29][]29}}
+\@writefile{toc}{\contentsline {section}{\numberline {9.4}Paired Comparisons (Preprocessing Effects)}{29}{section.9.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9.5}Main Effects and Interactions (Model-Based Analysis)}{30}{section.9.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9.6}Reporting of Effect Sizes}{30}{section.9.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9.7}Transferability: Synthetic vs Real (RQ3)}{30}{section.9.7}\protected@file@percent }
 \citation{chime6}
 \citation{Word_Error_Rate_Definitions}
-\@writefile{toc}{\contentsline {chapter}{\numberline {7}Statistical Analysis Plan}{20}{chapter.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {10}Statistical Analysis Plan}{31}{chapter.10}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {subsubsection}{Outcome Measurement metrics}{20}{section*.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{General Analysis Principles}{21}{section*.10}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Analysis of SNR Effect under Fixed Conditions}{21}{section*.11}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Analysis of OVR Effect under Fixed Conditions}{21}{section*.12}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Distribution Analysis Within Each Condition}{22}{section*.13}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Transfer to Real-World Data}{22}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Outcome Measurement metrics}{31}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{General Analysis Principles}{32}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Analysis of SNR Effect under Fixed Conditions}{32}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Analysis of OVR Effect under Fixed Conditions}{32}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Distribution Analysis Within Each Condition}{33}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Transfer to Real-World Data}{33}{section*.14}\protected@file@percent }
 \bibdata{references}
-\@writefile{toc}{\contentsline {subsubsection}{Optional Mixed-Effects Extension}{23}{section*.15}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Assumption Checks}{23}{section*.16}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Reporting}{23}{section*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Optional Mixed-Effects Extension}{34}{section*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Assumption Checks}{34}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Reporting}{34}{section*.17}\protected@file@percent }
 \bibcite{ami-corpus}{{1}{2007}{{AMI}}{{}}}
 \bibcite{chime6}{{2}{2020}{{CHiME}}{{}}}
 \bibcite{chen2020continuousspeechseparationdataset}{{3}{2020{}}{{Chen et~al.}}{{Chen, Yoshioka, Lu, Zhou, Meng, Luo, Wu, Xiao, and Li}}}
@@ -217,4 +287,4 @@
 \bibcite{Shriberg2001ObservationsOO}{{44}{2001}{{Shriberg et~al.}}{{Shriberg, Stolcke, and Baron}}}
 \bibcite{Handling_Trade-Offs_in_Speech_Separation_with_Sparsely-Gated_Mixture_of_Experts}{{45}{2023}{{Cosentino et~al.}}{{Cosentino, Pariente, Cornell, Deleforge, and Vincent}}}
 \bibcite{wu2018characteristics}{{46}{2018}{{YH et~al.}}{{YH, E, O, SS, A, and J}}}
-\gdef \@abspage@last{28}
+\gdef \@abspage@last{39}

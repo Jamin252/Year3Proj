@@ -10,52 +10,68 @@
 \contentsline {subsection}{\numberline {2.3.2}Integrated Pipelines and End-to-End ASR for Overlapping Speech}{7}{subsection.2.3.2}%
 \contentsline {subsection}{\numberline {2.3.3}Unified Metrics for Multi-Speaker ASR Evaluation}{8}{subsection.2.3.3}%
 \contentsline {subsection}{\numberline {2.3.4}Summary}{9}{subsection.2.3.4}%
-\contentsline {chapter}{\numberline {3}Datasets, ASR Models and Preprocessing Strategies}{10}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Datasets}{10}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Baseline Models under Evaluation}{10}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Preprocessing Strategies}{11}{section.3.3}%
-\contentsline {chapter}{\numberline {4}Experimental Design}{12}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Objective and Scope}{12}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Research Questions}{12}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Experimental Design Overview}{12}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Factors and Levels}{13}{subsection.4.3.1}%
-\contentsline {subsubsection}{Overlap Ratios Choice}{13}{section*.2}%
-\contentsline {subsubsection}{Maximum Concurrent Speakers Choice}{13}{section*.3}%
-\contentsline {subsubsection}{Signal-to-noise Raio Choice}{14}{section*.4}%
-\contentsline {subsubsection}{Noise Type Choice}{14}{section*.5}%
-\contentsline {subsection}{\numberline {4.3.2}Performance Metrics}{14}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Experimental Units}{14}{subsection.4.3.3}%
-\contentsline {section}{\numberline {4.4}Datasets and Data Splits}{15}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Track A: Synthetic Mixture Dataset (Controlled Overlap)}{15}{subsection.4.4.1}%
-\contentsline {subsubsection}{Source Speech Selection}{15}{section*.6}%
-\contentsline {subsubsection}{Overlap Construction}{15}{section*.7}%
-\contentsline {subsubsection}{Noise Addition and SNR Control}{15}{section*.8}%
-\contentsline {subsection}{\numberline {4.4.2}Track B: Real Overlapped Speech Dataset}{15}{subsection.4.4.2}%
-\contentsline {chapter}{\numberline {5}Preprocessing Pipelines}{16}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Preprocessing Structure}{16}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1}Pipeline Definition}{16}{subsection.5.1.1}%
-\contentsline {subsection}{\numberline {5.1.2}Experimental Plan}{16}{subsection.5.1.2}%
-\contentsline {section}{\numberline {5.2}ASR Inference Controls}{16}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Evaluation Protocol}{17}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}Reference Transcripts}{17}{subsection.5.3.1}%
-\contentsline {subsection}{\numberline {5.3.2}Primary and Secondary Metrics}{17}{subsection.5.3.2}%
-\contentsline {subsection}{\numberline {5.3.3}Overlap-aware Evaluation}{17}{subsection.5.3.3}%
-\contentsline {subsection}{\numberline {5.3.4}cpWER for Multi-speaker References}{17}{subsection.5.3.4}%
-\contentsline {chapter}{\numberline {6}Evaluation Metrics}{18}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Overview and Principles}{18}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Response Variables}{18}{section.6.2}%
-\contentsline {section}{\numberline {6.3}Bootstrap Confidence Intervals}{18}{section.6.3}%
-\contentsline {section}{\numberline {6.4}Paired Comparisons (Preprocessing Effects)}{18}{section.6.4}%
-\contentsline {section}{\numberline {6.5}Main Effects and Interactions (Model-Based Analysis)}{19}{section.6.5}%
-\contentsline {section}{\numberline {6.6}Reporting of Effect Sizes}{19}{section.6.6}%
-\contentsline {section}{\numberline {6.7}Transferability: Synthetic vs Real (RQ3)}{19}{section.6.7}%
-\contentsline {chapter}{\numberline {7}Statistical Analysis Plan}{20}{chapter.7}%
-\contentsline {subsubsection}{Outcome Measurement metrics}{20}{section*.9}%
-\contentsline {subsubsection}{General Analysis Principles}{21}{section*.10}%
-\contentsline {subsubsection}{Analysis of SNR Effect under Fixed Conditions}{21}{section*.11}%
-\contentsline {subsubsection}{Analysis of OVR Effect under Fixed Conditions}{21}{section*.12}%
-\contentsline {subsubsection}{Distribution Analysis Within Each Condition}{22}{section*.13}%
-\contentsline {subsubsection}{Transfer to Real-World Data}{22}{section*.14}%
-\contentsline {subsubsection}{Optional Mixed-Effects Extension}{23}{section*.15}%
-\contentsline {subsubsection}{Assumption Checks}{23}{section*.16}%
-\contentsline {subsubsection}{Reporting}{23}{section*.17}%
+\contentsline {chapter}{\numberline {3}Architectural Design}{10}{chapter.3}%
+\contentsline {section}{\numberline {3.1}System Overview}{10}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Synthetic Mixture Generation}{10}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Speaker and Clip Selection}{11}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Offset Scheduling}{11}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Noise Addition}{12}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.4}Manifest Structure}{12}{subsection.3.2.4}%
+\contentsline {chapter}{\numberline {4}System and Data Flow}{14}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Mixture Generation Algorithm}{14}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Representative ASR Models}{17}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Evaluation Metrics}{17}{section.4.3}%
+\contentsline {chapter}{\numberline {5}System Architecture and Implementation}{19}{chapter.5}%
+\contentsline {subsection}{\numberline {5.0.1}Libraries and Tools}{19}{subsection.5.0.1}%
+\contentsline {section}{\numberline {5.1}Synthetic Mixture Generation}{19}{section.5.1}%
+\contentsline {section}{\numberline {5.2}ASR Decoding}{20}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Error Metrics: WER, cpWER, DI-cpWER}{20}{section.5.3}%
+\contentsline {chapter}{\numberline {6}Datasets, ASR Models and Preprocessing Strategies}{21}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Datasets}{21}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Baseline Models under Evaluation}{21}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Preprocessing Strategies}{22}{section.6.3}%
+\contentsline {chapter}{\numberline {7}Experimental Design}{23}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Objective and Scope}{23}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Research Questions}{23}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Experimental Design Overview}{23}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}Factors and Levels}{24}{subsection.7.3.1}%
+\contentsline {subsubsection}{Overlap Ratios Choice}{24}{section*.2}%
+\contentsline {subsubsection}{Maximum Concurrent Speakers Choice}{24}{section*.3}%
+\contentsline {subsubsection}{Signal-to-noise Raio Choice}{25}{section*.4}%
+\contentsline {subsubsection}{Noise Type Choice}{25}{section*.5}%
+\contentsline {subsection}{\numberline {7.3.2}Performance Metrics}{25}{subsection.7.3.2}%
+\contentsline {subsection}{\numberline {7.3.3}Experimental Units}{25}{subsection.7.3.3}%
+\contentsline {section}{\numberline {7.4}Datasets and Data Splits}{26}{section.7.4}%
+\contentsline {subsection}{\numberline {7.4.1}Track A: Synthetic Mixture Dataset (Controlled Overlap)}{26}{subsection.7.4.1}%
+\contentsline {subsubsection}{Source Speech Selection}{26}{section*.6}%
+\contentsline {subsubsection}{Overlap Construction}{26}{section*.7}%
+\contentsline {subsubsection}{Noise Addition and SNR Control}{26}{section*.8}%
+\contentsline {subsection}{\numberline {7.4.2}Track B: Real Overlapped Speech Dataset}{26}{subsection.7.4.2}%
+\contentsline {chapter}{\numberline {8}Preprocessing Pipelines}{27}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Preprocessing Structure}{27}{section.8.1}%
+\contentsline {subsection}{\numberline {8.1.1}Pipeline Definition}{27}{subsection.8.1.1}%
+\contentsline {subsection}{\numberline {8.1.2}Experimental Plan}{27}{subsection.8.1.2}%
+\contentsline {section}{\numberline {8.2}ASR Inference Controls}{27}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Evaluation Protocol}{28}{section.8.3}%
+\contentsline {subsection}{\numberline {8.3.1}Reference Transcripts}{28}{subsection.8.3.1}%
+\contentsline {subsection}{\numberline {8.3.2}Primary and Secondary Metrics}{28}{subsection.8.3.2}%
+\contentsline {subsection}{\numberline {8.3.3}Overlap-aware Evaluation}{28}{subsection.8.3.3}%
+\contentsline {subsection}{\numberline {8.3.4}cpWER for Multi-speaker References}{28}{subsection.8.3.4}%
+\contentsline {chapter}{\numberline {9}Evaluation Metrics}{29}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Overview and Principles}{29}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Response Variables}{29}{section.9.2}%
+\contentsline {section}{\numberline {9.3}Bootstrap Confidence Intervals}{29}{section.9.3}%
+\contentsline {section}{\numberline {9.4}Paired Comparisons (Preprocessing Effects)}{29}{section.9.4}%
+\contentsline {section}{\numberline {9.5}Main Effects and Interactions (Model-Based Analysis)}{30}{section.9.5}%
+\contentsline {section}{\numberline {9.6}Reporting of Effect Sizes}{30}{section.9.6}%
+\contentsline {section}{\numberline {9.7}Transferability: Synthetic vs Real (RQ3)}{30}{section.9.7}%
+\contentsline {chapter}{\numberline {10}Statistical Analysis Plan}{31}{chapter.10}%
+\contentsline {subsubsection}{Outcome Measurement metrics}{31}{section*.9}%
+\contentsline {subsubsection}{General Analysis Principles}{32}{section*.10}%
+\contentsline {subsubsection}{Analysis of SNR Effect under Fixed Conditions}{32}{section*.11}%
+\contentsline {subsubsection}{Analysis of OVR Effect under Fixed Conditions}{32}{section*.12}%
+\contentsline {subsubsection}{Distribution Analysis Within Each Condition}{33}{section*.13}%
+\contentsline {subsubsection}{Transfer to Real-World Data}{33}{section*.14}%
+\contentsline {subsubsection}{Optional Mixed-Effects Extension}{34}{section*.15}%
+\contentsline {subsubsection}{Assumption Checks}{34}{section*.16}%
+\contentsline {subsubsection}{Reporting}{34}{section*.17}%
