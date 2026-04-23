@@ -1,112 +1,120 @@
 \chapter{Architectural Design}
+\label{chap:arch_design}
+\section{Design Objective and Principles}
+This chapter describes the software architecture for synthetic mixture generation, automatic speech recognition (ASR) inference under controlled identical conditions, evaluation using both established and proposed transcription metrics, and statistical analysis. The following principles guide the design:
+\begin{itemize}
+    \item \text{Experimental control}: overlap ratio, signal-to-noise ratio, clip duration, speaker count and noise type must be varied independently and systematically.
+    \item \text{Controlled comparison}: ASR models must be evaluated under the same set of synthetic mixtures with model-specific decoding.
+    \item \text{Traceability}: every result must be traceable to the specific configuration, including source files, offsets, transcripts and inference outputs.
+    \item \textbf{Modularity}: all components, including mixture generation, ASR inference, metric computation and statistical analysis, should be self-contained and separable so that new models or metrics can be added without rewriting the system.
+    \item \textbf{Reproducibility}: random seeds, libraries and model versions must be recorded so that other researchers can reproduce the experiment.
+\end{itemize}
+
+
+
 % Overall system architecture
 \section{System Overview}
 \begin{figure}[ht]
 \centering
-\resizebox{\linewidth}{!}{%
-\begin{tikzpicture}[
-    font=\sffamily,
-    >=Latex,
-    node distance=14mm and 16mm,
-    proc/.style={
-        draw,
-        rounded corners=2pt,
-        rectangle,
-        minimum height=9mm,
-        minimum width=31mm,
-        align=center,
-        line width=0.9pt,
-        fill=blue!6,
-        draw=blue!55!black
-    },
-    data/.style={
-        draw,
-        rounded corners=2pt,
-        rectangle,
-        minimum height=9mm,
-        minimum width=31mm,
-        align=center,
-        line width=0.9pt,
-        fill=green!7,
-        draw=green!45!black
-    },
-    outbox/.style={
-        draw,
-        rounded corners=2pt,
-        rectangle,
-        minimum height=9mm,
-        minimum width=31mm,
-        align=center,
-        line width=0.9pt,
-        fill=orange!10,
-        draw=orange!60!black
-    },
-    eval/.style={
-        draw,
-        rounded corners=2pt,
-        rectangle,
-        minimum height=10mm,
-        minimum width=36mm,
-        align=center,
-        line width=1.0pt,
-        fill=purple!8,
-        draw=purple!55!black
-    },
-    line/.style={-Latex, line width=0.9pt, draw=black!75},
-]
-
-% Left inputs and mixture generator
-\node[data] (A) {Speaker Audio\& Transcripts};
-\node[data, below=18mm of A] (C) {Noise Audio};
-\node[proc, right=28mm of $(A)!0.5!(C)$] (B) {Mixture Generator};
-
-% Direct outputs from mixture generator
-\node[outbox, right=28mm of B] (D) {Mixed Audio};
-\node[data, below=14mm of B] (J) {Manifest};
-
-% ASR models
-\node[proc, right=28mm of D, yshift=14mm] (E) {ASR Model 1\\(e.g. Whisper)};
-\node[proc, right=28mm of D] (F) {ASR Model 2\\(Wav2Vec2)};
-\node[proc, right=28mm of D, yshift=-14mm] (G) {ASR Model 3\\(Parakeet)};
-
-% Scoring and final results
-\node[eval, right=30mm of F] (H) {Scoring:\\WER, cpWER};
-\node[outbox, below=18mm of H] (I) {Results and Analysis};
-
-% Edges from inputs to generator
-\draw[line] (A) -- (B);
-\draw[line] (C) -- (B);
-
-% Edges from generator
-\draw[line] (B) -- (D);
-\draw[line] (B) -- (J);
-
-% Mixed audio to ASR models
-\draw[line] (D) -- (E);
-\draw[line] (D) -- (F);
-\draw[line] (D) -- (G);
-
-% ASR outputs and manifest to scoring
-\draw[line] (E) -- (H);
-\draw[line] (F) -- (H);
-\draw[line] (G) -- (H);
-\draw[line] (J) -| (H.west);
-
-% Final output
-\draw[line] (H) -- (I);
-
-\end{tikzpicture}%
-}
-\caption{System data flow: input speech and noise files (.wav or .flac) are combined into mixtures, which are then transcribed by ASR models. The transcripts are scored against the reference with WER and overlap-aware metrics.}
+\includefigure[width=\linewidth]{figures/system_overview.png}
+\caption{High-level data flow through the experimental system. Clean speech and noise recordings were transformed into synthetic mixtures, transcribed by ASR models, and passed to evaluation, benchmarking, and statistical analysis.}
 \label{fig:general_flow}
 \end{figure}
 
-\Cref{fig:general_flow} depicts the high-level data flow through the system. Inputs include clean speaker audio folders (containing audio of a single speaker, with speaker ID as the folder name and the corresponding transcripts) and noise audio folders (.wav or .flac, with noise type as the folder name). A YAML configuration file specifies parameters for mixture generation, including the number of mixtures, SNR levels (SNR), overlap ratios (ovr), duration, and speaker count (number of unique speakers). The \emph{Mixture Generator} module creates synthetic mixtures based on these configuration and outputs both the audio files and a manifest (containing metadata and transcripts). The mixed audio is fed into the target ASR models for inference. The result hypotheses are scored against the reference transcripts using evaluation metrics. The resulting hypotheses are then evaluated against the reference transcripts using specified evaluation metrics. The final results is analysed and compiled into a final report.
+\Cref{fig:general_flow} depicts the main pipeline of the system. The system starts from clean speaker audio folders (containing audio from a single speaker, with the speaker ID as the folder name and the corresponding transcripts) and noise audio folders (.wav or .flac, with the noise type as the folder name). A configuration file specifies experimental factors for mixture generation, including the number of mixtures, SNR levels (SNR), overlap ratios, duration, and speaker count (number of unique speakers). The \emph{Mixture Generator} module creates synthetic mixtures based on these configurations and outputs both the audio files and a manifest (containing metadata and transcripts). The mixed audio is fed into the target ASR models for inference. The result hypotheses are scored against the reference transcripts using evaluation metrics. The resulting hypotheses are then evaluated against the reference transcripts using specified evaluation metrics. The final results are analysed and compiled into a final report.
+
+\subsection{System Boundary and Design Rationale}
+\begin{table}[ht]
+\centering
+\caption{Summary of the main components in the experimental framework.}
+\label{tab:system_components}
+\begin{tabular}{p{3.2cm}p{3.1cm}p{3.2cm}p{5.2cm}}
+\toprule
+\textbf{Component} & \textbf{Input} & \textbf{Output} & \textbf{Responsibility} \\
+\midrule
+Synthetic mixture generation &
+Overlap ratio, SNR, noise type, speaker count &
+Synthetic audio, transcripts, and manifest &
+Generate synthetic audio mixtures that satisfy the specified acoustic and structural conditions. \\
+\hline
+DSS-WER beam approximation &
+Double-stream reference and single-stream hypothesis &
+DSS-WER approximation &
+Approximate a word error rate that permits interleaving between the two reference streams. \\
+\hline
+Benchmarking &
+None &
+Time statistics for four models &
+Measure the inference-time cost of each ASR model under a common benchmarking procedure. \\
+\hline
+Statistical notebook module &
+Transcriptions and WER values for each model and clip &
+Statistical plots and tables &
+Transform raw transcription outputs into statistical summaries, comparisons, and interpretable empirical claims. \\
+\bottomrule
+\end{tabular}
+\end{table}
+\Cref{tab:system_components} summarises the main components of the system and their responsibility. A modular architecture is adopted to allow for flexibility and extensibility, such that each component can function independently.
+%why synthetic generation, model inference, evaluation, benchmarking, and statistics are separated
+The synthetic mixture generation is separated from the ASR inference to ensure that synthetic mixture generation can also be used for other purposes such as training ASR models, and to allow for the possibility of adding new ASR models without modifying the generation code. The metric computation and statistical analysis are separated to allow for the addition of new metrics or new statistical analyses without modifying the inferencing code. This also keep the raw data so that new analyses can be performed without rerunning the entire system.
+
+\section{Artifact Structure}
+\subsection{Synthetic Audio Manifest Structure}
+Every clip is recorded in a manifest as a CSV file with metadata and transcripts. The transcript is a sequence of tuples of the form (speaker id, text, start time, end time) for each utterance. \Cref{tab:manifest_schema} summarise the key fields.
+\begin{table}[ht]
+\centering
+\begin{tabularx}{\linewidth}{|@{}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}|}
+\toprule
+\textbf{Field} & \textbf{Purpose} & \textbf{Example} \\
+\midrule
+\texttt{clip\_id} & Unique key joining audio, predictions, metrics, and statistics. & \texttt{mix\_0000104\_0.00\_2\_0\_T} \\
+\hline
+\texttt{audio\_path} & Relative path to the generated waveform. & \texttt{output/audio/mix\_000031.wav} \\
+\hline
+\texttt{transcript} & Ordered list of utterances with speaker ID, text, and timestamps. & \texttt{[(spk,text,t0,t1),\dots]} \\
+\hline
+\texttt{source\_files} & Provenance of the clean speech segments used. & list of input \texttt{.flac} or \texttt{.wav} paths \\
+\hline
+\texttt{noise\_files} & Provenance of the noise segment(s) used. & list of noise \texttt{.flac} or \texttt{.wav} paths \\
+\hline
+\texttt{speakers\_count} & Number of distinct speakers in the mixture. & \texttt{2} \\
+\hline
+\texttt{overlap\_ratio\_target} & Requested overlap ratio from configuration. & \texttt{0.20} \\
+\hline
+\texttt{overlap\_ratio\_actual} & Realised overlap ratio after scheduling. & \texttt{0.20} \\
+\hline
+\texttt{snr\_db} & Requested SNR, or \texttt{clean} for no added noise. & \texttt{7.4} \\
+\hline
+\texttt{noise\_type} & Noise category for condition grouping. & \texttt{P} (public) \\
+\bottomrule
+\end{tabularx}
+\caption{Recommended manifest schema. The key design principle is that every downstream analysis should be derivable from \texttt{clip\_id} plus stored metadata.}
+\label{tab:manifest_schema}
+\end{table}
+
+\subsection{Transcription Output Schema}
+The output transcription JSON file has the following format:
+\begin{itemize}
+    \item \textbf{key}: clip ID
+    \item \textbf{transcript}: a dictionary of the form \texttt{\{model name: hypothesis\}} for each ASR model, where each hypothesis is a list of tuples of the form (speaker id, text) for each utterance.
+\end{itemize}
+
+\subsection{Metric Output Schema}
+
+The evaluation results are stored in a JSON file with three top-level fields: \texttt{summary}, \texttt{results}, and \texttt{timestamp}. 
+The \texttt{summary} field contains aggregate information over the full evaluation run, including the total number of clips processed, the numbers of successful and failed evaluations, and descriptive statistics for the reported metrics. 
+In particular, it stores counts and summary statistics for standard word error rate (WER), DSS-WER, and ORC-WER.
+
+The \texttt{results} field contains a list of per-clip evaluation records. Each record corresponds to one audio clip and takes one of two forms. For an unsuccessful evaluation, the record instead stores the clip identifier, model name, evaluation status, and an error message describing the failure. 
+
+Finally, the \texttt{timestamp} field records when the output file was generated. 
+This structure separates corpus-level summary statistics from clip-level measurements, while also preserving failure information for later inspection and debugging.
+
 
 % Synthetic mixture generation process
 \section{Synthetic Mixture Generation}
-The mixture generation process comprises three steps: (1) \textbf{Speaker and clip selection}: randomly select the required number of speakers and clips from the clean speech dataset, (2) \textbf{Offset scheduling}:
-(1) \textbf{Offset computation}: calculate the time offsets for each utterance such that the overall overlap ratio approaches the target. (2) \textbf {Time offset adjustment}: adjust the time offsets to ensure the overall overlap ratio approaches the target. (3) \textbf{Noise addition}: add noise to the mixture at the specified SNR level. The output of this process will be a set of audio with different speaker counts and overlap ratios as base clips, and each base clip will have variants with different SNR levels. The metadata and transcripts of the mixtures are stored in a manifest file.
+The synthetic mixture is the core module of the system. It determines how overlap and noise are controlled. It comprises three steps: (1) \textbf{Speaker and clip selection}: randomly select the required number of speakers and clips from the clean speech dataset, (2) \textbf{Offset scheduling}:
+(1) \textbf{Offset computation}: calculate the time offsets for each utterance such that the overall overlap ratio approaches the target. (2) \textbf {Residual adjustment}: adjust the time offsets calculated to ensure the overall overlap ratio exactly matches the target. (3) \textbf{Noise addition}: add noise to the mixture at the specified SNR level. The output of this process will be a set of audio with different speaker counts and overlap ratios as base clips, and each base clip will have variants with different SNR levels. The metadata and transcripts of the mixtures are stored in a manifest file.
 
 \subsection{Speaker and Clip Selection}
 
@@ -167,22 +175,26 @@ The mixture generation process comprises three steps: (1) \textbf{Speaker and cl
 
 \end{tikzpicture}%
 }
-\caption{Speaker and Clip Selection Process}
+\caption{Speaker and Clip Selection Process. The stopping criteria are based on the required source duration, which is adjusted by the overlap ratio to account for occupied time by the overlapping region.}
 \label{fig:clip_selection}
 \end{figure}
-This process takes input of the target speaker count $c$ and duration constraints $d$ (minimum duration of final mixed audio), and returns: (1) a sequence of clips satisfying the target speaker count and duration constraints, (2) the corresponding sequence of transcripts.
+This \emph{clip-selection} process takes a target speaker count $c$ and a duration $d$ (minimum duration of final mixed audio), and returns: (1) a sequence of clips satisfying the target speaker count and duration constraints, (2) the corresponding sequence of transcripts.
 
-\Cref{fig:clip_selection} shows the process that is designed to create a sequence of clips with specified speaker count and duration. A set of $c$ speakers is selected at uniform random without replacement. During the clip selection process, the next speaker is chosen with probability inversely proportional to the number of clips contributed from each speaker to balance the number of clips per speaker (with probability of 0 for speakers from the previous iteration). The random selection of clips is uniform random with replacement. The process iterates until the total duration of the selected clips exceeds the target duration adjusted by the overlap ratio (to account for the overlapping region that is double-counted here). The adjusted total clip duration $T_{sum}$ is calculated by:
-\[
-    \begin{aligned}
-    \mathrm{OVR} &= T_{overlap} / d \\
-    T_{duration} &= T_{sum} - T_{overlap} \\
-    T_{overlap} &= T_{duration} - d \\
-    \mathrm{OVR} &= (T_{sum} - d) / d \\
-    \Rightarrow\quad T_{sum} &= d \cdot (1 + \mathrm{OVR})
-    \end{aligned}
-\]
-The output transcript is a sequence of speaker-attributed transcripts.
+\Cref{fig:clip_selection} shows the process that is designed to create a sequence of clips with specified speaker count and duration. A set of $c$ speakers is selected at uniform random without replacement. The process iterates until the total duration of the selected clips exceeds the target duration adjusted by the overlap ratio (to account for the overlapping region that is double-counted here). The adjusted total clip duration $T_{\mathrm{src}}$ is calculated by:
+\begin{equation}
+T_{\mathrm{src}} = T_{\mathrm{active}} + T_{\mathrm{overlap}}.
+\end{equation}
+If the overlap ratio is defined as
+\begin{equation}
+ \mathrm{OVR} = \frac{T_{\mathrm{overlap}}}{T_{\mathrm{active}}},
+\end{equation}
+Then the required total source duration is 
+\begin{equation}
+T_\mathrm{src} = d(1+\mathrm{OVR})
+\end{equation}
+This formulation is preferable to the naive duration threshold because it accounts for the double-counted time by the overlapping region. Without this, a highly overlapped mixture would have a much shorter duration than the intended target.
+
+A balanced selection is used during the clip selection process. The next speaker is chosen with a probability inversely proportional to the number of clips contributed by each speaker, to balance the number of clips per speaker (with probability 0 for speakers from the previous iteration). The random selection of clips is uniform random with replacement. This process mimics an actual conversation, with speakers taking turns.
 
 \subsection{Offset Scheduling}
 \begin{figure}[ht]
@@ -221,10 +233,10 @@ The output transcript is a sequence of speaker-attributed transcripts.
 ]
 
 % Nodes
-\node[block] (A) {sequence of clips\\[-1pt] \& overlap ratio target $(\mathrm{ovr})$\\[-1pt] \& clip spacing mean $(\mu)$\\[-1pt] \& clip spacing std $(\mathrm{std})$};
+\node[block] (A) {sequence of clips\\begin{equation}-1pt] \& overlap ratio target $(\mathrm{ovr})$\\begin{equation}-1pt] \& clip spacing mean $(\mu)$\\begin{equation}-1pt] \& clip spacing std $(\mathrm{std})$};
 \node[decision, below=of A] (B) {if $(\mathrm{ovr}) > 0$};
 \node[block, below left=12mm and 11mm of B, text width=28mm] (C) {overlap allocation (\Cref{fig:overlap_allocation})};
-\node[block, below right=12mm and 11mm of B, text width=31mm] (D) {allocate spacing\\[-1pt] $=\,\mathrm{Norm}(\mu,\mathrm{std})$};
+\node[block, below right=12mm and 11mm of B, text width=31mm] (D) {allocate spacing\\begin{equation}-1pt] $=\,\mathcal{N}(\mu,\mathrm{std})$};
 \node[block, below=16mm of $(C)!0.5!(D)$, text width=34mm] (E) {sequence of clip start times};
 
 % Edges
@@ -269,112 +281,544 @@ The output transcript is a sequence of speaker-attributed transcripts.
     }
 ]
 
-% Nodes
-\node[box] (A) {sequence of clips \& overlap ratio $(\mathrm{ovr})$ \& overlap std ratio};
+\node[box] (A) {clip sequence, target overlap ratio $o$, and overlap variability ratio};
+\node[box, below=of A] (B) {compute target absolute overlap $O^{\star}=\dfrac{o}{1+o}\sum_i \ell_i$};
+\node[box, below=of B] (C) {set mean adjacent overlap $\bar{O}=\dfrac{O^{\star}}{n-1}$};
+\node[box, below=of C] (D) {sample adjacent overlaps around $\bar{O}$ with clipping to feasible bounds};
+\node[box, below=of D] (E) {apply residual correction until $\sum_i O_i = O^{\star}$};
+\node[box, below=of E] (F) {convert overlaps to clip start times};
 
-\node[box, below=of A] (B) {abs size of overlap $(o_{\mathrm{abs}})$\\
-$= (\mathrm{ovr}) \cdot \dfrac{\text{total length of all clips}}{1 + (\mathrm{ovr})}$};
-
-\node[box, below=of B] (C) {average abs overlap $(\bar{o}_{\mathrm{abs}})$\\
-$= \dfrac{o_{\mathrm{abs}}}{\text{number of clips} - 1}$};
-
-\node[box, below=of C] (D) {sequence of overlap\\
-$= \mathrm{Norm}(\bar{o}_{\mathrm{abs}},\, \bar{o}_{\mathrm{abs}} \cdot \mathrm{std\_ratio})$};
-
-\node[box, below=of D] (E) {difference $(d)$\\
-$= \left|\left(\sum \text{sequence of overlap}\right) - o_{\mathrm{abs}}\right|$};
-
-\node[decision, below=12mm of E] (F) {if $d=0$};
-
-\node[box, below left=14mm and 28mm of F, text width=4.0cm, fill=green!8, draw=green!50!black] (G) {return sequence of overlap};
-
-\node[box, below right=14mm and 28mm of F, text width=4.6cm, fill=red!6, draw=red!55!black] (H) {allocate $(d)$ at uniform random};
-
-% Arrows
 \draw[line] (A) -- (B);
 \draw[line] (B) -- (C);
 \draw[line] (C) -- (D);
 \draw[line] (D) -- (E);
 \draw[line] (E) -- (F);
 
-\draw[line] (F) -- node[midway, left, font=\footnotesize\sffamily] {True} (G);
-\draw[line] (F) -- node[midway, right, font=\footnotesize\sffamily] {False} (H);
-\draw[line] (H) -- (G);
-
 \end{tikzpicture}
 }
-\caption{Overlap allocation process when overlap ratio $> 0$}
 \label{fig:overlap_allocation}
 \end{minipage}
-\caption{Offset Scheduling Process}
+\caption{Offset Scheduling Process. The left diagram shows the top-level decision flow between non-overlapping and overlapping cases. The diagram on the right shows the overlap allocation process when the overlap ratio is greater than zero.}
 \label{fig:offset_scheduling}
 \end{figure}
-This process takes input of a sequence of clips, overlap ratio ($\mathrm{ovr} \in [0,1]$), overlap std ratio, and clip spacing mean and std (for non-overlapping case) and outputs the start sample index for each clip where the overlap ratio is exactly as specified.
+This scheduler given a sequence of clips with durations $\ell_1, \ell_2,\dots, \ell_n$ and overlap ratio ($\mathrm{OVR} \in [0,1]$), constructs clip starting sample index such that the overlap ratio is exactly as specified, using the given overlap std ratio $\mathrm{\sigma_\mathrm{OVR}}$, and clip spacing mean and std (for non-overlapping case).
 
-In the case where the overlap ratio is zero, the start time of each clips is determined by allocating a spacing that is a random sample from a normal distribution \texttt{Norm}($\mu$, $\mathrm{std}$) where $\mu$ and $\mathrm{std}$ are the mean and std of the clip spacing specified.
-In the case where overlap ratio is greater than zero, we first compute the target overlap $o_{\mathrm{abs}}$ in samples by:
-\[
-o_{\mathrm{abs}} = \frac{\mathrm{ovr}}{1+\mathrm{ovr}} \cdot \sum \mathrm{clip~duration}.
-\]
-and, for $n$ number of clips, the average overlap $\bar{o}_{\mathrm{abs}}$ by $\bar{o}_{\mathrm{abs}} = \frac{o_{\mathrm{abs}}}{n-1}$. Then each overlap between adjacent clips is then sampled from a normal distribution \texttt{Norm}($\bar{o}_{\mathrm{abs}}$, $\bar{o}_{\mathrm{abs}} \cdot \mathrm{std\_ratio}$) where the overlap is capped by the duration of the preceding and succeeding clips. After that, a residual correction is applied so that the sum of sampled overlaps equals the target overlap exactly. The difference $\mathrm{diff} = o_{\mathrm{abs}} - \sum\text{sampled overlaps}$. If the difference is greater than zero, we randomly select overlaps that are smaller than the preceding clip and succeeding clip duration, and add one sample to the selected overlaps until the difference is zero. If the difference is smaller than zero, we randomly select overlaps that are greater than zero and subtract one sample until the difference is zero.
+In the case where the overlap ratio is zero, the start time of each clip is determined by allocating a spacing that is a random sample from a normal distribution $\mathcal{N}(\mu$, $\mathrm{std}$) where $\mu$ and $\mathrm{std}$ are the mean and std of the clip spacing specified.
+In the case where the overlap ratio is greater than zero, the target absolute overlap $o^*$ is
+\begin{equation}
+o^* = \frac{\mathrm{OVR}}{1+\mathrm{OVR}} \cdot \sum_{i=1}^n \ell_i.
+\end{equation}
+The total is distributed across the adjacent clips. Let $o_i$ be the overlap between clip $i$ and clip $i+1$, then the scheduler enforces
+\begin{equation}
+0\le o_i\le \min(\ell_i, \ell_{i+1}), \qquad \sum_{i=1}^{n-1} o_i=o^*.
+\end{equation}
+For $n$ clips, the average overlap is
+\begin{equation}
+\bar{o} = \frac{o^*}{n-1}
+\end{equation}
+then each overlap $o_i$ is sampled as
+\begin{equation}
+o_i=\mathcal{N}(\bar{o}, (\bar{o} \cdot \sigma_\mathrm{OVR})^2)
+\end{equation}
+
+After that, a residual correction is applied so that the sum of sampled overlaps equals the target overlap exactly. The difference $\mathrm{diff} = o^* - \sum\text{sampled overlaps}$. If the difference is greater than zero, we randomly select overlaps that are smaller than the preceding and succeeding clip durations, and add one sample to each selected overlap until the difference is zero. If the difference is negative, we randomly select overlaps greater than zero and subtract one sample until the difference is zero.
 Finally, the start sample index of each clip is determined by adding the spacing (overlap will be 
-treated as negative spacing). The start and end timestamp of each clip is then put into the manifest.
+treated as negative spacing). 
+
+The start times $s_i$ are then computed recursively as
+\begin{equation}
+s_1 = 0, \qquad s_{i} = s_{i-1} + \ell_{i-1} - o_{i-1} \quad \text{for } i=2,3,\dots,n.
+\end{equation}
+An important architectural design choice here is treating the overlap as a controlled variable. This makes the generator suitable for experimental work rather than just producing plausible mixtures.
+
 \subsection{Noise Addition}
-The noise addition process takes input of the mixed audio, set of noise audio, noise type and target SNR level ($\mathrm{SNR}_{dB} \in \mathbb{R} ~\text{or}~ \text{clean}$, measured over active speech time), and output the noisy mixed audio, where same base audio can produce different noisy versions. The noise type can be domestic (D), public (P), transportation (T), nature (N), office (O), street (S) or all (A) (more details in \Cref{sec:dataset}). Then sample noise audio from the specified noise type(s) uniformly at random with replacement, and concatenate the noise audio until the total length is reached (exceeding part will be truncated). Finally, the noise is scaled by a factor $\alpha$ to meet the target SNR level. The scaling factor $\alpha$ is computed by:
-\[
-\alpha = \frac{A_\text{active speech}}{A_\text{noise} \times 10^{\mathrm{SNR}_{dB}/20}}.
-\]
-where $A_\text{active speech}$ is the root mean square (RMS) amplitude of the active speech region in the mixture, and $A_\text{noise}$ is the RMS amplitude of the noise segment before scaling. The active speech region is determined by the RMS of all clips in the mixture. The SNR is measured relative to the active speech region to ensure the noise level is accurately proportional to the speech content.
-Finally, the scaled noise is added to the mixture to produce the final audio.
+After the clean mixture is generated, environmental noise is added.
+
+The noise addition process takes input of the mixed audio, set of noise audio, noise type and target SNR level ($\mathrm{SNR}_{dB} \in \mathbb{R} ~\text{or}~ \text{clean}$, measured over active speech time). The noise type can be domestic (D), public (P), transportation (T), nature (N), office (O), street (S), or all (A) (see \Cref{sec:speech_noise_sources} for more details). 
+
+Then, noise audio samples are uniformly sampled from the specified noise type(s) and concatenated until the total length is reached, with excess parts truncated. Let $A_\mathrm{active~speech}$ be the root mean square (RMS) amplitude of the active speech region, and let $A_\mathrm{noise}$ be the RMS amplitude of the noise segment before scaling. For a target SNR level of $\mathrm{SNR}_{dB}$ defined as
+\begin{equation}
+\mathrm{SNR}_{dB} = 20 \log_{10}\left(\frac{\text{A}_\text{active speech}}{\text{A}_\text{noise}}\right),
+\end{equation}
+The noise is scaled by a factor of
+\begin{equation}
+\alpha = 10^{-\frac{\mathrm{SNR}_{dB}}{20}} \cdot \frac{A_\text{active speech}}{A_\text{noise}}
+\label{eq:noise_scaling}
+\end{equation}
+
+
+The active speech region is determined by the RMS of all clips in the mixture.
+
+The final mixture is the sum of the clean mixture and the scaled noise.
+\begin{equation}
+x_\mathrm{final}(t) = x_\mathrm{speech}(t)+\alpha x_\mathrm{noise}(t)
+\end{equation}
+The SNR is measured relative to the active speech region to ensure the noise level is accurately proportional to the speech content, preventing long silenct regions from distorting the effective noise level. 
 
 This algorithm is designed to support controlled experiments on overlap ratio, SNR level, speaker count, duration and noise type by varying each factor independently. It also supports noise analysis on the same clip with different noise types and SNR levels.
 
 % metadata and transcription structure
-\subsection{Manifest Structure}
-The manifest is a csv file that contains the metadata and transcripts of the mixtures.
-\begin{table}[ht]
+
+
+
+% ASR inference layer
+\section{ASR Inference and Experiment Orchestration}
+The inference layer consumes the manifest and produces standardised hypotheses for each ASR model. Each ASR backend is wrapped by a common adapter interface, enabling uniform orchestration across models. The wrapper is responsible for:
+\begin{enumerate}
+    \item Periodic GPU cache clearing and optional garbage collection to manage memory during large-scale inference.
+    \item Skipping already transcribed clips by checking the existing JSON file
+    \item Running inference over a batch of clips
+    \item Serialising the output into the standardised JSON format
+    \item Recording runtime and failure information
+\end{enumerate}
+
+The adapter is important because the ASR models are heterogeneous. Some return segmented outputs, while some return unsegmented outputs. Some inputs are audio waveforms, while some take file paths. This architecture, therefore, standardises the output format and provides a unified interface.
+To support resumability, the wrapper checks whether a clip has already been transcribed before running inference. Exceptions are logged per batch, so a single clip failure does not break the entire process. This is practical as when large experiments are executed over days, robustness and resumability are important to prevent loss of progress. 
+
+\subsection{Fairness Controls}
+The following controls ensure that measured differences are attributed to the ASR models rather than confounding factors:
+\begin{itemize}
+    \item \textbf{fixed sample rate}: 16kHz for all models, resampling is applied if necessary
+    \item \textbf{identical audio}: the same set of audio files is used across all models
+    \item \textbf{identical reference}: the same set of reference transcriptions is used across all models
+    \item \textbf{text normalisation}: the same text normalisation is applied to both reference and hypothesis before evaluation, including lowercasing and punctuation removal.
+\end{itemize}
+
+
+
+\section{Evaluation Architecture}
+The evaluation system is a separate architectural block. This is where the dissertation's scientific contribution lies. 
+\subsection{Established Metric Modules}
+The first module computes established metrics, such as WER for single-stream referencing and ORC-WER for multi-stream referencing. 
+
+\subsubsection{WER}
+Given a reference transcript and a hypothesis transcript, WER is computed as the Levenshtein distance between the reference and hypothesis:
+\begin{equation}
+\mathrm{WER} = \frac{\mathrm{lev}(r,h)}{|r|}=\frac{I + D + S}{|r|}
+\end{equation}
+where $I$, $D$ and $S$ are the number of insertions, deletions and substitutions required to transform the hypothesis into the reference, and $|r|$ is the number of words in the reference \cite{Word_Error_Rate_Definitions}.
+
+\subsubsection{ORC-WER}
+The ORC-WER is speaker-agnostic. It computes the minimum WER over all possible segments-to-utterance assignments. It is defined as 
+\begin{equation}
+    \operatorname{lev}^{(\mathrm{ORC})}
+=
+\min_{\rho_1,\ldots,\rho_J}
+\sum_{j=1}^{J}
+\operatorname{lev}
+\left(
+\bigoplus_{u \in \rho_j} \mathcal{R}_u,\;
+\bigoplus_{u' = 1}^{U_{\mathcal{H},j}} \mathcal{H}_{j,u'}
+\right)
+\end{equation}
+where $rho_j$ contains index pairs of speaker $i$ and utterance $u$, meaning reference utterance $u$ from speaker $i$ is assigned $j$-th hypothesis segment. $\bigoplus$ is the concatenation operator.   
+
+\subsection{Proposed Metric Module: Double-Stream Serialised WER (DSS-WER)}
+The DSS-WER is a proposed metric that extends WER to solve the specific case of double-stream reference transcriptions with single-stream hypotheses. Given two reference streams $A$ and $B$ representing two speakers, and a single-stream hypothesis $H$, the DSS-WER computes the minimum WER between the hypothesis and any interleaving merging of the two reference streams. Formally, let $A$ and $B$ be a partial order of words, and let $R$ be the set of all possible interleaving mergings of $A$ and $B$ that preserve the partial order. Then the DSS-WER is defined as
+\begin{equation}
+\mathrm{DSS\text{-}WER}(A, B, H) = \min_{r \in R} \mathrm{WER}(r, H).
+\end{equation}
+\subsubsection{Example of DSS-WER vs. WER}
+\Cref{fig:mrswer_diff_example} shows an example where the ordinary concatenated WER and the DSS-WER differ. DSS-WER is able to give zero error for a valid interleaving of the two reference streams, whereas WER penalises the different serialisation order. This illustrates the important distinction between the two metrics and the motivation for the proposed DSS-WER.
+
+\begin{figure}[t]
 \centering
-\begin{tabularx}{\linewidth}{|@{}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}|}
-\toprule
-\textbf{Field} & \textbf{Description} & \textbf{Example} \\
-\midrule
-\texttt{clip\_id} & Unique identifier for each generated mixture. & \begin{tabular}[t]{@{}l@{}}\texttt{mix\_0000003\_0.00\_2\_}\\\texttt{7.4\_D}\end{tabular} \\
+
+\tikzset{
+    baseword/.style={
+        draw,
+        rounded corners=1pt,
+        minimum width=7mm,
+        minimum height=7mm,
+        inner sep=1.5pt,
+        font=\small
+    },
+    refA/.style={baseword, draw=blue!50!black, fill=blue!18},
+    refB/.style={baseword, draw=orange!60!black, fill=orange!22},
+    rowlabel/.style={font=\large},
+    scoretable/.style={anchor=west},
+    expltext/.style={anchor=west, align=left, text width=12.5cm, font=\small}
+}
+
+% -------------------- first subfigure --------------------
+\begin{subfigure}[t]{\linewidth}
+\centering
+\begin{tikzpicture}[x=0.9cm, y=0.9cm]
+
+% Labels
+\node[rowlabel] at (-1.2,2.0) {$R_1:$};
+\node[rowlabel] at (-1.2,1.0) {$R_2:$};
+\node[rowlabel] at (-1.2,0.0) {$H_1:$};
+
+% Reference rows
+\node[refA] (r1a) at (1.0,2.0) {hello};
+\node[refA, right=1mm of r1a] (r1b) {world};
+
+\node[refB] (r2a) at (0.0,1.0) {goodbye};
+\node[refB, right=8mm of r2a] (r2b) {earth};
+
+% Overlap shading
+\node[
+    draw=gray!60,
+    pattern=north east lines,
+    pattern color=gray!50,
+    fit=(r1a)(r1b)(r2a)(r2b),
+    inner sep=4pt,
+    rounded corners=2pt
+] {};
+
+% Hypothesis row
+\node[refA] (h1a) at (0.0,0.0) {hello};
+\node[refB, right=1mm of h1a] (h1b) {goodbye};
+\node[refA, right=1mm of h1b] (h1c) {world};
+\node[refB, right=1mm of h1c] (h1d) {earth};
+
+% Score table
+\node[scoretable] at (5.5,1.5) {
+\begin{tabular}{|l|c|}
 \hline
-\texttt{audio\_path} & Relative path to the generated mixed waveform file. & \texttt{Output/audio/...wav} \\
+\textbf{Metric} & \textbf{Error} \\
 \hline
-\texttt{transcript} & Serialized list of speaker-attributed utterances with start and end timestamps. & \texttt{[(spk,text,t0,t1), ...]} \\
+WER & $1/4$ \\
 \hline
-\texttt{overlap\_ratio\_target} & Target overlap ratio specified by the generation configuration. & \texttt{0.0} \\
+DSS-WER & $0/4$ \\
 \hline
-\texttt{overlap\_ratio\_actual} & Overlap ratio measured from the generated mixture. & \texttt{0.0} \\
+\end{tabular}
+};
+
+\end{tikzpicture}
+\caption{A toy lexical example in which the hypothesis forms a valid interleaving of the two reference streams.}
+\label{fig:dsswer_diff_toy}
+\end{subfigure}
+
+\vspace{0.75em}
+\rule{0.85\textwidth}{0.4pt}
+\vspace{0.75em}
+
+% -------------------- second subfigure --------------------
+\begin{subfigure}[t]{\linewidth}
+\centering
+\begin{tikzpicture}[x=0.95cm, y=0.95cm]
+
+% Labels
+\node[rowlabel, anchor=east] at (0.2, 1.2) {$R_1:$};
+\node[rowlabel, anchor=east] at (0.2, 0.35) {$R_2:$};
+\node[rowlabel, anchor=east] at (0.2,-1.0) {$H_1:$};
+
+% Overlap region
+\fill[pattern=north east lines, pattern color=gray!55]
+    (1.1,0.0) rectangle (6.9,1.55);
+
+% Reference stream R1
+\node[refA] at (1.7,1.2) {A};
+\node[refA] at (3.5,1.2) {B};
+\node[refA] at (5.3,1.2) {C};
+
+% Reference stream R2
+\node[refB] at (2.6,0.35) {D};
+\node[refB] at (4.4,0.35) {E};
+\node[refB] at (6.2,0.35) {F};
+
+% Divider line
+\draw[thick] (0.4,-0.15) -- (7.0,-0.15);
+
+% Hypothesis row
+\node[refA] at (1.7,-1.0) {A};
+\node[refB] at (2.6,-1.0) {D};
+\node[refA] at (3.5,-1.0) {B};
+\node[refB] at (4.4,-1.0) {E};
+\node[refA] at (5.3,-1.0) {C};
+\node[refB] at (6.2,-1.0) {F};
+
+% Score table
+\node[scoretable] at (8.0,1.2) {
+\begin{tabular}{|l|c|}
 \hline
-\texttt{speakers\_count} & Number of unique speakers. & \texttt{2} \\
+\textbf{Metric} & \textbf{Score} \\
 \hline
-\texttt{snr\_db} & Target signal-to-noise ratio in dB; can be empty for clean/no-noise settings. & \texttt{7.4}, \texttt{0.0}, \texttt{-5.0} \\
+WER & $2/6$ \\
 \hline
-\texttt{noise\_type} & Noise category code used in sampling (e.g., Domestic/Public/Transport). & \texttt{D}, \texttt{P}, \texttt{T} \\
+DSS-WER & $0/6$ \\
 \hline
-\texttt{overlap\_mask\_path} & Path to overlap mask data or placeholder if not generated. & \texttt{no mask} \\
-\hline
-\texttt{source\_files} & Serialized list of source speech files used to construct the mixture. & \begin{tabular}[t]{@{}l@{}}\texttt{['/Data/LibriSpeech/}\\\texttt{train-clean-100/8123/275209}\\\texttt{/8123-275209-0011.flac'}\\\texttt{, ...]} \end{tabular}\\
-\hline
-\texttt{noise\_files} & Serialized list of selected noise files (empty for clean conditions). & \texttt{'Data/Noise/TBUS/ch06.wav'} \\
-\hline
-\bottomrule
-\end{tabularx}
-\caption{Manifest schema used to store synthetic mixture metadata and transcripts.}
-\label{tab:manifest_schema}
-\end{table}
+\end{tabular}
+};
+
+% Explanatory note
+\node[expltext] at (0.4,-2.8) {%
+\textbf{Example:} Ordinary WER can over-penalise a hypothesis that is a valid
+interleaving of multiple reference streams. Here,
+$H_1=\texttt{A D B E C F}$ preserves the alternating order implied by
+$R_1$ and $R_2$, so DSS-WER assigns zero error. In contrast, ordinary WER
+compares the hypothesis against a single serialised reference and yields a
+non-zero score.
+};
+
+\end{tikzpicture}
+\caption{An alternating interleaving example where ordinary WER and DSS-WER produce different scores.}
+\label{fig:dsswer_diff_alternating}
+\end{subfigure}
+
+\caption{Examples illustrating the difference between ordinary WER and an interleaving-aware metric. In both cases, the hypothesis is a valid interleaving of the reference streams, so DSS-WER assigns zero error, whereas ordinary WER penalises the mismatch against a single serialised reference.}
+\label{fig:mrswer_diff_example}
+\end{figure}
 
 
-% ASR inference layer
 
+However, since the number of possible interleavings grows combinatorially with the length of the reference, the time complexity of computing DSS-WER exactly is $O\left(\binom{|A| + |B|}{|A|} \cdot (|A| + |B|) \cdot |H|\right)$, which is computationally infeasible for long transcripts. Therefore, an efficient approximation algorithm is necessary for practical use. Therefore, we hereby propose an efficient approximation algorithm for DSS-WER.
+
+\begin{figure}[ht]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+    font=\sffamily\small,
+    >=Latex,
+    node distance=8mm and 12mm,
+    process/.style={
+        rectangle,
+        rounded corners=2pt,
+        draw=blue!60!black,
+        line width=0.8pt,
+        fill=blue!6,
+        text width=4.2cm,
+        minimum height=9mm,
+        align=center,
+        inner sep=4pt
+    },
+    decision/.style={
+        diamond,
+        aspect=2.1,
+        draw=orange!70!black,
+        line width=0.8pt,
+        fill=orange!10,
+        text width=2.8cm,
+        align=center,
+        inner sep=1pt
+    },
+    line/.style={
+        -{Latex[length=2.4mm,width=1.6mm]},
+        draw=gray!75!black,
+        line width=0.9pt
+    }
+]
+
+% Top section
+\node[process, text width=5.0cm] (A) {Input chain A, chain B, hypothesis};
+\node[process, below=of A] (B) {Normalise words};
+\node[process, below left=of B] (C) {Run forward beam search};
+\node[process, below right=of B] (D) {Run reverse beam search};
+
+% Forward branch
+\node[process, below=of C] (E) {Initialise state (0,0,0)};
+\node[process, below=of E] (G) {Expand beam states};
+\node[process, below=of G, text width=5.0cm] (I) {Generate successors: match/sub A, match/sub B, insert, delete A, delete B};
+\node[process, below=of I] (K) {Score using exact cost + heuristic};
+\node[process, below=of K] (M) {Adaptive + stratified beam pruning};
+\node[decision, below=11mm of M] (O) {Terminal reached?};
+\node[process, below=13mm of O] (Q) {Backtrack alignment};
+\node[process, below=of Q] (S) {Compute distance and WER};
+
+% Reverse branch
+\node[process, below=of D] (F) {Initialise reversed state (0,0,0)};
+\node[process, below=of F] (H) {Expand beam states};
+\node[process, below=of H, text width=5.0cm] (J) {Generate successors: match/sub A, match/sub B, insert, delete A, delete B};
+\node[process, below=of J] (L) {Score using exact cost + heuristic};
+\node[process, below=of L] (N) {Adaptive + stratified beam pruning};
+\node[decision, below=11mm of N] (P) {Terminal reached?};
+\node[process, below=13mm of P] (R) {Backtrack alignment};
+\node[process, below=of R] (T) {Compute distance and WER};
+
+% Merge and final
+\node[process, below=18mm of $(S)!0.5!(T)$, text width=5.2cm] (U) {Choose better of forward and reverse pass};
+\node[process, below=of U, text width=4.8cm] (V) {Return best distance, WER, alignment};
+
+% Main arrows
+\draw[line] (A) -- (B);
+\draw[line] (B) -- (C);
+\draw[line] (B) -- (D);
+
+\draw[line] (C) -- (E);
+\draw[line] (E) -- (G);
+\draw[line] (G) -- (I);
+\draw[line] (I) -- (K);
+\draw[line] (K) -- (M);
+\draw[line] (M) -- (O);
+\draw[line] (O) -- node[right, font=\scriptsize, xshift=1pt] {Yes} (Q);
+\draw[line] (Q) -- (S);
+
+\draw[line] (D) -- (F);
+\draw[line] (F) -- (H);
+\draw[line] (H) -- (J);
+\draw[line] (J) -- (L);
+\draw[line] (L) -- (N);
+\draw[line] (N) -- (P);
+\draw[line] (P) -- node[right, font=\scriptsize, xshift=1pt] {Yes} (R);
+\draw[line] (R) -- (T);
+
+\draw[line] (S) |- (U);
+\draw[line] (T) |- (U);
+\draw[line] (U) -- (V);
+
+% Loop-back arrows for negative decisions
+\draw[line] (O.west) -| ++(-2.0,0) |- node[pos=0.22, above, font=\scriptsize] {No} (G.west);
+\draw[line] (P.east) -| ++(2.0,0) |- node[pos=0.22, above, font=\scriptsize] {No} (H.east);
+
+\end{tikzpicture}
+}
+\caption{High-level flow of the beam-search approximation algorithm for DSS-WER.}
+\label{fig:dss_wer_flow}
+\end{figure}
+%dss wer algorithm
+\subsection{Beam-Search Approximation for DSS-WER}
+\label{sec:dss_wer_algorithm}
+To evaluate a single hypothesis transcript against two reference speaker streams while allowing interleaving, I implement a beam-search approximation to the minimum levenshtein distance over all valid merges of the two reference chains. \Cref{fig:dss_wer_flow} is the overall flowchart. The full pseudocode is in \Cref{ch:dss_wer_pseudocode}.
+
+Let
+\begin{equation}
+A=(a_1,a_2,\dots, a_m), \qquad B=(b_1,b_2, \dots, b_n), \qquad H=(h_1,h_2,\dots, h_T)
+\end{equation}
+denotes the two reference chains and the hypothesis chain.
+
+\subsubsection{Normalisation}
+Each word in the reference and hypothesis is normalised by lowercasing and removing punctuation. This is to ensure that the metric is not affected by mismatches caused by case or punctuation differences rather than recognition errors.
+\subsubsection{State Definition} 
+A search state is defined as
+\begin{equation}
+s=(i,j,t),
+\end{equation}
+where $i$ is the number of words consume from chain $A$, $j$ is the number of words consumed from chain $B$, and $t$ is the number of words consumed from the hypothesis $H$. The initial state is $(0,0,0)$ and the terminal states are $(m,n,T)$.
+\subsubsection{Transition and Cost}
+For non-terminal states $s=(i,j,t)$, there are up to 5 transitions:
+\begin{enumerate}
+    \item \textbf{Match / Substitution from $A$}: if $i<m$ and $t<T$, align $a_{i+1}$ with $h_{t+1}$, gives
+    \begin{equation}
+        (i,j,t) \to (i+1,j,t+1),
+    \end{equation}
+    The cost is 0 if $a_{i+1}=h_{t+1}$ and 1 otherwise.
+    \item \textbf{Match / Substitution from $B$}: if $j<n$ and $t<T$, align $b_{j+1}$ with $h_{t+1}$, gives
+    \begin{equation}
+        (i,j,t) \to (i,j+1,t+1),
+    \end{equation}
+    The cost is 0 if $b_{j+1}=h_{t+1}$ and 1 otherwise.
+    \item \textbf{Insertion}: if $t<T$, insert $h_{t+1}$ into the merged sequence, gives
+    \begin{equation}
+        (i,j,t) \to (i,j,t+1),
+    \end{equation}
+    The cost is 1.
+    \item \textbf{Deletion from $A$}: if $i<m$, delete $a_{i+1}$, gives
+    \begin{equation}
+        (i,j,t) \to (i+1,j,t),
+    \end{equation}
+    The cost is 1.
+    \item \textbf{Deletion from $B$}: if $j<n$, delete $b_{j+1}$, gives
+    \begin{equation}
+        (i,j,t) \to (i,j+1,t),
+    \end{equation}
+    The cost is 1.
+\end{enumerate}
+These transition preserves the partial order of the two reference chain while allowing any interleaving.
+\subsubsection{Scoring Function}
+Each state $s$ maintains the best exact cost $g(s)$ while candidate states are ranked using 
+\begin{equation}
+    f(s) = g(s) + \lambda h(s),
+\end{equation} 
+where $\lambda \ge 0$ is a tunable heuristic weight, and $h(s)$ is a lower bound estimate of the remaining cost.
+\subsubsection{Heuristic Function}
+The heuristic is the maximum of the following two estimates:
+\begin{itemize}
+    \item \textbf{minimum remaining edit distance}:
+    \begin{equation}
+    h_\mathrm{length}(s) = |((m-i) + (n-j) - (T-t))|
+    \end{equation} 
+    is the minimum number of insertions or deletions required to consume all remaining words from the references and hypothesis, assuming perfect matches.
+    \item \textbf{local bag of words lower bound}:
+    \begin{equation}
+    h_\mathrm{bow}^\ell(s) = \left\lceil\frac{1}{2}\cdot\sum_{w} |\mathrm{count}(w, A_{i+1:i+\ell}) + \mathrm{count}(w, B_{j+1:j+\ell}) - \mathrm{count}(w, H_{t+1:t+\ell})|\right\rceil
+    \end{equation}
+    where $\mathrm{count}(w, S)$ is the number of occurrences of word $w$ in sequence $S$, and $\ell$ is the lookahead window size (truncated to the end of the sequence). This is a lower bound because it assumes that the best case where all matching words in the lookahead window can be aligned, and the remaining unmatched words can be perfectly aligned.
+\end{itemize}
+The heuristic is then
+\begin{equation}
+h(s) = \max(h_\mathrm{length}(s), h_\mathrm{bow}^\ell(s)),
+\end{equation}
+preserving admissibility and take the stronger approximation.
+\subsubsection{Beam Pruning}
+At each iteration, all successor states are ranked by $f(s)$ with ties breaker of $g(s)$. The algorithm only keeps a bounded number of candidates. The implementation has two main pruning strategies:
+\begin{itemize}
+    \item \textbf{adaptive beam size}: the beam size is dynamically adjusted based on the distribution of $f(s)$ scores. Given an ambiguity threshold $\tau$, base beam size $B$ and maximum beam size $B_\mathrm{max}$, if number of candidates with $f(s) \le f_\mathrm{best} + \tau$ is greater than $\frac{B}{2}$, beam size is set to $B_\mathrm{max}$, and $B$ otherwise. This allows search to be more expansive when best path is more ambiguous, and more aggressively when best path is more clear.
+    \item \textbf{stratified beam pruning}: candidates are stratified into different buckets based imbalances in consumption in chain $A$ and chain $B$ (i.e. $i-j$), and a balanced number of candidates are kept from each group. The buckets are defined by $\lfloor (i-j) / \max(1, \text{bucket width})\rfloor$ (where bucket width is a tunable parameter), then the buckets are ranked by the best $f(s)$ score of each bucket, and candidates are selected in a round-robin manner from the ranked buckets until the beam size is reached. This is to prevent the beam from dominated by similar alignment and increase the diversity of the search.
+\end{itemize}
+
+\subsubsection{Bidirectional Search}
+The search is run in both forward and reverse direction, and the best result from both directions are returned. The reverse direction search can discover better alignment that might be pruned in the forward direction.
+
+\subsubsection{Final Output}
+For best path distance $d^*$ found from both directions, the DSS-WER is computed as
+\begin{equation}
+\frac{d^*}{m+n}
+\end{equation}
+In addition, the best path alignment is also returned as a list of tuples of the form (operation, chain used, reference word, hypothesis word). This allows downstream error analysis and hyperparameter tunings.
+
+\subsubsection{Complexity}
+Let
+\begin{itemize}
+    \item $\ell$ be the lookahead window size for the heuristic,
+    \item $B$ be the maximum beam size,
+    \item $E$ be the maximum number of expansions (which is the upper bound of the expansions during the search)
+\end{itemize}
+The time complexity is
+\begin{equation}
+O(E(\ell + B\log B)),
+\end{equation}
+where there is $E$ expansions, each expansion generates up to 5 sucessors, and each successor requires $O(\ell)$ for heuristic computation and $O(B\log B)$ for sorting during beam pruning. The space complexity is $O(E)$ for storing all expanded states.
+
+\subsection{Metric Output Schema}
+All metric results are stored at clip level in a JSON file with the following fields: \texttt{clip\_id}, \texttt{model}, \texttt{wer}, \texttt{orcwer}, \texttt{dsswer}.
+
+\section{Benchmarking}
+\label{subsec:inference_time_benchmarking}
+
+Inference-time benchmarking was used to compare the operational cost of the ASR systems under a common evaluation protocol. A fixed subset of $100$ clips was sampled from the experiment manifest using a fixed random seed, and each model was run on the same sampled set.
+
+The runtime metric recorded was measured using \texttt{time.perf\_counter()} to capture the total wall-clock time taken for inference on the sampled set. This captures the end-to-end time instead of just the decoding time, as it reflects the actual user experience and operational cost.
+
+Execution was performed on CUDA. The implementation used batch size $100$ \texttt{parakeet} as it allows batch inferencing, while the other systems were evaluated sequentially on the sampled clips. GPU cache clearing and garbage collection were applied between runs, but GPU memory usage was not logged as an output statistic. Likewise, failed runs were not recorded through a separate structured logging system.
+
+\section{Real-Data Segmentation and Evaluation Pipeline}
+\label{subsec:real_data_pipeline}
+
+A separate pipeline was implemented to evaluate ASR performance on real conversational audio. Speaker-labelled utterances were first loaded from a JSON transcript, converted into timestamped intervals, and sorted chronologically. Fixed-length clips were then constructed from valid utterance boundaries so that no reference utterance was truncated across clip limits.
+
+For each extracted clip, the corresponding waveform segment and reference transcript were written to disk as reusable evaluation artefacts. These clips were then transcribed by the selected ASR models under a common batching procedure, with intermediate outputs cached to JSON in order to support recovery from interrupted runs.
+
+Evaluation was performed clip by clip against the exported references. Where a model returned segmented output, ORC-WER was used; otherwise, standard WER was applied to the flattened hypothesis. The pipeline therefore provided a unified framework for comparing heterogeneous ASR systems on real data while preserving both per-clip results and aggregate summary statistics.
+
+
+\section{Statistical Analysis Module}
+All results from transcription and metric evaluation are stored in a clip-level table indexed by clip ID and model. This table is used in the statistical analysis module.
+
+This module converts raw clip-level scores into statistical claims about the generator and ASR models. The main functionalities include:
+\begin{itemize}
+    \item \textbf{Descriptive statistics}: summarise the distribution of scores under each model and condition
+    \item \textbf{Paired comparisons}: perform paired statistical tests between models evaluated on the same set of clips
+    \item \textbf{DSS-WER and WER comparison}: perform paired comparisons between DSS-WER and WER to evaluate the proposed metric
+\end{itemize}
+
+
+\section{Design Trade-offs and Limitations}
+This section discusses the design trade-offs and limitations of the architectural choices.
+\begin{itemize}
+    \item \textbf{Controlled generation vs natural realism}: the generator is designed to support precise control over factors. This is ideal for scientific experiments but may results in less natural mixtures compared to using actual conversation.
+    \item \textbf{Metric accuracy vs simplicity}: the DSS-WER approximation algorithm improves accuracy in capturing transcription errors in double-reference-single-hypothesis cases. It better reflects the transcription quality, but it is more complex and substantially more computationally expensive than WER.
+\end{itemize}
 % experimental setup for reproducibility
+\section{Reproducibility and Experimental Setup}
 
+\subsection*{System Environment}
+\begin{description}
+    \item[Operating System] Ubuntu 22.04
+    \item[Python] Version 3.14.3
+    \item[GPU] NVIDIA GeForce RTX 4070 Laptop GPU with 8GB VRAM
+    \item[Random Seed] 1234
+\end{description}
+Software dependencies and configuration details are documented in \Cref{ch:software_config}
 
-
-% metadata and transcription structure
-
-% ASR inference layer
-
-% experimental setup for reproducibility

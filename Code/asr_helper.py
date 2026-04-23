@@ -90,14 +90,18 @@ def transcribe_faster_whisper(metas: List[MixtureMeta], dic: Dict[str, MixtureTr
     # del model
 
 @asr_model
-def transcribe_wav2vec2(metas: List[MixtureMeta], dic: Dict[str, MixtureTranscription], ind: int = 0, model_name: str = "", asr=None):
+def transcribe_wav2vec2(metas: List[MixtureMeta], dic: Dict[str, MixtureTranscription], ind: int = 0, model_name: str = ""):
     """
     Wav2Vec2 Transcription
     Transcription format: list of text with no speaker labels
     """
     
     model_name = MODEL_NAMES[1]
-    
+    asr = pipeline(
+        "automatic-speech-recognition",
+        model="facebook/wav2vec2-large-960h",
+        device=0,
+    )
     with torch.inference_mode():
         for meta in metas:
             audio, sr = load_mixture_audio(Path(meta.audio_path))
@@ -194,7 +198,7 @@ def transcribe_funasr(metas: List[MixtureMeta], dic: Dict[str, MixtureTranscript
 def main():
     meta_df = load_mixture_meta(Path("Output", "manifest.csv"))
     # meta_df = meta_df[meta_df["clip_id"].str.contains(r"(^mix_[0-9]+_0\.(00|14|20|40)_2_7\.4_T$)|(^mix_[0-9]+_0\.14_2_(None|7\.4|0|-5)_T$)")]
-    meta_df = meta_df[meta_df["clip_id"].str.contains("mix_0001238_0.14_2_None_T")]
+    # meta_df = meta_df[meta_df["clip_id"].str.contains("mix_0001238_0.14_2_None_T")]
     # print(meta_df.head())
     dic_path = Path("ASR_transcriptions.json")
     dic = {}
@@ -225,7 +229,7 @@ def main():
         audio_list = [batch.iloc[j] for j in range(len(batch))]
         # transcribe_faster_whisper(audio_list, dic, ind = ind, model_name="faster-whisper")
         # print(dic)
-        # transcribe_wav2vec2(audio_list, dic, ind = ind, model_name="wav2vec2", asr=wav_asr)
+        # transcribe_wav2vec2(audio_list, dic, ind = ind, model_name="wav2vec2")
         transcribe_parakeet(audio_list, dic, ind = ind, model_name="parakeet")
         # transcribe_whisperx(audio_list, dic, ind = ind, model_name="whisperx")
         # transcribe_funasr(audio_list, dic, ind = ind, model_name="funasr")

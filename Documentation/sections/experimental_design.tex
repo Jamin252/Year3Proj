@@ -78,8 +78,8 @@ The performance of each experimental unit is measured using standard automatic s
 \end{itemize}
 \subsection{Experimental Units}
 The experimental unity is an pairing of an audio clip (with specific overlap, SNR, noise type), a preprocessing pipeline (including no preprocessing), target-speaker embedding availability (for target-speaker methods), and an ASR model. 
-\[
-\text{clip} \to \{\text{preprocessing pipeline}\}\times (\text{speaker embedding}) \times\{\text{ASR model}\}\]
+\begin{equation}
+\text{clip} \to \{\text{preprocessing pipeline}\}\times (\text{speaker embedding}) \times\{\text{ASR model}\}\end{equation}
 Each unit is evaluated to produce a set of performance metrics (e.g., WER, overlap-specific WER) that are then statistically analysed to answer the research questions.
 
 
@@ -93,23 +93,23 @@ Synthetic mixtures are constructed from clean English speech utterances with hig
 
 \subsubsection{Overlap Construction}
 For each mixture, a target overlap ratio (OVR) is achieved by controlling the alignment of selected utterances. The overlap ratio is defined as:
-\[
+\begin{equation}
 \mathrm{OVR} = \frac{\text{time with $\geq 2$ active speakers}}{\text{active speech time (time with at least one speaker)}}.
-\]
+\end{equation}
 In the controlled design, the maximum number of concurrent speakers is fixed to $K=2$ to isolate the effect of overlap ratio. During generation, an active mask $a(t)$ is produce indicating the number of speaker in any given moment. The actual overlap ratio is then calculated by
-\[
+\begin{equation}
 \mathrm{OVR}_\text{actual}=\frac{\sum_t 1[a(t) > 1]}{\sum_t 1[a(t) \ge 1]} 
-\]
+\end{equation}
 
 \subsubsection{Noise Addition and SNR Control}
 Additive noise is added to the clean mixtures to achieve target SNR levels. The SNR (RMS) is calculated as:
-\[
+\begin{equation}
 \mathrm{SNR}_{dB} = 20 \log_{10}\left(\frac{\text{A}_\text{active speech}}{\text{A}_\text{noise}}\right),
-\]
+\end{equation}
 where $A$ denotes root mean square (RMS) amplitude. $A_\text{active speech}$ denotes the RMS amplitude of active segments such that the SNR level is silence invariant and closer to human perception. The noise is first normalised and rescaled by $\alpha$ to achieve the target SNR (Table \ref{tab:design_factors}).
-\[
+\begin{equation}
 \alpha = \frac{A_\text{active speech}}{A_\text{noise} \times 10^{\mathrm{SNR}_{dB}/20}}.
-\]
+\end{equation}
 Type of noise is varied across conditions, with noise segments selected from dataset DEMAND to represent a range of real-world environments.
 
 \subsection{Track B: Real Overlapped Speech Dataset}

@@ -1,6 +1,250 @@
-% research questions
-% independent and controlled variables
-% datasets and splits
-% evaluation metrics
-% per-condition sample counts
-% statistical analysis plan
+% research questions done
+% independent and controlled variables done
+% datasets and splits done
+% evaluation metrics done
+
+
+\chapter{Experimental Design}
+
+\section{Objective and Scope}
+This chapter specified the empirical design used to evalute the robustness of multiple automatic speech recognition (ASR) transcription models under overlapping speech and addition noise, and to assess the utility and accuracy of the newly proposed Double-Stream Serialisation WER (DSS-WER) when two streams of reference are compared against a single hypothesis. The evaluation is grounded in the structures and pipelines proposed in \Cref{chap:arch_design} and is divided into three tracks.
+
+The first track is the controlled synthetic benchmarking of ASR performance in which overlap ratio, SNR and noise type are manipulated independently. This provides a setting where degradation factors can be isolated and their effects on ASR performance can be causally attributed, while the ASR models can be evaluated under identical conditions for fair comparison. The second track is a real-world data transferability evaluation on CHiME-6, which assesses whether the trends observed in the controlled synthetic mixtures are visible in natural conversational audio with realistic overlap and noise conditions. The third track is a hypothesis testing of the proposed DSS-WER metric, which evaluates whether it provides additional insights and accuracy in quantifying ASR performance under overlapping conditions compared to standard WER.
+
+
+\section{Research Questions}
+\begin{enumerate}[label=\textbf{RQ\arabic*:}, leftmargin=*]
+    \item How do \emph{overlap ratio} and \emph{background noise} affect ASR accuracy under controlled synthetic conditions, and how does this behaviour differ across models?
+    \item How do publicly available ASR models compare across different overlap and noise operating points?
+    \item To what extent do trends observed on controlled \emph{synthetic mixtures} transfer to real conversational recordings with natural overlap?
+    \item Does the proposed double-stream serialisation metric provide a more suitable evaluation than ordinary WER when a two-speaker reference is compared with a single-stream hypothesis?
+\end{enumerate}
+
+The final question is accompanied by the following working hypothesis:
+\begin{equation}
+    d_i = M_{\text{DSS},i} - M_{\text{WER},i},
+\end{equation}
+where $M_{\text{DSS},i}$ and $M_{\text{WER},i}$ are the DSS-WER and ordinary WER for the $i$-th clip, is not significantly different from zero across clips.
+\begin{equation}
+H_0:\ \mathbb{E}[d_i] \ge 0
+\qquad \text{against} \qquad
+H_1:\ \mathbb{E}[d_i] < 0.
+\end{equation}
+Rejection of \(H_0\) therefore indicates that the proposed metric yields significantly lower scores than standard WER on average.
+
+$H_0$ is expected to hold in the case of non-overlapping speech, where the single-stream hypothesis can be directly compared to the single-speaker reference. However, in the case of overlapping speech, $H_1$ should hold because wer assumes a single reference stream and will penalise interleaving errors that should not be penalised while DSS-WER can recognise the interleaving nature and therefore yield a lower score. 
+
+This hypothesis is not intended to imply that DSS-WER is universally superior to WER. This is specific to the evaluation problem studied in this dissertation, where a single-stream hypothesis is compared against a two-stream reference in which two speaker may overlap and transcripts may be interleaved. 
+
+\section{Design Principles}
+The overall design principle is a repeated measures benchmarking framework. Each synthetic clip is transcribed by the same set of ASR models, and the model comparisons are paired at clip level. Within the synthetic benchmark, acoustic variants are also paired as the generation process first generate a clean base clip and then derives multiple SNR and noise-category variants from the same base. This reduces the variance, makes difference between conditions more attributable to corresponding factors and makes result more interpretable.
+
+Two consideration motivated the choice of experimental factors. First, overlap ratio is treated as the primary factor of interest because it is the central phenomenon of interest in this dissertation and because overlapping speech is a common and challenging condition for ASR. Second, noise is crossed compared with overlap because both noise and overlap often co-occur in real-world conditions.
+
+\section{Track 1: Controlled Synthetic Benchmark}
+\subsection{Speech and Noise Sources}
+\label{sec:speech_noise_sources}
+The synthetic mixtures sample clean speech from the source root declared in \texttt{speech\_roots.txt}, which includes:
+\begin{itemize}
+    \item \textbf{LibriSpeech train-clean-100} LibriSpeech is a corpus of approximately 100 hours of 16kHz read English speech, prepared by Vassil Panayotov with the assistance of Daniel Povey. The data is derived from read audiobooks from the LibriVox project, and has been carefully segmented and aligned. \cite{librispeech}
+    \item \textbf{CSTR VCTK Corpus}: a large-scale speaker recognition dataset containing speech from thousands of speakers, suitable for creating synthetic mixtures with varying overlap and SNR \cite{voxceleb}.
+\end{itemize}
+These datasets provided abundant clean speech with diverse speakers and accurate transcripts. The mixture generator scans these roots for \texttt{.wav} or \texttt{.flac} files and their corresponding transcripts, and converts multi-channel recordings to mono by channel averaging and resampling to 16kHz if necessary. 
+The background noise is drawn from a local copy of the DEMAND dataset \cite{demand}. The DEMAND (Diverse Environments Multichannel Acoustic Noise Database) aims to provide a set of recordings that allow testing of algorithms using real-world noise in a variety of settings. The noise is categorised into three types: domestic (i.e., washroom, kitchen, living room), public (i.e., subway station, office cafeteria, university restaurant) and transportation (i.e., subway, public bus, private passenger vehicle), denoted as D, P, and T respectively. These noise types are broad categories that represent common real-world listening environments where ASR are often used, and small enough to support a manageable clean factorial analysis. 
+
+\subsection{Synthetic Mixture Generation}
+The mixture generator takes a target overlap ratio, SNR level, noise type, speaker count and target duration as inputs. For the experiment here, the random seed is fixed to 1234, the target duration is set to 60s, speaker count is set to 2 in the configuration for reproducibility and isolation of the effect of OVR, SNR and noise type.
+
+For each base mixture, two speakers are sampled without replacement from the pool of speakers. Utterances are then drawn from each speaker alternatively until the total duration exceed the required duration to realise the target final duration after overlapping. Each utterance also contributed its transcript in which the speaker ID, start and end timestamps are also preserved in a form of
+\begin{equation}
+(\text{speaker}, \text{text}, t_{\text{start}}, t_{\text{end}}).
+\end{equation}
+This makes the manifest enable the calculation of any speaker-attributed or time-constrainted metrics in the future. 
+\subsection{Noise Addition and SNR Control}
+The base mixture is then used to derive multiple variants with different noise types and SNR levels. The noise is rescaled by a factor $\alpha$ to achieve the target SNR level, as described in \Cref{eq:noise_scaling}. The final mixture is then 
+\begin{equation}
+x_\mathrm{final}(t) = x_\mathrm{speech}(t)+\alpha x_\mathrm{noise}(t)
+\end{equation}
+
+The same clean base mixture is reused across all SNR and noise-category variants, which makes the variants paired and reduce variance. When SNR is \texttt{null} in the configuration, no noise is added and the base mixture is function as clean control condition.
+
+\subsection{Experimental Conditions and Corpus Size}
+\begin{table}[ht]
+\centering
+\caption{Experimental factors and planned levels.}
+\label{tab:design_factors}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Factor} & \textbf{Levels} \\
+\midrule
+Overlap ratios (OVRs) & $0\%, 14\%, 20\%, 40\%$ \\
+Max concurrent speakers ($S$) & $2$ \\
+SNR (dB) & clean, 7.4, 0, $-5$ \\
+Noise type & domestic,  public, transportation\\
+Audio duration & Synthetic: $\approx$60s, Real-world: long-form meetings\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\begin{table}[ht]
+\centering
+\caption{Synthetic corpus size in the current manifest.}
+\label{tab:synthetic_counts}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Target overlap ratio} & \textbf{Base mixtures} & \textbf{Derived variants per base} & \textbf{Total clips} \\
+\midrule
+$0.00$ & $10$ & $12$ & $120$ \\
+$0.14$ & $100$ & $12$ & $1200$ \\
+$0.20$ & $100$ & $12$ & $1200$ \\
+$0.40$ & $100$ & $12$ & $1200$ \\
+\midrule
+\textbf{Total} &  &  & \textbf{$3720$} \\
+\bottomrule
+\end{tabular}
+\end{table}
+\Cref{tab:design_factors} documents the levels of the main experimental factors. In the implementation, overlap condition above zero each uses 100 base mixtures, while 0\% overlap condition uses 10 base mixtures as control for runtime feasibility. Each base mixture is expanded across all factors $\text{SNR} \times \text{noise type}$, yielding a total of 3720 corpus summarised in \Cref{tab:synthetic_counts}.
+
+The asymmetry in the number of base mixtures between 0\% and non-zero overlap conditions is a pragmatic choice to balance the need for a control condition with the computational cost of generating and evaluating a large number of mixtures. It does not invalidate the control condition, but it does mean that the diversity of the 0\% overlap condition is lower. Later analysis therefore will treats the 0\% overlap condition as a control point rather than a fully representative condition, and the focus will be on the trends across the non-zero overlap conditions.
+
+\paragraph{Overlap Ratios Choice.} The overlap ratios are chosen to represent a range of realistic and challenging conditions for ASR:
+\begin{itemize}
+    \item 0\% is chosen to be the control where it represent completely clean audio in which there is no overlapping.
+    \item 14\% is chosen to represent the mean overlap ratio for meetings. The percentage of overlapped words (excluding backchannels like "uh-huh") in meetings is 14.1\% \cite{Shriberg2001ObservationsOO}.
+    \item 20\% is chosen to represent the maximum overlap ratio in a natural meeting or casual dinner parties \cite{chen2020continuousspeechseparationdataset} \cite{cosentino2020librimixopensourcedatasetgeneralizable}.
+    \item 40\% is chosen as it is supported by the LibriMix benchmark, which chooses 40\% as the maximum overlap ratio. This is chosen to stress-test under high-overlap conditions \cite{chen2020continuousspeechseparationdataset}.
+\end{itemize}
+
+\paragraph{Maximum Concurrent Speakers Choice.} Speaker count is chosen to be 2 for practicality and to isolate the effect of overlap and noise.
+
+\paragraph{Signal-to-noise Raio Choice.} The SNR levels are chosen to represent a range of realistic and challenging noise conditions:
+\begin{itemize}
+    \item \textit{clean} is chosen to be the control where it represent clean background with no noise.
+    \item 7.4dB is chosen to represent the noisy environment as it is the mean SNR for noisy environment \cite{wu2018characteristics}.
+    \item 0db is chosen to represent environment where the noise and speech are equally loud, which is a challenging but realistic condition in very noisy environments.
+    \item -5db is chosen to represent environment where the noise is louder than speech in which even human listeners struggle to understand speech, providing a stress-test condition for ASR.
+\end{itemize}
+
+\paragraph{Noise Type Choice.} Domestic, public, and transportation are chosen as they represent different real-world scenarios with varying noise characteristics:
+\begin{itemize}
+    \item \textbf{Domestic noise} includes kitchen noise when food is being prepared, living room noise and washing room with front-loading washing machine. These noises are commonly found in home environments that a home-based voice assistant would encounter.
+    \item \textbf{Public noise} includes noise from main transfer area of subway station, office cafeteria, and university restaurants during lunchtime. These noise represent common public environments where ASR like mobile devices may be used in.
+    \item \textbf{Transportation noise} includes noises in subway, public bus and private passenger vehicle. These noises represent common transportation environments where ASR like mobile devices may be used in.
+\end{itemize}
+
+\section{Track 2: Real-world Data Transferability Evaluation}
+The real-world data evaluation is intentionally narrower than the synthetic benchmark. Its purpose is to test whether the trends of the findings in synthetic mixtures survives when overlap is natural rather generated.
+
+The implemented real-data scripts is extracted from CHiME-6 evaluation scripts \cite{chime6}, specifically the \texttt{S01} session. It is a  English multi-channel far field meeting data used in the CHiME-6 Challenge. It is derived from CHiME-5 by fixing some array synchronization errors. It uses the 2 hours long audio and divides it into 100 segments of approximately 60s each by the following rules:
+\begin{itemize}
+    \item each clip must be at least \SI{60}{\second} long;
+    \item clip boundaries must lie at utterance boundaries where no other utterance is active at the boundary time;
+    \item only utterances fully contained within the selected time window are kept in the reference.
+\end{itemize}
+These design choice avoid clipping utterances mid-sentence, perserving the accuracy of the reference. The 60s duration is such that the duration is similar to that of synthetic mixtures. They mean that the resulting clips are not fully representative of the natural distribution of overlap in the original recording, but that limitation is necessary to enable a clean comparison.
+
+\section{ASR Models Under Evaluation}
+Although the framework is designed to be extensible to any ASR model, the evaluation will focus on the following publicly available models that represent a range of model architectures:
+\begin{itemize}
+    \item \textbf{Faster Whisper} (OpenAI): Faster-whisper is a reimplementation of OpenAI's Whisper model using CTranslate2, which is a fast inference engine for Transformer models. \cite{github_openai_faster-whisper}
+    \item \textbf{WhisperX} (OpenAI): WhisperX is a ASR model trained on a large dataset of diverse audio \cite{bain2026whisperx_repo}.
+    \item \textbf{Wav2Vec2-Large-960h} (Meta AI): The large model pretrained and fine-tuned on 960 hours of Librispeech on 16kHz sampled speech audio. When using the model make sure that your speech input is also sampled at 16Khz. \cite{facebook_wav2vec2-large-960h}
+    \item \textbf{parakeet-tdt-0.6b-v3} (NVIDIA): parakeet-tdt-0.6b-v3 is a 600-million-parameter multilingual automatic speech recognition (ASR) model designed for high-throughput speech-to-text transcription. \cite{nvidia/parakeet-tdt-0.6b-v3}
+    
+\end{itemize}
+These models are chosen as representation of the mainstream ASR architectures. Faster Whisper and WhisperX are both based on the Whisper architecture, which is a encoder-decoder architecture trained on a large dataset. Wav2Vec-2.0 is an example of self-supervised encoders while Parakeet is an example of the conformer and transducer architecture. The evaluation of these models will provide insights into how different ASR architectures perform under overlapping and noisy conditions, and whether certain architectures are more robust in specific conditions.
+
+\section{Scoring Metrics}
+\subsection{Reference and Hypothesis Structure}
+For synthetic data, the reference transcripts are loaded from the manifest and reduced to $(speaker, text)$ pairs (removing timestamps) as not all ASR models provide timeed output. Depending on the model, the hypothesis may be a single stream of text or as multiple segments. This structure determines what metrics can be calculated as some metrics assume a segmented output while some do not. The normalisation function used in scoring is applied to both reference and hypothesis. It strips punctuation and converts text to lowercase. This is to isolate the evaluation to the core lexical robustness under overlap and noise rather than punctuation and casing.
+
+\subsection{Metrics}
+Three metrics are used in the synthetic scoring pipeline:
+\begin{itemize}
+    \item \textbf{Word Error Rate (WER)}: The standard conventional metric for ASR evaluation, computed after concatenating all segments of reference and hypothesis by chronological order
+    \item \textbf{Optimal Reference Combination WER (ORC-WER)}: Measures the minimum WER for multi-speaker scenarios across any mapping of hypothesis segements to reference utterances.
+    \item \textbf{Multi-Reference Serialisation WER (DSS-WER)}: Proposed metric that computes the minimum edit distance between double reference chains and single hypothesis, allowing any interleaving merge of the two chains.
+\end{itemize}
+The DSS-WER implementation is based on the beam-search approximation algorithm in \Cref{sec:dss_wer_algorithm} with hyperparameters set to beam width of 64, lookahead of 16, heuristic weight of 0.4, max expansion 220000, max beam width of 128 and with adpative beam size and stratified beam pruning.
+
+\subsection{Metric Application Rules}
+The choice of metrics are based on the following rules:
+\begin{itemize}
+    \item For single-stream hypothesis output, WER and DSS-WER are used.
+    \item For segmented hypothesis output, all three WER, ORC-WER and DRS-WER are used.
+\end{itemize}
+
+\section{Experimental Unit and Comparison Strategy}
+The fundamental unit of comparison is the (clip, model) pair with related metadata and transcript. For synthetic data, the comparison includes:
+\begin{itemize}
+    \item comparison across models are paired at clip level as all models are evaluated on the same set of clips;
+    \item comparisons across SNR values are paired becauses noisy variants are derived from the same base mixture;
+\end{itemize}
+This pairing structure supports stronger inference than purely between-subjects design. When a model performs different in lower SNR or higher overlap, the degradation or improvement can be attributed more confidently to the change in condition rather than the change in lexical content or other confounding factors. 
+
+\section{Track 3: Hypothesis Testing of DSS-WER}
+This track evaluates whether the proposed Double-Stream Serialisation WER (DSS-WER) approximation algorithm differs systematically from standard WER, and whether it occurs in the expected settings and direction. Since DSS-WER is designed to relax the strict serialisation assumption of WER, the primary questions are whether DSS-WER yields lower scores than WER in overlapped setting while remaining similar in non-overlapped setting.
+
+Let 
+\begin{equation}
+    d_i = M_{\text{DSS},i} - M_{\text{WER},i},
+\end{equation}
+where $M_{\text{DSS},i}$ and $M_{\text{WER},i}$ are the DSS-WER approximationand ordinary WER for the $i$-th clip. A negative value of $d_i$ will therefore indicate that DSS-WER yields a lower score than WER on the $i$-th clip. 
+\subsection{Primary Hypothesis}
+The main hypothesis is that examines whether DSS-WER approximation is lower than WER on average:
+\begin{equation}
+H_0:\ \mathbb{E}[d_i] \ge 0
+\qquad \text{against} \qquad
+H_1:\ \mathbb{E}[d_i] < 0.
+\end{equation}
+Rejection of $H_0$ therefore indicates that the proposed metric yields significantly lower scores than WER over the set of clips.
+\subsection{Condition-Specific Hypotheses}
+To further assess whether the expected advantage of DSS-WER approximation is specific to the overlapping condition, the test is repeated separately for different overlap ratio.
+
+\paragraph{Non-overlapping clips.} For clips with no overlap, DSS-WER is expected to behave similarly to WER. Therefore, the hypothesis:
+\begin{equation}
+    H_0:\ \mathbb{E}[d_i] = 0
+    \qquad \text{against} \qquad
+    H_1:\ \mathbb{E}[d_i] \neq 0.
+\end{equation}
+Large $d_i$ will suggest that DSS-WER approximation alters the evaluation even when interleaving is not a factor.
+
+\paragraph{Overlapping clips.} For clips with overlap, DSS-WER is expected to be lower than standard WER, since it permits interleaving. Therefore the hypothesis is the same as the primary hypothesis:
+\begin{equation}
+    H_0:\ \mathbb{E}[d_i] \ge 0
+    \qquad \text{against} \qquad
+    H_1:\ \mathbb{E}[d_i] < 0.
+\end{equation}
+
+\subsection{Test Procedure}
+Since metrics are calculated at clip level, the comparison is paired where hypothesis testing is conducted on paired differences $d_i$. A one-sided Monte Carlo permutation test may be used by randomly flipping the signs of the paired differences to generate the null distribution of the test statistic $\bar{d}$. The observed mean
+\begin{equation}
+    T_\text{obs} = \bar{d} = \frac{1}{N}\sum_{i=1}^N d_i
+\end{equation}
+is then compared against the null distribution generated by random sign flipping, for $j=1,...,N$ permutations:
+\begin{equation}
+    T_\text{null}^{(j)} = \frac{1}{N}\sum_{i=1}^N s_i^{(j)} d_i, \qquad s_i^{(j)} \in \{-1, 1\} \text{ with equal probability}.
+\end{equation}
+The p-value is calculated as
+\begin{equation}
+    p=\frac{1}{N+1}\left(1+\sum_{j=1}^N 1[T_\text{null}^{(j)} \le T_\text{obs}]\right),
+\end{equation}
+where $1[\cdot]$ is the indicator function. The confidence interval of the mean difference can also be calculated by resampling the paired differences with replacement, calculating the mean difference for each resample and take the 2.5 and 97.5 percentiles of the resampled mean differences as the bounds of the 95\% confidence interval.
+
+\subsection{Interpretation}
+This analysis does not intend to claim that DSS-WER is universally superior to WER. It test whether DSS-WER yields lower scores than WER in the double-stream reference single-stream hypothesis setting, where DSS-WER is designed to relax the interleaving restriction of WER. 
+
+\section{Reproducibility}
+The implemented framework traces every results (including synthetic mixture generation, ASR inferencing and metric calculation) to its generating condition. The manifest stores clip identifiers, audio paths, source-file provenance, noise-file provenance, target overlap ratio, realised overlap ratio, SNR, and noise category. Model outputs are written to JSON keyed by clip ID, and evaluation outputs are stored both per clip and per model. Combined with the fixed random seed in the configuration, this provides a reproducible record of how each reported score was obtained.
+
+\section{Scope and Limitations}
+The experimental design combines precisely controlled synthetic benchmarking with a narrower but meaningful real-world data evaluation. It separates overlap and noise as explicit variables, preserving the paired comparisons across conditions.
+
+However, the limitation is clear. They are as follows: 
+\begin{itemize}
+    \item the comparative system only cover four ASR models
+    \item the 0\% overlap condition only has 10 base mixtures, which may limit the representativeness of the control condition
+    \item ORC-WER is only calculated for segmented output (faster-whisper and whisperX) as not every model provides segment-level output
+    \item Real-world evaluation only cover one session in CHiME-6 rather than a balanced sampling of real-world conditions
+\end{itemize}
+However, these limitations do not invalidate the design. They define the scope of the dissertation and the interpretation of the results.
+

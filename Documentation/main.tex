@@ -16,11 +16,12 @@
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,shapes.geometric,shapes.symbols,calc}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,shapes.symbols,calc, fit, patterns}
 \usepackage{enumitem}
 \usepackage{hyperref}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
 \usepackage[nameinlink,noabbrev]{cleveref}
-
+\usepackage{subcaption}
 
 \lstdefinestyle{codeblock}{
 	basicstyle=\ttfamily\small,
@@ -36,7 +37,7 @@
 	aboveskip=0.8em,
 	belowskip=0.8em
 }
-
+\newcommand{\includefigure}[2][]{\includegraphics[#1]{#2}}
 % Citations (BibTeX)
 \usepackage[numbers]{natbib}
 \bibliographystyle{unsrtnat} % numeric citations in order of appearance
@@ -54,24 +55,25 @@
 \input{sections/02_literature_review}
 
 \input{sections/03_architectural_design}
-\input{sections/c3}
 
 \input{sections/04_experimental_design}
+% \input{sections/c4}
 
-\chapter{Datasets, ASR Models and Preprocessing Strategies}
-\input{sections/datasets_models.tex}
+% \input{sections/05_statistical_analysis}
 
-\chapter{Experimental Design}
-\input{sections/experimental_design}
 
-\chapter{Preprocessing Pipelines}
-\input{sections/preprocessing}
+% \input{sections/datasets_models}
 
-\chapter{Evaluation Metrics}
-\input{sections/metrics}
+% \chapter{Experimental Design}
+% % \input{sections/experimental_design}
 
-\chapter{Statistical Analysis Plan}
-\input{sections/statistics}
+% \chapter{Preprocessing Pipelines}
+% % \input{sections/preprocessing}
+
+% \chapter{Evaluation Metrics}
+% \input{sections/metrics}
+
+% \input{sections/statistics}
 
 % \chapter{Implementation Plan and Reproducibility}
 % \input{sections/07_implementation}
@@ -79,6 +81,8 @@
 \bibliography{references}
 
 \appendix
+\input{sections/app_code}
+\input{sections/app_software_config}
 % \chapter{Experiment Matrix}
 % optionally input a big table here
 

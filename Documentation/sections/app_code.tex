@@ -1,0 +1,50 @@
+\chapter{Pseudocode for DSS-WER Beam Search}
+\label{ch:dss_wer_pseudocode}
+
+\begin{algorithm}[H]
+\caption{\textsc{DSS-WER-Beam-2Chain}$(A,B,H)$}
+\KwIn{Reference word chains $A,B$ and hypothesis $H$}
+\KwOut{Approximate overlap-aware edit distance and WER}
+
+initialise search parameters $B,\lambda,M,L$\;
+$\mathcal{R}_{\mathrm{front}} \gets \textsc{BeamPass}(A,B,H,\texttt{front})$\;
+$\mathcal{R}_{\mathrm{tail}} \gets \textsc{BeamPass}(A,B,H,\texttt{tail})$\;
+\Return{the better of $\mathcal{R}_{\mathrm{front}}$ and $\mathcal{R}_{\mathrm{tail}}$ under lexicographic order $(\mathrm{distance},\mathrm{wer})$}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\caption{\textsc{BeamPass}$(A,B,H,\textit{direction})$}
+\KwIn{Reference chains $A,B$, hypothesis $H$, and search direction}
+\KwOut{One-pass approximate edit distance and WER}
+
+\eIf{$\textit{direction}=\texttt{front}$}{
+    $(\widehat{A},\widehat{B},\widehat{H}) \gets (A,B,H)$\;
+}{
+    $(\widehat{A},\widehat{B},\widehat{H}) \gets (\mathrm{reverse}(A),\mathrm{reverse}(B),\mathrm{reverse}(H))$\;
+}
+
+normalise $\widehat{A},\widehat{B},\widehat{H}$ if required\;
+initialise $\mathrm{bestCost}[(0,0,0)] \gets 0$, backpointers, and beam $\gets \{(0,0,0)\}$\;
+
+\While{beam is non-empty and expansion budget not exhausted}{
+    generate all valid successors of each beam state using:
+    match/substitute against $A$, match/substitute against $B$, insert, delete from $A$, and delete from $B$\;
+    keep only the best predecessor for each successor state\;
+    score each successor by
+    \begin{equation}
+    f(i,j,t)=g(i,j,t)+\lambda\,h(i,j,t),
+    \end{equation}
+    where $g$ is accumulated edit cost and $h$ is a lower-bound heuristic based on remaining-length mismatch and local bag-of-words mismatch\;
+    sort candidates by score and prune to the next beam
+    using fixed or adaptive beam width, optionally with stratified selection\;
+}
+
+read the final state $(|\widehat{A}|,|\widehat{B}|,|\widehat{H}|)$\;
+compute $\mathrm{WER}=\mathrm{distance}/(|A|+|B|)$ when finite\;
+optionally reconstruct alignment from backpointers\;
+\If{$\textit{direction}=\texttt{tail}$}{
+    reverse the recovered alignment\;
+}
+\Return{distance, WER, and alignment}
+\end{algorithm}
+

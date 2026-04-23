@@ -38,6 +38,8 @@ def parse_clip_id(clip_id: str) -> Dict[str, Optional[float]]:
 
 def _extract_error_value(result: Dict) -> Optional[float]:
     metrics = result.get("metrics", {}) or {}
+    if "orc_wer" in metrics and metrics["orc_wer"] is not None:
+        return float(metrics["orc_wer"])
     if "cpwer" in metrics and metrics["cpwer"] is not None:
         return float(metrics["cpwer"])
     if "wer" in metrics and metrics["wer"] is not None:
@@ -47,6 +49,8 @@ def _extract_error_value(result: Dict) -> Optional[float]:
 
 def _extract_metric_name(result: Dict) -> str:
     metrics = result.get("metrics", {}) or {}
+    if "orc_wer" in metrics and metrics["orc_wer"] is not None:
+        return "orc_wer"
     if "cpwer" in metrics and metrics["cpwer"] is not None:
         return "cpwer"
     if "wer" in metrics and metrics["wer"] is not None:
@@ -188,7 +192,7 @@ def plot_snr_vs_error(success_df: pd.DataFrame) -> Tuple[plt.Figure, plt.Axes]:
     )
     ax.set_title("wav2vec2 Error by SNR")
     ax.set_xlabel("SNR (dB, No noise = clean)")
-    ax.set_ylabel("Error (WER or cpWER)")
+    ax.set_ylabel("Error (WER or ORC-WER)")
     return fig, ax
 
 

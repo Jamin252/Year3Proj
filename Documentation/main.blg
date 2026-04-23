@@ -3,46 +3,47 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: unsrtnat.bst
 Database file #1: references.bib
-Warning--I didn't find a database entry for "gulati2020conformer"
-You've used 46 entries,
+Warning--entry type for "bain2026whisperx_repo" isn't style-file defined
+--line 555 of file references.bib
+You've used 40 entries,
             2481 wiz_defined-function locations,
-            783 strings with 15681 characters,
-and the built_in function-call counts, 18218 in all, are:
-= -- 1240
-> -- 1520
-< -- 17
-+ -- 566
-- -- 470
-* -- 1477
-:= -- 3116
-add.period$ -- 166
-call.type$ -- 46
-change.case$ -- 92
-chr.to.int$ -- 42
-cite$ -- 46
-duplicate$ -- 730
-empty$ -- 1462
-format.name$ -- 518
-if$ -- 3756
-int.to.chr$ -- 5
-int.to.str$ -- 47
-missing$ -- 10
-newline$ -- 265
-num.names$ -- 138
-pop$ -- 515
+            758 strings with 14656 characters,
+and the built_in function-call counts, 16225 in all, are:
+= -- 1093
+> -- 1384
+< -- 14
++ -- 511
+- -- 428
+* -- 1341
+:= -- 2772
+add.period$ -- 143
+call.type$ -- 40
+change.case$ -- 80
+chr.to.int$ -- 37
+cite$ -- 40
+duplicate$ -- 638
+empty$ -- 1286
+format.name$ -- 472
+if$ -- 3342
+int.to.chr$ -- 4
+int.to.str$ -- 41
+missing$ -- 8
+newline$ -- 230
+num.names$ -- 120
+pop$ -- 451
 preamble$ -- 1
-purify$ -- 46
+purify$ -- 40
 quote$ -- 0
-skip$ -- 511
+skip$ -- 455
 stack$ -- 0
-substring$ -- 237
-swap$ -- 137
+substring$ -- 225
+swap$ -- 123
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 322
+type$ -- 280
 warning$ -- 0
-while$ -- 99
+while$ -- 87
 width$ -- 0
-write$ -- 619
+write$ -- 537
 (There was 1 warning)

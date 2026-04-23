@@ -1,4 +1,4 @@
-\begin{thebibliography}{46}
+\begin{thebibliography}{40}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -276,69 +276,6 @@ Xianrui Zheng, Chao Zhang, and Philip~C. Woodland.
 \newblock \url{https://zenodo.org/records/1227121}, 2013.
 \newblock Accessed: 2026-02-14.
 
-\bibitem[{OpenAI}(2024)]{github_openai_faster-whisper}
-{OpenAI}.
-\newblock openai/faster-whisper.
-\newblock \url{https://github.com/SYSTRAN/faster-whisper}, 2024.
-\newblock Accessed: 2026-02-14.
-
-\bibitem[{Meta AI}(2020)]{facebook_wav2vec2-large-960h}
-{Meta AI}.
-\newblock facebook/wav2vec2-large-960h.
-\newblock \url{https://huggingface.co/facebook/wav2vec2-large-960h}, 2020.
-\newblock Accessed: 2026-02-14.
-
-\bibitem[{NVIDIA}(2025{\natexlab{a}})]{nvidia/parakeet-tdt-0.6b-v3}
-{NVIDIA}.
-\newblock nvidia/parakeet-tdt-0.6b-v3.
-\newblock \url{https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3},
-  2025{\natexlab{a}}.
-\newblock Accessed: 2026-02-14.
-
-\bibitem[{NVIDIA}(2025{\natexlab{b}})]{nvidia/canary-qwen-2.5b}
-{NVIDIA}.
-\newblock nvidia/canary-qwen-2.5b.
-\newblock \url{https://huggingface.co/nvidia/canary-qwen-2.5b},
-  2025{\natexlab{b}}.
-\newblock Accessed: 2026-02-14.
-
-\bibitem[{IBM Research}(2025)]{ibm-granite/granite-speech-3.3-8b}
-{IBM Research}.
-\newblock ibm-granite/granite-speech-3.3-8b.
-\newblock \url{https://huggingface.co/granite-speech-3.3-8b}, 2025.
-\newblock Accessed: 2026-02-14.
-
-\bibitem[{Microsoft}(2025)]{microsoft/phi-4-multimodal-instruct}
-{Microsoft}.
-\newblock microsoft/phi-4-multimodal-instruct.
-\newblock \url{https://huggingface.co/microsoft/Phi-4-multimodal-instruct},
-  2025.
-\newblock Accessed: 2026-02-14.
-
-\bibitem[{ESPnet}(2024)]{ESPnet}
-{ESPnet}.
-\newblock Espnet.
-\newblock
-  \url{https://github.com/espnet/espnet?tab=readme-ov-file#se-speech-enhancement-and-separation},
-  2024.
-\newblock Accessed: 2026-02-14.
-
-\bibitem[Shin et~al.(2024)Shin, Lee, Kim, and Park]{SepReformer}
-Ui-Hyeop Shin, Sangyoun Lee, Taehan Kim, and Hyung-Min Park.
-\newblock Separate and reconstruct: Asymmetric encoder-decoder for speech
-  separation.
-\newblock \emph{arXiv:2406.05983}, 2024.
-\newblock URL \url{https://arxiv.org/pdf/2406.05983}.
-
-\bibitem[Wang et~al.(2019)Wang, Muckenhirn, Wilson, Sridhar, Wu, Hershey,
-  Saurous, Weiss, Jia, and Moreno]{VoiceFilter}
-Quan Wang, Hannah Muckenhirn, Kevin Wilson, Prashant Sridhar, Zelin Wu, John
-  Hershey, Rif~A. Saurous, Ron~J. Weiss, Ye~Jia, and Ignacio~Lopez Moreno.
-\newblock Voicefilter: Targeted voice separation by speaker-conditioned
-  spectrogram masking.
-\newblock \emph{arXiv:1810.04826}, 2019.
-\newblock URL \url{https://arxiv.org/pdf/1810.04826}.
-
 \bibitem[Shriberg et~al.(2001)Shriberg, Stolcke, and
   Baron]{Shriberg2001ObservationsOO}
 Elizabeth Shriberg, Andreas Stolcke, and Don Baron.
@@ -347,19 +284,36 @@ Elizabeth Shriberg, Andreas Stolcke, and Don Baron.
 \newblock In \emph{Interspeech}, 2001.
 \newblock URL \url{https://api.semanticscholar.org/CorpusID:11947676}.
 
-\bibitem[Cosentino et~al.(2023)Cosentino, Pariente, Cornell, Deleforge, and
-  Vincent]{Handling_Trade-Offs_in_Speech_Separation_with_Sparsely-Gated_Mixture_of_Experts}
-Joris Cosentino, Manuel Pariente, Samuele Cornell, Antoine Deleforge, and
-  Emmanuel Vincent.
-\newblock Handling trade-offs in speech separation with sparsely-gated mixture
-  of experts, 2023.
-\newblock URL \url{https://arxiv.org/abs/2211.06493}.
-
 \bibitem[YH et~al.(2018)YH, E, O, SS, A, and J]{wu2018characteristics}
 Wu~YH, Stangl E, Chipara O, Hasan SS, Welhaven A, and Oleson J.
 \newblock Characteristics of real-world signal to noise ratios and speech
   listening situations of older adults with mild to moderate hearing loss.
 \newblock \emph{Ear Hear}, 39\penalty0 (2):\penalty0 293--304, March 2018.
 \newblock \doi{10.1097/AUD.0000000000000486}.
+
+\bibitem[{OpenAI}(2024)]{github_openai_faster-whisper}
+{OpenAI}.
+\newblock openai/faster-whisper.
+\newblock \url{https://github.com/SYSTRAN/faster-whisper}, 2024.
+\newblock Accessed: 2026-02-14.
+
+\bibitem[Bain and contributors(2026)]{bain2026whisperx_repo}
+Max Bain and contributors.
+\newblock Whisperx: Automatic speech recognition with word-level timestamps (\&
+  diarization), 2026.
+\newblock URL \url{https://github.com/m-bain/whisperX}.
+\newblock GitHub repository, latest release v3.8.5, accessed 2026-04-23.
+
+\bibitem[{Meta AI}(2020)]{facebook_wav2vec2-large-960h}
+{Meta AI}.
+\newblock facebook/wav2vec2-large-960h.
+\newblock \url{https://huggingface.co/facebook/wav2vec2-large-960h}, 2020.
+\newblock Accessed: 2026-02-14.
+
+\bibitem[{NVIDIA}(2025)]{nvidia/parakeet-tdt-0.6b-v3}
+{NVIDIA}.
+\newblock nvidia/parakeet-tdt-0.6b-v3.
+\newblock \url{https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3}, 2025.
+\newblock Accessed: 2026-02-14.
 
 \end{thebibliography}

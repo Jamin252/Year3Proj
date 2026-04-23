@@ -1,0 +1,193 @@
+\chapter{Experimental Design}
+\label{chap:experimental_design}
+
+\section{Chapter Overview}
+This chapter specifies the empirical design used to evaluate automatic speech recognition (ASR) robustness under overlapping speech and additive noise, and to assess whether the proposed double-stream serialisation metric provides a more appropriate scoring procedure than conventional Word Error Rate (WER) when a two-stream reference must be compared against a single-stream hypothesis. The design is grounded in the implemented pipeline described in Chapter~3 and is divided into two complementary tracks.
+
+The first track is a controlled synthetic benchmark in which overlap ratio, signal-to-noise ratio (SNR), and noise category are manipulated directly. This provides a setting in which degradation factors can be isolated and model behaviour can be compared under matched conditions. The second track is a real-data transfer evaluation on CHiME-6, used to test whether trends observed under controlled synthesis remain visible in naturally occurring conversational audio with genuine overlap.
+
+\section{Research Questions and Hypotheses}
+\begin{enumerate}[label=\textbf{RQ\arabic*:}, leftmargin=*]
+    \item How do overlap ratio and background noise affect ASR accuracy under controlled synthetic conditions, and how does this behaviour differ across models?
+    \item How do publicly available ASR models compare across different overlap and noise operating points?
+    \item To what extent do trends observed on controlled synthetic mixtures transfer to real conversational recordings with natural overlap?
+    \item Does the proposed double-stream serialisation metric provide a more suitable evaluation than ordinary WER when a two-speaker reference is compared with a single-stream hypothesis?
+\end{enumerate}
+
+The final question is accompanied by the following working hypothesis:
+\begin{itemize}
+    \item \textbf{$H_0$}: DSS-WER does not differ systematically from ordinary WER.
+    \item \textbf{$H_1$}: DSS-WER is lower than or equal to ordinary WER on overlapping two-speaker material because it can account for interleaving between reference streams that flat WER cannot represent naturally.
+\end{itemize}
+
+This hypothesis is not intended to imply that DSS-WER is universally preferable in every transcription setting. Rather, it is specific to the evaluation problem studied in this dissertation: comparing a single-stream ASR hypothesis against a reference structure in which two speakers may overlap and interleave.
+
+\section{Design Logic}
+The overall design is a repeated-measures benchmarking framework. Each synthetic clip is transcribed by the same set of ASR systems, so model comparisons are paired at the clip level. Within the synthetic benchmark, acoustic variants are also paired because the implementation first generates a \emph{base mixture} and then derives multiple SNR and noise-category variants from that same base waveform. This reduces avoidable variance and makes differences between conditions more interpretable.
+
+Two considerations motivated the choice of experimental factors. First, overlap ratio is treated as a primary degradation variable because overlap is the central phenomenon of interest in this dissertation and because realistic conversational corpora report non-trivial but usually partial overlap rather than full simultaneity \citep{Shriberg2001ObservationsOO, chen2020continuousspeechseparationdataset}. Secondly, additive noise is crossed with overlap because robust ASR systems must operate under both interference sources simultaneously rather than in isolation.
+
+\begin{table}[ht]
+\centering
+\caption{Implemented experimental factors in the synthetic benchmark.}
+\label{tab:implemented_factors}
+\begin{tabularx}{\textwidth}{l l X}
+\toprule
+\textbf{Factor} & \textbf{Implemented levels} & \textbf{Purpose} \\
+\midrule
+Overlap ratio & $0.00$, $0.14$, $0.20$, $0.40$ & Baseline, meeting-like overlap, moderate overlap, and a higher-overlap stress condition \citep{Shriberg2001ObservationsOO, chen2020continuousspeechseparationdataset, cosentino2020librimixopensourcedatasetgeneralizable}. \\
+Maximum concurrent speakers & $2$ & Keeps the reference structure compatible with the proposed two-chain metric and reflects the fact that sustained three-way simultaneous speech is comparatively rare. \\
+SNR (dB) & clean, $7.4$, $0$, $-5$ & Covers clean speech, moderate noise, equal-level speech and noise, and a severe low-SNR condition \citep{wu2018characteristics}. \\
+Noise category & domestic (D), public (P), transport (T) & Captures acoustically distinct everyday backgrounds using DEMAND recordings \citep{demand}. \\
+Nominal clip duration & $60$ s & Produces long-form clips that are more informative than isolated utterances for overlap-aware evaluation. \\
+Sample rate & $16$ kHz & Matches the implementation and keeps model input handling consistent. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Track A: Controlled Synthetic Benchmark}
+\label{sec:synthetic_benchmark}
+
+\subsection{Speech and Noise Sources}
+The synthetic benchmark draws clean speech from the source roots declared in \texttt{Code/speech\_roots.txt}, namely local copies of LibriSpeech and the CSTR VCTK corpus \citep{librispeech, voxceleb}. LibriSpeech provides abundant transcribed read speech, while VCTK increases speaker diversity and recording variability. The mixture generator scans these roots for \texttt{.wav} and \texttt{.flac} files, loads the corresponding transcripts, converts multi-channel recordings to mono by channel averaging where necessary, and resamples all material to \SI{16}{\kilo\hertz}.
+
+Background noise is drawn from a local copy of DEMAND \citep{demand}. In the implementation, noise files are grouped into three coarse categories using the folder prefix: domestic (\texttt{D}), public (\texttt{P}), and transport (\texttt{T}). These categories are broad enough to represent materially different listening environments while remaining small enough to support a clean factorial analysis.
+
+\subsection{Synthetic Mixture Construction}
+The mixture generator takes a target clip duration, a speaker count, and a target overlap ratio as inputs. For the experiments reported here, the target duration is fixed at \SI{60}{\second}, the speaker count is fixed at two, and the random seed is fixed at \texttt{1234} in the configuration.
+
+For each base mixture, two speakers are sampled without replacement from the available speaker pool. Utterances are then drawn iteratively until the accumulated source duration exceeds the amount required to realise the target final duration after overlap. Speaker selection is not purely uniform at each step: the next speaker is chosen with probability inversely related to that speaker's previous contribution count, and immediate repetition of the same speaker is disallowed. This produces mixtures that are more balanced than naive random selection while preserving stochastic variation across clips.
+
+Each selected utterance contributes both waveform data and transcript text. The stored transcript for a synthetic clip is therefore not merely lexical; it also includes start and end times after scheduling, giving tuples of the form
+\begin{equation}
+(\text{speaker}, \text{text}, t_{\text{start}}, t_{\text{end}}).
+\end{equation}
+This makes the manifest sufficient for later scoring, inspection, and audit.
+
+\subsection{Overlap Scheduling}
+The implemented definition of overlap ratio is
+\begin{equation}
+\mathrm{OVR} = \frac{T_{\mathrm{overlap}}}{T_{\mathrm{active}}},
+\end{equation}
+where \(T_{\mathrm{overlap}}\) is the duration for which at least two streams are active and \(T_{\mathrm{active}}\) is the duration for which at least one stream is active. Since
+\begin{equation}
+T_{\mathrm{src}} = T_{\mathrm{active}} + T_{\mathrm{overlap}},
+\end{equation}
+the target overlap duration implied by a chosen overlap ratio is
+\begin{equation}
+T_{\mathrm{overlap}} = \frac{\mathrm{OVR}}{1+\mathrm{OVR}} T_{\mathrm{src}}.
+\end{equation}
+
+The generator first allocates a provisional amount of overlap across adjacent utterance pairs and then iteratively adjusts offsets until the realised overlap is sufficiently close to the target. The realised overlap stored in the manifest is computed from the active-speaker mask as
+\begin{equation}
+\mathrm{OVR}_{\mathrm{actual}} =
+\frac{\sum_t \mathbb{1}[a(t) > 1]}{\sum_t \mathbb{1}[a(t) \geq 1]},
+\end{equation}
+where \(a(t)\) is the number of active streams at sample index \(t\).
+
+In the current manifest, the realised means are effectively identical to the requested targets, with only negligible floating-point deviation. This is important because it confirms that later analysis is performed on the intended operating points rather than approximate ones.
+
+\subsection{Noise Injection}
+Once a clean base mixture has been created, additive noise is applied to form the noisy variants. Let \(A_{\mathrm{speech}}\) denote the RMS amplitude of the clean mixture and \(A_{\mathrm{noise}}\) the RMS amplitude of the selected noise segment. The scaling factor used to achieve a target SNR is
+\begin{equation}
+\alpha = \frac{A_{\mathrm{speech}}}{A_{\mathrm{noise}} \cdot 10^{\mathrm{SNR}_{\mathrm{dB}}/20}},
+\end{equation}
+and the final noisy mixture is
+\begin{equation}
+x_{\mathrm{noisy}} = x_{\mathrm{speech}} + \alpha x_{\mathrm{noise}}.
+\end{equation}
+
+The same clean base mixture is reused across all SNR and noise-category variants, which makes those comparisons paired by construction. When the SNR entry is \texttt{null} in the configuration, no noise is added and the clip functions as a clean control condition.
+
+\subsection{Condition Matrix and Corpus Size}
+The current configuration specifies overlap ratios \(\{0.00, 0.14, 0.20, 0.40\}\), speaker count \(=2\), SNR levels \(\{\text{clean}, 7.4, 0, -5\}\), and noise categories \(\{D, P, T\}\). In the implemented generator, overlap conditions above zero each use \(100\) base mixtures, while the \(0\%\) overlap baseline uses \(10\) base mixtures for runtime reasons. Each base mixture is expanded across the full SNR \(\times\) noise-category grid, yielding the corpus sizes shown in Table~\ref{tab:synthetic_counts}.
+
+% \begin{table}[ht]
+% \centering
+% \caption{Synthetic corpus size in the current manifest.}
+% \label{tab:synthetic_counts}
+% \begin{tabular}{lccc}
+% \toprule
+% \textbf{Target overlap ratio} & \textbf{Base mixtures} & \textbf{Derived variants per base} & \textbf{Total clips} \\
+% \midrule
+% $0.00$ & $10$ & $12$ & $120$ \\
+% $0.14$ & $100$ & $12$ & $1200$ \\
+% $0.20$ & $100$ & $12$ & $1200$ \\
+% $0.40$ & $100$ & $12$ & $1200$ \\
+% \midrule
+% \textbf{Total} &  &  & \textbf{$3720$} \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
+
+This asymmetry between the non-overlap baseline and the non-zero overlap conditions should be acknowledged explicitly. It does not invalidate the experiment, but it does mean that the \(0\%\) condition has lower lexical diversity than the other overlap settings. Later analysis therefore reports uncertainty at the clip level rather than treating all condition cells as equally rich by assumption.
+
+One additional implementation detail should also be noted. The clean condition is materialised once for each nominal noise category because the generator loops over noise labels even when no noise is added. As a result, the manifest contains clean clips labelled \texttt{D}, \texttt{P}, and \texttt{T}, although their waveforms are acoustically identical. This is retained here because the dissertation aims to document the implemented system faithfully.
+
+\section{Track B: Real-Data Transfer Evaluation}
+\label{sec:real_transfer}
+The real-data evaluation is intentionally narrower than the synthetic benchmark. Its purpose is not to provide a second fully crossed experiment, but to test whether the direction of the synthetic findings survives when overlap is natural rather than generated.
+
+The implemented real-data script uses CHiME-6 evaluation material \citep{chime6, watanabe2020chime6challengetacklingmultispeakerspeech}, specifically session \texttt{S01}. The script loads utterance-level annotations from \texttt{S01.json} and audio from \texttt{S01.wav}, then constructs up to \(100\) clips subject to the following rules:
+\begin{itemize}
+    \item each clip must be at least \SI{60}{\second} long;
+    \item clip boundaries must lie at utterance boundaries where no other utterance is active at the boundary time;
+    \item only utterances fully contained within the selected time window are kept in the reference.
+\end{itemize}
+
+These design choices avoid clipping utterances mid-word, preserve natural speaker transitions inside each clip, and ensure that the reference remains linguistically coherent. At the same time, they mean that the real-data benchmark is a transfer evaluation on one session rather than a balanced population-level sample of CHiME-6. That limitation is acceptable here because the real-data track is used as a validity check rather than as the sole evidential basis for the dissertation's main claims.
+
+\section{ASR Systems Under Comparison}
+Although the broader framework can accommodate additional models, the comparative evaluation reported here instantiates four systems:
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{faster-whisper}, using Whisper large-v3 through CTranslate2 \citep{github_openai_faster-whisper, radford2022robustspeechrecognitionlargescale};
+    \item \textbf{wav2vec2}, using \texttt{facebook/wav2vec2-large-960h} through the Hugging Face ASR pipeline \citep{facebook_wav2vec2-large-960h, baevski2020wav2vec20frameworkselfsupervised};
+    \item \textbf{parakeet}, using \texttt{nvidia/parakeet-tdt-0.6b-v3} through NVIDIA NeMo streaming inference \citep{nvidia/parakeet-tdt-0.6b-v3, sekoyan2025canary1bv2parakeettdt06bv3efficient};
+    \item \textbf{WhisperX}, using WhisperX large-v2 alignment-style transcription.
+\end{enumerate}
+
+These four models are the systems actually compared in the present study because they were the ones fully integrated into the batch inference and evaluation pipeline. This distinction between \emph{candidate} and \emph{evaluated} systems matters: the dissertation should not imply that a model was part of the empirical comparison merely because it appeared in a configuration file or an earlier design sketch.
+
+\section{Scoring Protocol}
+\subsection{Reference and Hypothesis Structure}
+For synthetic data, the reference transcript is loaded from the manifest and reduced to \((\text{speaker}, \text{text})\) pairs for scoring. Hypotheses are loaded from \texttt{ASR\_transcriptions.json}. Depending on the ASR system, a hypothesis may be emitted as a single segment or as multiple segments. This structural difference matters because some metrics assume a segmented, speaker-grouped output while others do not.
+
+The helper functions used in scoring normalise text by lowercasing and stripping punctuation before edit-distance computation. This is appropriate for the present study because the research questions concern lexical robustness under overlap and noise rather than punctuation restoration.
+
+\subsection{Metrics}
+Three metrics are used in the synthetic scoring pipeline:
+\begin{itemize}
+    \item \textbf{WER}: conventional single-stream word error rate, computed after concatenating all reference words and all hypothesis words into linear sequences.
+    \item \textbf{cpWER}: concatenated minimum-permutation WER, computed when the hypothesis is segmented and can therefore be compared speaker-wise up to permutation \citep{Word_Error_Rate_Definitions}.
+    \item \textbf{DSS-WER}: the proposed double-stream serialisation metric for comparing a two-speaker reference with a single-stream hypothesis. In the implementation and output JSON files this score is stored under the name \texttt{mrs\_wer}; the dissertation retains the conceptual label DSS-WER while noting the code-level name for reproducibility.
+\end{itemize}
+
+The DSS-WER implementation uses a beam-search approximation over two reference chains and one hypothesis chain. The scoring script fixes the main search hyperparameters at beam width \(64\), lookahead \(16\), heuristic weight \(0.4\), and maximum expansions \(160{,}000\). These settings are part of the experimental design because they determine the computational approximation used for the proposed metric.
+
+\subsection{Metric Application Rules}
+The synthetic evaluation script computes standard WER and DSS-WER for every successful clip--model pair. cpWER is then computed additionally when the hypothesis is segmented into more than one output segment. In practice, this means that systems such as faster-whisper and WhisperX can contribute cpWER scores, whereas single-output systems such as wav2vec2 and Parakeet primarily contribute WER and DSS-WER.
+
+The real-data evaluation script is slightly simpler. There, segmented hypotheses are scored with cpWER and non-segmented hypotheses with WER. This should be borne in mind when comparing synthetic and real outputs: the synthetic benchmark is the more comprehensive metric testbed.
+
+\section{Experimental Unit and Comparison Strategy}
+The fundamental experimental unit is a \((\text{clip}, \text{model})\) pair with attached metadata describing target overlap ratio, realised overlap ratio, SNR, noise category, and transcript structure. For synthetic data, the design also induces a higher-order pairing structure:
+\begin{itemize}
+    \item comparisons across models are paired because all models transcribe the same clip IDs;
+    \item comparisons across SNR values are paired because noisy variants derive from the same base mixture;
+    \item comparisons across noise categories are paired for the same reason.
+\end{itemize}
+
+This pairing structure supports stronger inference than a purely between-items design. When a model performs worse at lower SNR or higher overlap, that degradation can be attributed more confidently to the manipulated condition rather than to changes in lexical content or speaker identity across clips.
+
+\section{Planned Statistical Treatment}
+Formal statistical analysis is presented in Chapter~5, but the design choices relevant to that analysis are specified here. Because the same clip content is reused across models and across derived acoustic variants, results are analysed as paired observations wherever possible. Condition summaries are reported at minimum with means and dispersion measures, and uncertainty is assessed at the clip level rather than by assuming condition cells are exchangeable.
+
+For the metric comparison question, the central quantity of interest is the within-item difference between ordinary WER and DSS-WER. For the model comparison question, the paired structure across shared clips allows differences between systems to be interpreted more cleanly than in an unpaired design. The purpose of this chapter is therefore not to present full inferential results, but to make clear that the later analysis rests on an explicitly repeated-measures experimental structure.
+
+\section{Reproducibility}
+The implemented framework is designed so that every result is traceable to its generating conditions. The manifest stores clip identifiers, audio paths, source-file provenance, noise-file provenance, target overlap ratio, realised overlap ratio, SNR, and noise category. Model outputs are written to JSON keyed by clip ID, and evaluation outputs are stored both per clip and per model. Combined with the fixed random seed in the configuration, this provides a reproducible record of how each reported score was obtained.
+
+\section{Scope and Limitations}
+The experimental design combines a tightly controlled synthetic benchmark with a narrower but ecologically meaningful real-data validation stage. Its main strengths are that it separates overlap and noise as explicit variables, preserves paired comparisons across models and conditions, and evaluates the proposed metric in the setting for which it was designed.
+
+Its limitations are equally clear. The comparative evaluation presently covers four ASR systems; the \(0\%\) overlap baseline is smaller than the other synthetic cells; cpWER is not available for every model because not every model emits segmented hypotheses; and the real-data validation currently covers a single CHiME-6 session rather than a balanced sample of all meeting environments. These limitations do not invalidate the design, but they define the scope within which the dissertation's conclusions should be interpreted.

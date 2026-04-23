@@ -6,7 +6,7 @@ random_seed: 1234
 factors:
   # overlap_ratio: [0.2]
   overlap_ratio: [0, 0.14, 0.2, 0.4]
-  max_speakers: [2]
+  speaker_count: [2]
   snr_db: [null, 7.4, 0, -5]
   # snr_db: [null]
   noise_type: [D,P,T]
@@ -17,6 +17,7 @@ factors:
   speaker_spacing: 
     mu: 0.2
     sigma: 0.1
+  overlap_std_ratio: 0.01
 
 asr_models:
   - faster_whisper

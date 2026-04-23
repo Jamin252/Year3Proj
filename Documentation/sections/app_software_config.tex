@@ -1,0 +1,22 @@
+\chapter{Software Configuration}
+\label{ch:software_config}
+\section{Software Dependencies}
+\begin{itemize}
+    \item numpy 2.4.4
+    \item pandas 3.0.2
+    \item soundfile 0.13.1
+    \item librosa 0.11.0
+    \item faster-whisper 1.2.1
+    \item transformers 4.57.6
+    \item torch 2.8.0
+    \item whisperx 3.8.5
+\end{itemize}
+\noindent\rule{\textwidth}{0.4pt}
+
+\section{ASR Models and Configurations}
+\begin{description}
+    \item[faster-whisper] large-v3 model with compute type int8
+    \item[wav2vec-2.0] wav2vec2-large-960h
+    \item[parakeet] parakeet-tdt-0.6b-v3 with configuration: \texttt{right\_context\_secs=2.0}, \texttt{left\_context\_secs=10.0}, \texttt{chunk\_secs=10}, \texttt{batch\_size=1}, decoding=greedy
+    \item[whisperx] large-v2 model with compute type int8
+\end{description}

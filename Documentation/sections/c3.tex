@@ -1,329 +1,596 @@
-\chapter{System and Data Flow}
-Figure~\ref{fig:dataflow} shows the high-level data flow of the system.  The inputs are folders of \textbf{speaker audio} (clean speech WAVs with transcripts) and \textbf{noise audio} (e.g. environmental sounds).  A configuration YAML file specifies parameters (target overlap ratios, SNR values, clip length, speaker count, etc.).  The \emph{Mixture Generator} module loads all audio files and transcripts, and repeatedly constructs mixtures using the \texttt{generate\_audio.py} script.  Each mixture is passed to ASR \emph{Evaluation} (the \texttt{asr\_helper.py} pipeline), which runs several models to produce hypotheses.  The \emph{Metrics} module (using \texttt{wer\_helper.py}) computes WER, cpWER, DI-cpWER, etc. for each transcription.  Finally, results (scores and logs) are collated for analysis.
+\chapter{Architectural Design}
 
+%dss begin
+\subsection{Beam-Search Approximation for Two-Chain DSS-WER}
+
+To evaluate a single hypothesis transcript against two reference speaker streams while allowing interleaving between speakers, I implement a beam-search approximation to the minimum edit distance over all valid merges of the two reference chains. Let
+\begin{equation}
+A = (a_1,\dots,a_m), \qquad
+B = (b_1,\dots,b_n), \qquad
+H = (h_1,\dots,h_T)
+\end{equation}
+denote the two reference word chains and the hypothesis word sequence respectively.
+
+\paragraph{Preprocessing.}
+If normalisation is enabled, each word is lowercased and stripped of punctuation before comparison. This reduces superficial mismatches caused by case and punctuation rather than lexical disagreement.
+
+\paragraph{State space.}
+A search state is defined as
+\begin{equation}
+s = (i,j,t),
+\end{equation}
+where \(i\) is the number of words already consumed from chain \(A\), \(j\) is the number of words already consumed from chain \(B\), and \(t\) is the number of words already consumed from the hypothesis \(H\). The initial state is \((0,0,0)\), and the terminal state is \((m,n,T)\).
+
+Each state therefore represents a partial alignment between the prefix of the hypothesis and some valid interleaving of the first \(i\) words of \(A\) and the first \(j\) words of \(B\).
+
+\paragraph{Allowed transitions.}
+From a non-terminal state \((i,j,t)\), the algorithm considers up to five edit-style transitions:
+\begin{enumerate}
+    \item \textbf{Match/Substitute from \(A\):}
+    if \(i<m\) and \(t<T\), align \(a_{i+1}\) with \(h_{t+1}\), giving
+    \begin{equation}
+    (i,j,t) \rightarrow (i+1,j,t+1).
+    \end{equation}
+    The cost is \(0\) if the words match and \(1\) otherwise.
+
+    \item \textbf{Match/Substitute from \(B\):}
+    if \(j<n\) and \(t<T\), align \(b_{j+1}\) with \(h_{t+1}\), giving
+    \begin{equation}
+    (i,j,t) \rightarrow (i,j+1,t+1),
+    \end{equation}
+    again with cost \(0\) for a match and \(1\) for a substitution.
+
+    \item \textbf{Insertion:}
+    if \(t<T\), consume the next hypothesis word without matching a reference word:
+    \begin{equation}
+    (i,j,t) \rightarrow (i,j,t+1),
+    \end{equation}
+    with cost \(1\).
+
+    \item \textbf{Deletion from \(A\):}
+    if \(i<m\), skip the next word in chain \(A\):
+    \begin{equation}
+    (i,j,t) \rightarrow (i+1,j,t),
+    \end{equation}
+    with cost \(1\).
+
+    \item \textbf{Deletion from \(B\):}
+    if \(j<n\), skip the next word in chain \(B\):
+    \begin{equation}
+    (i,j,t) \rightarrow (i,j+1,t),
+    \end{equation}
+    with cost \(1\).
+\end{enumerate}
+
+These transitions ensure that order is preserved within each speaker chain, while still allowing the hypothesis to align with any valid interleaving of the two chains.
+
+\paragraph{Scoring function.}
+Each state maintains the best exact cost \(g(i,j,t)\) found so far. Candidate states are ranked using
+\begin{equation}
+f(i,j,t) = g(i,j,t) + \lambda\, h(i,j,t),
+\end{equation}
+where \(\lambda \ge 0\) is a heuristic weight and \(h(i,j,t)\) is a lower-bound estimate of the remaining alignment cost.
+
+\paragraph{Heuristic.}
+The heuristic combines two lower bounds:
+\begin{enumerate}
+    \item a \textbf{length lower bound}
+    \begin{equation}
+    h_{\mathrm{len}}(i,j,t) = \left| (m-i)+(n-j) - (T-t) \right|,
+    \end{equation}
+    which reflects the minimum number of insertions or deletions required if the remaining reference length and remaining hypothesis length differ;
+
+    \item a \textbf{local bag-of-words lower bound}
+    \begin{equation}
+    h_{\mathrm{bow}}(i,j,t),
+    \end{equation}
+    computed over a finite lookahead window by comparing the multiset of the next reference words from both chains against the multiset of the next hypothesis words.
+\end{enumerate}
+The final heuristic is
+\begin{equation}
+h(i,j,t) = \max\!\bigl(h_{\mathrm{len}}(i,j,t),\, h_{\mathrm{bow}}(i,j,t)\bigr).
+\end{equation}
+Using the maximum preserves a stronger lower bound while remaining computationally cheap.
+
+\paragraph{Beam pruning.}
+At each iteration, all successors generated from the current beam are ranked by \(f(i,j,t)\). Instead of retaining all states, the algorithm keeps only a bounded number of candidates. This yields a beam-search approximation rather than exact dynamic programming.
+
+The implementation also supports two refinements:
+\begin{enumerate}
+    \item \textbf{Adaptive beam width:} if many candidates have scores close to the best score, the beam width is increased up to a preset maximum to avoid premature pruning in ambiguous regions;
+    \item \textbf{Stratified beam selection:} candidates may be selected from multiple buckets indexed by the imbalance \(i-j\), which encourages diversity and reduces the risk that all beam states collapse onto one alignment pattern.
+\end{enumerate}
+
+\paragraph{Two-pass decoding.}
+The solver is run twice:
+\begin{enumerate}
+    \item in the original left-to-right direction;
+    \item in a reversed direction, where both reference chains and the hypothesis are reversed before search.
+\end{enumerate}
+The final output is the better of the two runs, chosen by minimum edit distance and then by WER. The reverse-direction pass can recover alignments that are difficult to find using only forward beam search, especially when ambiguity is concentrated near the end of the sequence.
+
+\paragraph{Backtracking and output.}
+For each state, the best predecessor and operation are stored. If alignment output is requested, the best path from the terminal state \((m,n,T)\) is reconstructed by backtracking through these stored pointers.
+
+Let \(d^\star\) denote the best distance found for the terminal state. The reported overlap-aware word error rate is then
+\begin{equation}
+\mathrm{DSS\mbox{-}WER} = \frac{d^\star}{m+n}.
+\end{equation}
+
+\paragraph{Interpretation.}
+This procedure approximates the minimum edit distance between the hypothesis and any valid interleaving of the two speaker chains. Unlike ordinary WER, it does not force the reference into a single fixed serial order across speakers. This makes it more suitable for evaluating a single-stream hypothesis against overlapping speech when multiple speaker orderings may be equally plausible.
+
+\paragraph{Complexity.}
+Let \(B\) denote the beam width, \(E\) the maximum number of state expansions, and \(L\) the heuristic lookahead window. Each expanded state generates only a constant number of successors, while candidate ranking requires sorting a list whose size is proportional to the beam width. The practical running time is therefore
+\begin{equation}
+O\!\bigl(E(\log B + L)\bigr),
+\end{equation}
+which simplifies to
+\begin{equation}
+O(E \log B)
+\end{equation}
+when the lookahead window is treated as a fixed constant. The memory usage is \(O(E)\) in the worst case due to the storage of best costs and backpointers for discovered states.
+
+%mr end
+
+\section{Design Objectives and Principles}
+This chapter describes the software architecture used to generate controlled overlapped-speech mixtures, run automatic speech recognition (ASR) systems under identical conditions, evaluate both established and proposed transcription metrics, and perform statistical analysis on the resulting scores. The design is driven by five requirements.
+
+\begin{enumerate}
+    \item \textbf{Experimental control:} overlap ratio, number of speakers, noise type, signal-to-noise ratio (SNR), and clip duration must be varied systematically without changing unrelated factors.
+    \item \textbf{Comparability:} all ASR systems must be evaluated on exactly the same waveform for a given clip, with model-specific decoding settings fixed in advance.
+    \item \textbf{Traceability:} every result must be recoverable from stored metadata, including source files, offsets, noise files, transcripts, and evaluation outputs.
+    \item \textbf{Modularity:} mixture generation, inference, metric evaluation, benchmarking, and statistical analysis should be separable so that new models or metrics can be added without rewriting the full pipeline.
+    \item \textbf{Reproducibility:} randomness, software versions, hardware, and configuration files must be recorded so that the experiments can be rerun and audited.
+\end{enumerate}
+
+In an Oxford undergraduate dissertation, an architecture chapter should do more than list implementation details. It should make clear \emph{why} the system is decomposed in a particular way, what assumptions each module relies on, and how those choices support the research questions. The emphasis here is therefore on design rationale as well as implementation.
+
+\section{System Overview}
 \begin{figure}[ht]
 \centering
 \resizebox{\linewidth}{!}{%
 \begin{tikzpicture}[
     font=\sffamily,
     >=Latex,
-    node distance=12mm and 16mm,
-    block/.style={
-        rectangle,
+    node distance=14mm and 16mm,
+    proc/.style={
+        draw,
         rounded corners=2pt,
-        draw=blue!55!black,
-        very thick,
-        minimum height=10mm,
-        text width=34mm,
-        align=center,
-        fill=blue!6
-    },
-    process/.style={
         rectangle,
-        rounded corners=2pt,
-        draw=teal!60!black,
-        very thick,
-        minimum height=10mm,
-        text width=34mm,
+        minimum height=9mm,
+        minimum width=31mm,
         align=center,
-        fill=teal!8
+        line width=0.9pt,
+        fill=blue!6,
+        draw=blue!55!black
     },
-    model/.style={
+    data/.style={
+        draw,
+        rounded corners=2pt,
         rectangle,
-        rounded corners=2pt,
-        draw=violet!70!black,
-        very thick,
-        minimum height=10mm,
-        text width=34mm,
+        minimum height=9mm,
+        minimum width=31mm,
         align=center,
-        fill=violet!8
+        line width=0.9pt,
+        fill=green!7,
+        draw=green!45!black
     },
-    output/.style={
+    outbox/.style={
+        draw,
+        rounded corners=2pt,
         rectangle,
-        rounded corners=2pt,
-        draw=orange!80!black,
-        very thick,
-        minimum height=10mm,
-        text width=36mm,
+        minimum height=9mm,
+        minimum width=31mm,
         align=center,
-        fill=orange!10
+        line width=0.9pt,
+        fill=orange!10,
+        draw=orange!60!black
     },
-    line/.style={
-        -{Latex[length=3mm,width=2mm]},
-        very thick,
-        draw=gray!75!black
-    }
+    eval/.style={
+        draw,
+        rounded corners=2pt,
+        rectangle,
+        minimum height=10mm,
+        minimum width=36mm,
+        align=center,
+        line width=1.0pt,
+        fill=purple!8,
+        draw=purple!55!black
+    },
+    line/.style={-Latex, line width=0.9pt, draw=black!75},
 ]
-\node[block] (A) {Speaker Audio\\Transcripts};
-\node[block, below=18mm of A] (C) {Noise Audio};
-\node[process, right=28mm of $(A)!0.5!(C)$] (B) {Mixture Generator};
 
-\node[output, right=24mm of B] (D) {Mixed Audio + Manifest};
-
-\node[model, right=26mm of D, yshift=18mm] (E) {ASR Model 1\\(e.g. Whisper)};
-\node[model, right=26mm of D] (F) {ASR Model 2\\(Wav2Vec2)};
-\node[model, right=26mm of D, yshift=-18mm] (G) {ASR Model 3\\(Parakeet)};
-
-\node[process, right=26mm of F] (H) {Scoring:\\WER, cpWER};
-\node[output, right=24mm of H] (I) {Results and Analysis};
+\node[data] (A) {Speaker Audio\\and Transcripts};
+\node[data, below=18mm of A] (C) {Noise Audio};
+\node[proc, right=28mm of $(A)!0.5!(C)$] (B) {Mixture Generator};
+\node[outbox, right=28mm of B] (D) {Mixed Audio};
+\node[data, below=14mm of B] (J) {Manifest};
+\node[proc, right=28mm of D, yshift=14mm] (E) {ASR Model 1\\(e.g. Whisper)};
+\node[proc, right=28mm of D] (F) {ASR Model 2\\(e.g. Wav2Vec2)};
+\node[proc, right=28mm of D, yshift=-14mm] (G) {ASR Model 3\\(e.g. Parakeet)};
+\node[eval, right=30mm of F] (H) {Evaluation and\\Benchmarking};
+\node[outbox, below=18mm of H] (I) {Metrics, Runtime,\\and Statistical Outputs};
 
 \draw[line] (A) -- (B);
 \draw[line] (C) -- (B);
 \draw[line] (B) -- (D);
+\draw[line] (B) -- (J);
 \draw[line] (D) -- (E);
 \draw[line] (D) -- (F);
 \draw[line] (D) -- (G);
 \draw[line] (E) -- (H);
 \draw[line] (F) -- (H);
 \draw[line] (G) -- (H);
+\draw[line] (J) -| (H.west);
 \draw[line] (H) -- (I);
+
 \end{tikzpicture}%
 }
-\caption{System data flow: input speech and noise are combined into mixtures, which are then transcribed by multiple ASR models; transcripts are scored with WER and overlap-aware metrics.}
-\label{fig:dataflow}
+\caption{High-level data flow through the experimental system. Clean speech and noise recordings are transformed into controlled mixtures, transcribed by multiple ASR systems, and then passed to the evaluation, benchmarking, and statistical analysis stages.}
+\label{fig:general_flow}
 \end{figure}
 
-In more detail, the mixture generation component comprises three steps: (1) \textbf{Selecting speakers and clips}: randomly choose $n$ speakers and their utterances; (2) \textbf{Offset scheduling}: compute time offsets to position each utterance so that the overall overlap ratio approaches the target; (3) \textbf{Noise addition}: mix in noise at a specified SNR. These steps yield a single mixed waveform plus metadata (transcripts aligned to mixture times). Table~\ref{tab:tools} lists the main software tools and libraries used.
+\Cref{fig:general_flow} shows the main pipeline. The system starts from two input collections: clean single-speaker recordings with transcripts, and environmental noise recordings grouped by type. A configuration file specifies the experimental factors to be controlled, including speaker count, target active duration, overlap ratio, noise type, and SNR. The mixture generator produces two coupled outputs: the waveform itself and a manifest containing the latent structure of that waveform, such as which utterances were used, when each utterance starts and ends, and which noise files were applied.
 
-\begin{table}[ht]
-\centering
-\caption{Main tools and libraries in the system.}
-\label{tab:tools}
-\begin{tabular}{ll}
-\toprule
-Component / Library & Purpose \\
-\midrule
-Python 3.x & Implementation language \\
-NumPy, SciPy & Numerical computing, resampling \\
-SoundFile (PySoundFile) & Audio I/O (WAV/FLAC) \\
-Librosa & Audio processing (resampling, padding) \\
-Pandas & Metadata (CSV manifest) \\
-PyTorch & Model inference engine (ASR models) \\
-NVIDIA NeMo & ASR and audio processing toolkit \\
-Hugging Face Transformers & Faster-Whisper, Wav2Vec2 pipelines \\
-WhisperX & Whisper with timestamp alignment \\
-FunASR & End-to-end ASR models (Nano-T, etc.) \\
-Jupyter / CLI & Experiment control \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\section{Mixture Generation Algorithm}
-The core mixture generation algorithm is implemented in \texttt{generate\_audio.py}.
-First, the script loads all clean speech files (grouped by speaker) and noise files.
-A transcript map is built from available transcripts (e.g.\ LibriSpeech or VCTK labels)
-keyed by utterance ID.
-
-The main function \texttt{build\_base\_mixture} selects $n$ speakers and samples
-utterances (potentially concatenating multiple segments per speaker to reach minimum
-length). It then calls \texttt{generate\_offsets} to compute start times:
-
-\begin{lstlisting}[style=codeblock,language=Python]
-def generate_offsets(
-    audios: List[np.ndarray],
-    n_speakers: int,
-    overlap_ratio_target: float,
-    sample_rate: int,
-    speaker_spacing: tuple,
-    sample_length: int,
-) -> Tuple[List[int], float, np.ndarray, int]:
-    offsets = [0]
-    p = len(audios[0])
-    active = np.zeros(sample_length, dtype=np.int32)
-    active[: len(audios[0])] += 1
-
-    if n_speakers == 1 or overlap_ratio_target <= 0:
-        for a in audios[1:]:
-            p += max(0, np.random.normal(*speaker_spacing) * sample_rate)
-            offsets.append(int(p))
-            active[int(p): int(p) + len(a)] += 1
-            p += len(a)
-        return offsets, overlap_ratio_target, active, len(active)
-
-    # ... otherwise allocate overlapping offsets ...
-\end{lstlisting}
-
-This function attempts to align the chosen utterances so that the fraction of
-overlapping samples matches \texttt{overlap\_ratio\_target}. It does so by random
-sampling of overlap extents and iterative adjustment. In the no-overlap case, it
-simply spaces speakers apart by a random gap.
-
-Once offsets are determined, \texttt{build\_base\_mixture} sums the waveforms at those
-offsets:
-
-\begin{lstlisting}[style=codeblock,language=Python]
-mixture = np.zeros(sample_length, dtype=np.float32)
-
-for i, (wave, off) in enumerate(zip(audio_parts, offsets)):
-    if off + len(wave) > len(mixture):
-        mixture = np.pad(mixture, (0, off + len(wave) - len(mixture)), "constant")
-
-    # Record transcript segment timing
-    speaker, text = transcript_parts[i][:2]
-    transcript_parts[i] = (
-        speaker,
-        text,
-        off / sample_rate,
-        (off + len(wave)) / sample_rate,
-    )
-
-    # Add waveform
-    mixture[off: off + len(wave)] += wave
-
-rms_val = rms(np.concatenate(audio_parts))
-return BaseMixture(
-    wave=mixture,
-    overlap_mask=active,
-    source_files=chosen,
-    transcript=transcript_parts,
-    overlap_ratio_actual=actual_or,
-    rms=rms_val,
-)
-\end{lstlisting}
-
-This produces a \texttt{BaseMixture} object containing the mixed audio and metadata
-(actual overlap, RMS value, transcripts with time). Finally, in the main loop the
-code iterates over conditions (overlap ratios, max speakers, SNR values, noise
-types) and generates final mixtures by adding noise:
-
-\begin{lstlisting}[style=codeblock,language=Python]
-noise = []
-
-# Concatenate random noise clips until mixture length is reached
-while len(noise) < len(mixture):
-    npath = random.choice(noise_files[noise_type])
-    tnoise, nsr = sf.read(npath)
-    tnoise = resample(tnoise, nsr, sample_rate)
-    noise = np.concatenate([noise, tnoise.astype(np.float32)])
-
-noise = noise[: len(mixture)]
-mixture_noisy = add_noise_for_snr(mixture, noise, snr_db, base_rms)
-sf.write(out_audio / f"{clip_id}.wav", mixture_noisy, sample_rate)
-
-rows.append(
-    MixtureMeta(
-        ...,  # other fields
-        transcript=base.transcript,
-        snr_db=snr_db,
-        noise_type=noise_type,
-        source_files=base.source_files,
-        noise_files=noise_paths,
-    )
-)
-\end{lstlisting}
-
-Here \texttt{add\_noise\_for\_snr} (from \texttt{generate\_audio.py}) scales the noise
-to achieve the target SNR:
-
-\begin{lstlisting}[style=codeblock,language=Python]
-def add_noise_for_snr(speech, noise, snr_db, base_rms):
-    noise_rms = rms(noise)
-    alpha = base_rms / (noise_rms * (10 ** (snr_db / 20)) + EPSILON)
-    return speech + alpha * noise
-\end{lstlisting}
-
-By saving each noisy mixture and its metadata (clip ID, transcripts, overlap,
-noise paths, etc.) to a CSV manifest, the system ensures reproducibility of every
-parameter.
-
-\section{Representative ASR Models} We evaluate several pre-trained ASR models to cover different architectures and training regimes. Table~\ref{tab:models} compares their key properties. The selection includes large sequence-to-sequence models and smaller streaming ones: \begin{itemize} \item \textbf{Whisper (large-v3)} – an encoder-decoder model trained on multilingual weakly supervised data
-; known for robustness to noise and disfluencies. \item \textbf{Wav2Vec2} – a self-supervised convolutional-Transformer model (e.g.\ base or large from Facebook)
-, fine-tuned on English data. \item \textbf{Parakeet-RNNT} – an NVIDIA NeMo multilingual RNN-Transducer (1.1B) model
- trained on extensive data, used for robust transcription and language identification. \item \textbf{WhisperX} – a variant of Whisper with timestamp refinement (for forced alignment of transcripts). \item \textbf{FunASR} – lightweight end-to-end ASR models (e.g.\ Nano-T) from the FunASR toolkit, enabling fast decoding. \end{itemize} We justify these choices as follows: Whisper and Wav2Vec2 are leading open-source ASR models, representing large-scale and self-supervised approaches respectively
-. NVIDIA’s Parakeet RNN-T provides a state-of-the-art industrial model for multilingual ASR. WhisperX and FunASR add variety in capabilities (alignment, low-latency models). Each model has published results attesting to competitive WER performance under noise (e.g.\ Whisper
- and Wav2Vec2
-). We do not use proprietary services, focusing on open or academic systems.
-
-\begin{table}[ht]
-\centering
-\caption{ASR models evaluated on the synthetic mixtures.}
-\label{tab:models}
-\begin{tabular}{lll}
-\toprule
-Model & Type & Comments \\
-\midrule
-Whisper (large-v3) & Seq2Seq Transformer & Multilingual, robust to noise \\
-Wav2Vec2 (base/large) & Transformer (CTC) & Self-supervised, fine-tuned on LibriSpeech \\
-Parakeet-RNNT & RNN-Transducer & Large (1.1B) multilingual model (NVIDIA NeMo) \\
-WhisperX & Seq2Seq + alignment & Whisper with improved timestamping \\
-FunASR (Nano-T) & Conformer (CTC) & Small model for low-latency ASR \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Each model is run on every generated audio file via \texttt{asr\_helper.py}. The outputs are collected into a \texttt{MixtureTranscription} structure (mapping clip IDs and speaker IDs to hypothesis text). This uniform format simplifies downstream scoring. No fine-tuning is performed; we evaluate the zero-shot performance of these off-the-shelf models on the synthetic data, and also test their transfer to real recordings (using a reserved real multi-speaker corpus).
-
-\section{Evaluation Metrics} We use standard and overlap-aware metrics to quantify transcription accuracy. The basic measure is \emph{Word Error Rate (WER)}, the Levenshtein distance normalized by reference length. For multi-speaker outputs, we compute \emph{concatenated minimum-permutation WER (cpWER)}
-: all utterances of each speaker are concatenated, and the speaker labels are optimally permuted to minimize total WER
-. This was introduced for CHiME 2020 and captures both ASR and diarization errors
-. We implement cpWER as in CHiME and Meeteval, and also compute a \emph{diarization-informed cpWER (DI-cpWER)} by penalizing misaligned word-timestamps (as in our code’s \texttt{DIcpWER} function). Additionally, we record \emph{Character Error Rate (CER)} and \emph{Insertion-Deletion-Substitution rates} for completeness. We do not use perceptual metrics (e.g.\ PESQ) as we focus on transcription. All metrics are averaged across mixtures with the same conditions to analyze trends.
-\chapter{System Architecture and Implementation}
-The system is implemented in Python and consists of three stages: \textit{mixture generation}, \textit{ASR decoding}, and \textit{metric computation}. Figure~\ref{fig:dataflow} shows the high-level data flow. First, input audio files (clean speech from each speaker, and optional background noise) are read. The \texttt{generate\_audio.py} script computes random time offsets for each speaker to achieve a target overlap ratio, then sums the signals and noise at those offsets to create the synthetic mixture. The synthetic waveform and reference transcripts (with speaker labels) are then passed to the ASR stage.
-
-\subsection{Libraries and Tools}
-Key software includes Python 3.8+, with \texttt{numpy}, \texttt{soundfile}/\texttt{librosa} for audio I/O, \texttt{pandas} for metadata tables, and \texttt{torch}/\texttt{transformers} for ASR models. We also use the \texttt{whisperx} package for OpenAI Whisper models. The baseline ASR systems are representative neural models: wav2vec\,2.0 \cite{baevski2020wav2vec20frameworkselfsupervised}, Whisper \cite{radford2022robustspeechrecognitionlargescale}, and Conformer \cite{gulati2020conformer}. Table~\ref{tab:asrmodels} summarizes their architectures.
-
-\begin{table}[t]
-\centering
-\begin{tabular}{p{3cm} p{4cm} p{5cm}}
-\toprule
-\textbf{Model} & \textbf{Architecture} & \textbf{Pretraining / Data} \\
-\midrule
-Wav2Vec\,2.0 \cite{baevski2020wav2vec20frameworkselfsupervised} & CNN + Transformer (self-supervised) & Pretrained on LibriSpeech (960\,h) \\
-Whisper \cite{radford2022robustspeechrecognitionlargescale} & Encoder-decoder Transformer & Trained on 680\,k hours of diverse audio \\
-Conformer \cite{gulati2020conformer} & Convolution-augmented Transformer & Trained on Librispeech (10\,k h) \\
-\bottomrule
-\end{tabular}
-\caption{ASR models evaluated.}
-\label{tab:asrmodels}
-\end{table}
+This explicit separation between \emph{audio} and \emph{manifest} is important. The waveform is used for ASR inference, whereas the manifest is used for evaluation, overlap-only scoring, error analysis, and auditing. In other words, the architecture is intentionally data-centric: the manifest is treated as a first-class research object rather than as an implementation by-product.
 
 \section{Synthetic Mixture Generation}
-\label{sec:mixture}
-The \texttt{generate\_audio.py} script creates controlled multi-speaker mixtures. After loading individual speaker waveforms, it calls \texttt{generate\_offsets} to determine start times. For example, the first speaker is placed at $t=0$; subsequent speakers are placed at random delays sampled from a normal distribution. The code snippet below (simplified) shows this offset scheduling:
+The synthetic data generator is the core module of the system because it determines how precisely overlap and noise can be controlled. It is divided into three stages: speaker and clip selection, offset scheduling, and noise addition.
 
-\begin{lstlisting}[language=Python, caption={Offset scheduling algorithm (simplified).},label={lst:genoffsets}]
-def generate_offsets(audios: List[np.ndarray], n_speakers: int,
-                     overlap_ratio_target: float, sample_rate: int,
-                     speaker_spacing: tuple, sample_length: int):
-    offsets = [0]
-    p = len(audios[0])
-    active = np.zeros(sample_length, dtype=np.int32)
-    active[:len(audios[0])] += 1
-    
-    if n_speakers == 1 or overlap_ratio_target <= 0:
-        for a in audios[1:]:
-            p += max(0, np.random.normal(*speaker_spacing) * sample_rate)
-            offsets.append(int(p))
-            active[int(p):int(p)+len(a)] += 1
-            p += len(a)
-        return (offsets, overlap_ratio_target, active, len(active))
-    # Otherwise, allocate overlap duration across speakers (omitted)
-\end{lstlisting}
+\subsection{Speaker and Clip Selection}
+\begin{figure}[ht]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[
+    font=\sffamily,
+    >=Latex,
+    node distance=10mm and 16mm,
+    every node/.style={align=center},
+    process/.style={
+        rectangle,
+        rounded corners=2pt,
+        draw=blue!60!black,
+        very thick,
+        minimum width=6.2cm,
+        minimum height=10mm,
+        text width=6.0cm,
+        fill=blue!5
+    },
+    decision/.style={
+        diamond,
+        aspect=2.2,
+        draw=orange!70!black,
+        very thick,
+        minimum width=5.4cm,
+        minimum height=11mm,
+        text width=3.4cm,
+        fill=orange!10,
+        inner sep=1pt
+    },
+    line/.style={
+        -{Latex[length=3mm,width=2mm]},
+        very thick,
+        draw=black!75
+    },
+    labelstyle/.style={font=\sffamily\footnotesize, inner sep=1pt, fill=white, text=black!80}
+]
 
-Each speaker signal is added to the mixture at its offset, and noise is scaled to reach the specified SNR. Metadata (speaker IDs, offsets, transcripts) is recorded in a Pandas DataFrame (see \texttt{helper\_class.py}).
+\node[process, text width=4.4cm, minimum width=4.8cm] (A) {speaker count $c$, target active duration $d$, and overlap ratio $o$};
+\node[process, right=of A, text width=4.0cm, minimum width=4.5cm] (B) {sample $c$ speakers uniformly without replacement};
+\node[process, right=of B, text width=4.0cm, minimum width=4.5cm] (C) {select the next speaker with balancing constraints};
+\node[process, right=of C, text width=4.2cm, minimum width=4.6cm] (D) {sample one utterance from that speaker};
+\node[decision, right=of D, text width=3.8cm, minimum width=4.3cm] (E) {is total source duration $> d(1+o)$?};
+\node[process, right=of E, text width=5.4cm, minimum width=5.8cm] (F) {return clip sequence and speaker-attributed transcript sequence};
 
-\section{ASR Decoding}
-\label{sec:decoding}
-In \texttt{asr\_helper.py}, each mixture is passed to selected ASR models. HuggingFace models use \texttt{pipeline("automatic-speech-recognition")}. Whisper models use \texttt{whisperx.load\_model}. The output transcripts may include special tokens marking speaker changes (e.g.\ serialized output). We parse each hypothesis into (speaker, text) pairs for scoring.
+\draw[line] (A) -- (B);
+\draw[line] (B) -- (C);
+\draw[line] (C) -- (D);
+\draw[line] (D) -- (E);
+\draw[line] (E) -- node[labelstyle, right] {True} (F);
+\draw[line] (E.south) -- ++(0,-8mm) -| node[labelstyle, pos=0.2, above] {False} (C.south);
 
-\section{Error Metrics: WER, cpWER, DI-cpWER}
-\label{sec:wer}
-Standard word error rate (WER) is computed per speaker by aligning hypothesis vs. reference words. For overlapping speech, we implement {\em concatenated-permutation WER} (cpWER) as defined by von Neumann et al.\ \cite{von_Neumann_2025}. This finds the best mapping of hypothesis speakers to reference speakers to minimize total errors. The code below sketches the calculation; setting \texttt{DI=True} computes the DI-cpWER variant (ignoring speaker labels):
+\end{tikzpicture}%
+}
+\caption{Speaker and clip selection. The stopping condition is expressed in terms of required source duration rather than output duration, because overlap causes some speech to occupy the same time interval in the final mixture.}
+\label{fig:clip_selection}
+\end{figure}
 
-\begin{lstlisting}[language=Python,caption={Computing cpWER (with optional DI mode).},label={lst:cpwer}]
-def cpWER(ref: List[tuple[str, str]], hyp: List[tuple[str, str]], DI=False) -> float:
-    # Convert (speaker, text) lists to dict of full utterances
-    ref_dict = transcript_to_dict(ref)
-    hyp_dict = transcript_to_dict(hyp)
-    for spk in ref_dict:
-        ref_dict[spk] = ' '.join(ref_dict[spk])
-    for spk in hyp_dict:
-        hyp_dict[spk] = ' '.join(hyp_dict[spk])
-    # If DI=True, ignore speaker IDs (diarization-invariant)
-    # Find optimal assignment (permutation search or greedy)
-    ...
-\end{lstlisting}
+The clip-selection stage takes a target number of speakers $c$, a target \emph{active} duration $d$, and a target overlap ratio $o$. The system first samples $c$ speakers without replacement, then repeatedly draws utterances until enough total source material has been accumulated.
 
-The \texttt{wer\_evaluation.py} script computes and reports WER, cpWER, and DI-cpWER for each evaluation set.
+The stopping criterion is based on the identity
+\begin{equation}
+T_{\mathrm{src}} = T_{\mathrm{active}} + T_{\mathrm{overlap}}.
+\end{equation}
+If the overlap ratio is defined as
+\begin{equation}
+ o = \frac{T_{\mathrm{overlap}}}{T_{\mathrm{active}}},
+\end{equation}
+then the required total source duration is
+\begin{equation}
+T_{\mathrm{src}} = d(1+o).
+\end{equation}
+This formulation is preferable to a naive duration threshold because it makes the dependence on overlap explicit. Without this correction, highly overlapped mixtures would systematically undershoot the intended amount of speech content.
 
+A balancing rule is used during iterative speaker selection so that one speaker does not dominate the clip sequence. This is not only a data-generation convenience: it reduces confounding between overlap condition and speaker contribution, which in turn makes later paired comparisons cleaner.
+
+\subsection{Offset Scheduling}
+\begin{figure}[ht]
+\centering
+\begin{minipage}[t]{0.48\linewidth}
+\vspace{0pt}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tikzpicture}[
+    font=\sffamily,
+    >=Latex,
+    node distance=14mm and 14mm,
+    line/.style={draw, -{Latex[length=3mm,width=2mm]}, very thick, color=gray!70},
+    block/.style={
+        rectangle,
+        rounded corners=2pt,
+        draw=blue!50!black,
+        very thick,
+        fill=blue!5,
+        text width=36mm,
+        minimum height=11mm,
+        align=center,
+        inner sep=6pt
+    },
+    decision/.style={
+        diamond,
+        aspect=2,
+        draw=orange!70!black,
+        very thick,
+        fill=orange!10,
+        text width=20mm,
+        align=center,
+        inner sep=2pt
+    },
+    labelstyle/.style={font=\footnotesize\bfseries, text=gray!35!black, fill=white, inner sep=1pt}
+]
+
+\node[block] (A) {clip sequence, target overlap ratio $o$, and spacing parameters $(\mu,\sigma)$};
+\node[decision, below=of A] (B) {is $o > 0$?};
+\node[block, below left=12mm and 11mm of B, text width=28mm] (C) {overlap allocation (right panel)};
+\node[block, below right=12mm and 11mm of B, text width=31mm] (D) {sample non-overlap spacing from $\mathcal{N}(\mu,\sigma)$};
+\node[block, below=16mm of $(C)!0.5!(D)$, text width=34mm] (E) {return clip start times};
+
+\draw[line] (A) -- (B);
+\draw[line] (B) -- node[labelstyle, left, pos=0.45] {True} (C);
+\draw[line] (B) -- node[labelstyle, right, pos=0.45] {False} (D);
+\draw[line] (C) -- (E);
+\draw[line] (D) -- (E);
+
+\end{tikzpicture}
+}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+\vspace{0pt}
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tikzpicture}[
+    font=\sffamily,
+    >=Latex,
+    node distance=10mm and 16mm,
+    line/.style={draw=gray!70, -{Latex[length=3mm,width=2mm]}, thick},
+    box/.style={
+        rectangle,
+        rounded corners=2pt,
+        draw=blue!55!black,
+        fill=blue!6,
+        thick,
+        align=center,
+        text width=8.2cm,
+        minimum height=10mm,
+        inner sep=4pt
+    },
+    decision/.style={
+        diamond,
+        aspect=2.1,
+        draw=orange!70!black,
+        fill=orange!10,
+        thick,
+        align=center,
+        text width=3.2cm,
+        inner sep=1.5pt
+    }
+]
+
+\node[box] (A) {clip sequence, target overlap ratio $o$, and overlap variability ratio};
+\node[box, below=of A] (B) {compute target absolute overlap $O^{\star}=\dfrac{o}{1+o}\sum_i \ell_i$};
+\node[box, below=of B] (C) {set mean adjacent overlap $\bar{O}=\dfrac{O^{\star}}{n-1}$};
+\node[box, below=of C] (D) {sample adjacent overlaps around $\bar{O}$ with clipping to feasible bounds};
+\node[box, below=of D] (E) {apply residual correction until $\sum_i O_i = O^{\star}$};
+\node[box, below=of E] (F) {convert overlaps to clip start times};
+
+\draw[line] (A) -- (B);
+\draw[line] (B) -- (C);
+\draw[line] (C) -- (D);
+\draw[line] (D) -- (E);
+\draw[line] (E) -- (F);
+
+\end{tikzpicture}
+}
+\end{minipage}
+\caption{Offset scheduling. The left panel shows the top-level decision between non-overlapping and overlapping construction. The right panel shows the overlap-allocation path used when the target overlap ratio is positive.}
+\label{fig:offset_scheduling}
+\end{figure}
+
+Given clip durations $\ell_1,\ldots,\ell_n$, the scheduler constructs clip start times such that the realised overlap ratio matches the target exactly in sample units. For overlapping mixtures, the target absolute overlap is
+\begin{equation}
+O^{\star} = \frac{o}{1+o}\sum_{i=1}^{n} \ell_i.
+\end{equation}
+This total is distributed across adjacent clip pairs. Let $O_i$ denote the overlap between clips $i$ and $i+1$. The scheduler enforces
+\begin{equation}
+0 \leq O_i \leq \min(\ell_i, \ell_{i+1}),
+\qquad
+\sum_{i=1}^{n-1} O_i = O^{\star}.
+\end{equation}
+The start times are then obtained recursively as
+\begin{equation}
+ s_1 = 0,
+ \qquad
+ s_{i+1} = s_i + \ell_i - O_i.
+\end{equation}
+
+The important architectural point is that overlap is not treated as an emergent property of random offsets. It is treated as a controlled variable first, with offsets derived afterwards. This reversal makes the generator suitable for experimental work rather than merely for producing plausible audio.
+
+\subsection{Noise Addition}
+Once a clean overlapped mixture has been formed, additive environmental noise is introduced. Noise files are sampled uniformly from the requested category and concatenated until they cover the full mixture duration; excess samples are truncated. Let $A_{\mathrm{s}}$ be the root-mean-square (RMS) amplitude of the active-speech region, and let $A_{\mathrm{n}}$ be the RMS amplitude of the chosen noise segment before scaling. For a target SNR in decibels, the noise scaling factor is
+\begin{equation}
+\alpha = \frac{A_{\mathrm{s}}}{A_{\mathrm{n}}\,10^{\mathrm{SNR}_{\mathrm{dB}}/20}}.
+\end{equation}
+The final mixture is then
+\begin{equation}
+ x_{\mathrm{final}}(t) = x_{\mathrm{speech}}(t) + \alpha x_{\mathrm{noise}}(t).
+\end{equation}
+
+Measuring SNR over active speech rather than over the entire waveform is a deliberate design choice. It prevents long silent regions from distorting the effective noise level, and it makes the resulting condition labels more faithful to what the ASR system actually experiences.
+
+\subsection{Manifest and Data Model}
+Every generated clip is recorded in a manifest so that waveform generation, inference, and evaluation remain joined by a common identifier. \Cref{tab:manifest_schema_improved} summarises the key fields.
+
+\begin{table}[ht]
+\centering
+\begin{tabularx}{\linewidth}{|@{}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}|}
+\toprule
+\textbf{Field} & \textbf{Purpose} & \textbf{Example} \\
+\midrule
+\texttt{clip\_id} & Unique key joining audio, predictions, metrics, and statistics. & \texttt{mix\_000031} \\
+\hline
+\texttt{audio\_path} & Relative path to the generated waveform. & \texttt{output/audio/mix\_000031.wav} \\
+\hline
+\texttt{transcript} & Ordered list of utterances with speaker ID, text, and timestamps. & \texttt{[(spk,text,t0,t1),\dots]} \\
+\hline
+\texttt{source\_files} & Provenance of the clean speech segments used. & list of input \texttt{.flac} paths \\
+\hline
+\texttt{noise\_files} & Provenance of the noise segment(s) used. & list of noise \texttt{.wav} paths \\
+\hline
+\texttt{speakers\_count} & Number of distinct speakers in the mixture. & \texttt{2} \\
+\hline
+\texttt{overlap\_ratio\_target} & Requested overlap ratio from configuration. & \texttt{0.20} \\
+\hline
+\texttt{overlap\_ratio\_actual} & Realised overlap ratio after scheduling. & \texttt{0.20} \\
+\hline
+\texttt{snr\_db} & Requested SNR, or \texttt{clean} for no added noise. & \texttt{7.4} \\
+\hline
+\texttt{noise\_type} & Noise category for condition grouping. & \texttt{public} \\
+\hline
+\texttt{overlap\_mask\_path} & Optional path for overlap-only evaluation support. & \texttt{output/masks/mix\_000031.npy} \\
+\bottomrule
+\end{tabularx}
+\caption{Recommended manifest schema. The key design principle is that every downstream analysis should be derivable from \texttt{clip\_id} plus stored metadata.}
+\label{tab:manifest_schema_improved}
+\end{table}
+
+\section{Inference and Experiment Orchestration}
+The inference layer consumes the manifest and produces standardised prediction files for each ASR model. Each backend is wrapped by a common adapter interface so that the orchestration code can treat different models uniformly. The wrapper is responsible for five tasks:
+\begin{enumerate}
+    \item loading the model and its fixed decoding configuration;
+    \item normalising audio I/O conventions, such as sample rate and waveform shape;
+    \item running inference over a list of clips;
+    \item serialising outputs into a common prediction format; and
+    \item recording runtime and failure information.
+\end{enumerate}
+
+This adapter pattern is important because the compared systems are heterogeneous. Some expose long-form transcription directly, some require chunking, and some may return word- or segment-level metadata. The architecture therefore standardises \emph{outputs} rather than forcing identical internals.
+
+To support resumability, the inference runner checks whether a clip has already been transcribed before launching a new job. Exceptions are logged per clip so that a single failure does not invalidate the remaining experiment. This is a practical but academically relevant decision: robustness of the evaluation pipeline matters when large factorial experiments are executed over many hours or days.
+
+\subsection{Fairness Controls}
+A strong architecture chapter should state explicitly how fairness is enforced. In this project, the main controls are:
+\begin{itemize}
+    \item fixed input sample rate per model, with deterministic resampling;
+    \item fixed decoding parameters within each model family;
+    \item identical audio clips across all models for a given condition;
+    \item no manual correction of model outputs before scoring; and
+    \item identical reference transcripts and manifests across all evaluation runs.
+\end{itemize}
+These controls ensure that measured differences are attributable to the model or pipeline under study, rather than to hidden changes in audio preprocessing or decoding.
+
+\subsection{Runtime Benchmarking Module}
+Because this dissertation is not only about accuracy but also about practical benchmarking, the architecture should include an explicit efficiency module. The benchmarking code records wall-clock processing time for each clip, and should report at least three quantities:
+\begin{enumerate}
+    \item \textbf{mean processing time per clip,}
+    \item \textbf{real-time factor (RTF),} defined by
+    \begin{equation}
+    \mathrm{RTF} = \frac{t_{\mathrm{proc}}}{t_{\mathrm{audio}}},
+    \end{equation}
+    where $t_{\mathrm{proc}}$ is inference time and $t_{\mathrm{audio}}$ is audio duration, and
+    \item \textbf{throughput,} for example clips per minute or audio-seconds processed per second.
+\end{enumerate}
+If average time per sample is already available in code, it can be retained in an appendix or supplementary table, but RTF should appear in the main dissertation because it is more interpretable across clips of different lengths.
+
+\section{Evaluation Architecture}
+The evaluation subsystem should be described as a separate architectural block rather than as a short afterthought. That is where this dissertation's scientific contribution becomes visible.
+
+\subsection{Established Metric Module}
+The first module computes established metrics used for external comparability, including WER for single-stream references and cpWER or DI-cpWER when multi-speaker references are more appropriate. Keeping these metrics explicit is important because they anchor the work in accepted ASR evaluation practice.
+
+\subsection{Proposed Metric Module}
+The second module computes the dissertation's proposed metric. This separation is intellectually useful: it makes clear that the new metric is an \emph{addition} to the benchmark rather than a replacement for standard reporting. The chapter should therefore state:
+\begin{itemize}
+    \item the problem the new metric is intended to solve;
+    \item the exact input and output format of the metric function;
+    \item the assumptions it makes about overlap or word ordering;
+    \item its time complexity; and
+    \item how it behaves on representative edge cases.
+\end{itemize}
+A concise pseudocode block or worked toy example is especially valuable here. For an Oxford dissertation, that usually raises the chapter from descriptive to analytical, because it shows that the metric is a designed algorithmic object, not merely an implementation detail.
+
+\subsection{Metric Output Schema}
+All metric results should be written at clip level to a structured table with at least the following fields:
+\texttt{clip\_id}, \texttt{model}, \texttt{pipeline}, \texttt{metric\_name}, \texttt{metric\_value}, and condition labels such as overlap ratio and SNR. This makes the statistical analysis layer independent of the inference code and avoids repeated recomputation.
+
+\section{Statistical Analysis Module}
+Your code for statistical inference deserves a visible place in the architecture chapter. At present, many student dissertations mention significance testing only in the results chapter, but it is stronger to show that the analysis layer was designed in advance.
+
+The statistical module should be presented as taking a clip-level metric table as input and producing four classes of output:
+\begin{enumerate}
+    \item descriptive summaries by condition and model;
+    \item uncertainty estimates, such as bootstrap confidence intervals;
+    \item paired comparisons for preprocessing or metric contrasts; and
+    \item model-based inference, for example mixed-effects or repeated-measures analyses where justified.
+\end{enumerate}
+
+Architecturally, this separation matters because it prevents statistical logic from being entangled with metric computation. It also makes it easier to rerun the analysis when new models are added, without recomputing the raw predictions.
+
+\section{Design Trade-offs}
+No architecture is neutral, so this section should make the trade-offs explicit.
+
+\begin{itemize}
+    \item \textbf{Controlled realism vs natural realism.} Synthetic mixtures provide precise experimental control, but they cannot capture every discourse and acoustic pattern of natural conversation.
+    \item \textbf{Exact target matching vs generation simplicity.} The offset scheduler is more complex than random placement, but it gives exact control over overlap ratio.
+    \item \textbf{Metric richness vs computational cost.} A proposed overlap-aware metric may better reflect transcription quality, but it may also be substantially slower than standard WER. Reporting both accuracy and computational overhead is therefore essential.
+    \item \textbf{Backend flexibility vs uniformity.} A shared adapter interface enables fair comparison without pretending that all ASR systems expose identical internals.
+\end{itemize}
+
+Including such trade-offs improves the chapter because it demonstrates judgement. That is usually one of the clearest differences between a competent technical write-up and a high-quality dissertation chapter.
+
+\section{Reproducibility and Experimental Environment}
+Reproducibility should be reported at the end of the chapter, but briefly and precisely. The key items are the operating system, Python version, major library versions, GPU, and random seed. It is also useful to record the configuration file used for each experiment and, where relevant, the git commit hash of the codebase.
+
+\begin{description}
+    \item[Operating system] Ubuntu 22.04
+    \item[Python] 3.14.3
+    \item[GPU] NVIDIA GeForce RTX 4070 Laptop GPU (8 GB VRAM)
+    \item[Random seed] 1234
+\end{description}
+
+Rather than listing every package in prose, a compact table or appendix is often cleaner. The main text should concentrate on why the environment matters: reproducibility of long-running inference, deterministic dataset generation, and repeatable statistical analysis.
+
+\section{What Should Be Included in the Final Dissertation Version}
+To make this chapter stronger in the final dissertation, the following elements should be included explicitly.
+
+\begin{enumerate}
+    \item A short \textbf{design-goals section} at the start.
+    \item A \textbf{clear separation} between generation, inference, evaluation, benchmarking, and statistics.
+    \item A formal description of the \textbf{new metric}, with complexity and a worked example.
+    \item A small subsection on \textbf{runtime benchmarking}, including RTF.
+    \item A statement of \textbf{fairness controls} for comparing ASR models.
+    \item A description of the \textbf{output schemas} used between modules.
+    \item A short \textbf{trade-off discussion} explaining why these design choices were made.
+\end{enumerate}
+
+With those additions, the chapter would read much more like a dissertation architecture chapter and much less like a code walkthrough.

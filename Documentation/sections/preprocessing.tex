@@ -1,9 +1,9 @@
 \section{Preprocessing Structure}
 \subsection{Pipeline Definition}
 Each preprocessing method is implemented as a deterministic function $f(\cdot)$ applied to waveform audio, producing a processed waveform:
-\[
+\begin{equation}
 x' = f(x;\theta),
-\]
+\end{equation}
 where $\theta$ are fixed parameters. Pipelines are defined as ordered compositions (e.g., normalisation $\rightarrow$ enhancement $\rightarrow$ ASR), where normalisation is always applied as it is computationally cheap and necessary for consistent input to downstream models, but to avoid combinatorial explosion, only a limited set of combinations is evaluated.
 
 \subsection{Experimental Plan}

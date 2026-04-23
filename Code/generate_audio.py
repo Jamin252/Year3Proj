@@ -1,5 +1,4 @@
 import argparse
-import json
 import random
 from dataclasses import dataclass, asdict
 from pathlib import Path
@@ -87,7 +86,7 @@ def resample(audio: np.ndarray, sr: int, target_sr: int) -> np.ndarray:
 #     return audio.astype(np.float32) + np.zeros(sample_length - len(audio), dtype=np.float32)
 
 
-def generate_offsets(audios: List[np.ndarray], n_speakers: int, overlap_ratio_target: float, sample_rate: int, speaker_spacing: tuple[float, float], sample_length: int) -> tuple[List[int], float, np.ndarray]:
+def generate_offsets(audios: List[np.ndarray], n_speakers: int, overlap_ratio_target: float, sample_rate: int, speaker_spacing: tuple[float, float], sample_length: int, std_ratio: float = 0.01) -> tuple[List[int], float, np.ndarray]:
     # print("\n")
     # print(n_speakers, overlap_ratio_target, sample_rate, speaker_spacing, sample_length)
     offsets = [0]
@@ -107,9 +106,8 @@ def generate_offsets(audios: List[np.ndarray], n_speakers: int, overlap_ratio_ta
         n_or_target = int(sum(len(a) for a in audios) * (overlap_ratio_target) // (1 + overlap_ratio_target))
         # print(n_or_target, sum(len(a) for a in audios))
         
-        
         avg_overlap = n_or_target / (len(audios) + EPSILON)
-        overlaps = np.array([int(np.random.normal(avg_overlap, avg_overlap * 0.01))for _ in range(len(audios)-1)], dtype=np.int32)
+        overlaps = np.array([int(np.random.normal(avg_overlap, avg_overlap * std_ratio))for _ in range(len(audios)-1)], dtype=np.int32)
         overlaps = np.clip(overlaps, 0, np.array(caps))
             
         diff = int(n_or_target - sum(overlaps))
@@ -207,6 +205,7 @@ def build_base_mixture(
     speaker_spacing: tuple[float, float],
     long_sample_length: int = 0,
     mins_lengths: List[float]= [10,20],
+    std_ratio: float = 0.01,
 ) -> BaseMixture:
     speakers: List[str] = random.sample(list(speech_files.keys()), n_speakers)
     sample_length = max(sample_length, long_sample_length) if overlap_ratio_target > 0.5 else sample_length
@@ -302,7 +301,7 @@ def build_base_mixture(
             audio_parts, n_speakers, 
             float(overlap_ratio_target), 
             sample_rate,  
-            speaker_spacing, sample_length)
+            speaker_spacing, sample_length, std_ratio=std_ratio)
         attempt += 1
         if offsets is not None:
             print(f"actual overlap ratio: {actual_or:.4f} (target was {overlap_ratio_target:.4f}), actualy length: {actual_length/sample_rate:.2f}s")
@@ -381,12 +380,12 @@ def main() -> None:
 
     rows: List[MixtureMeta] = []
     clip_counter = 0
-    total_num_clips = len(factors["overlap_ratio"]) * len(factors["max_speakers"]) * len(factors["snr_db"]) * len(factors["noise_type"]) * n_per_condition
+    total_num_clips = len(factors["overlap_ratio"]) * len(factors["speaker_count"]) * len(factors["snr_db"]) * len(factors["noise_type"]) * n_per_condition
     print(f"Generating {total_num_clips} mixtures...")
 
     for oratio in factors["overlap_ratio"]:
         print(f"Generating mixtures with target overlap ratio: {oratio:.2f}")
-        for k in factors["max_speakers"]:
+        for k in factors["speaker_count"]:
             # Build base overlapped mixtures once, then vary SNR/noise over the same base
             base_mixtures = []
             for _ in range(10 if oratio == 0 else n_per_condition):
@@ -403,6 +402,7 @@ def main() -> None:
                         speaker_spacing=(factors["speaker_spacing"]["mu"], factors["speaker_spacing"]["sigma"]),
                         long_sample_length=int(cfg["long_audio_duration_s"] * sample_rate),
                         mins_lengths = [cfg["min_length_s"], cfg["min_length_s_0.75"]],
+                        std_ratio=factors.get("overlap_std_ratio", 0.01)
                     )
                 base_mixtures.append(b)
             print(f"For overlap ratio {oratio:.2f} and max speakers {k}, generated {len(base_mixtures)} base mixtures.")
@@ -414,7 +414,12 @@ def main() -> None:
                         mixture = np.copy(base.wave)
                         noise_paths = []
                         if snr_db is not None:
-                            candidates = noise_files.get(noise_type, [])
+                            if noise_type == "A":
+                                candidates = []
+                                for nt in ["D", "P", "T"]:
+                                    candidates.extend(noise_files.get(nt, []))
+                            else:
+                                candidates = noise_files.get(noise_type, [])
                             noise = np.array([], dtype=np.float32)
                             while len(noise) < len(mixture):
                                 npath = random.choice(candidates)

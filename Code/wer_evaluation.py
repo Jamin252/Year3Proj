@@ -3,15 +3,29 @@ import csv
 import ast
 import sys
 import argparse
+import importlib
 import re
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional, Set
+
+try:
+    meeteval = importlib.import_module("meeteval")
+except ImportError:
+    meeteval = None
+
+MRS_LOOKAHEAD = 16
+MRS_BEAM_WIDTH = 64
+MRS_HEURISTIC_WEIGHT = 0.4
+MRS_MAX_EXPANSIONS = 160000
 
 # Add Code directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
 from wer_helper import cpWER, wer
 from mrs_beam_wer import mrs_wer_beam_2chain
+
+
+VALID_METRICS = {"wer", "mrs_wer", "cpwer", "orc_wer"}
 
 
 def load_asr_transcriptions(asr_json_path: str = "ASR_transcriptions.json") -> Dict:
@@ -28,12 +42,104 @@ def load_manifest(manifest_path: str = "Output/manifest.csv") -> Dict:
             clip_id = row['clip_id']
             transcript_str = row['transcript']
             try:
-                transcript = ast.literal_eval(transcript_str)
+                transcript = _parse_transcript_literal(transcript_str)
                 manifest[clip_id] = transcript
             except (ValueError, SyntaxError) as e:
                 print(f"Warning: Could not parse transcript for {clip_id}: {e}")
                 manifest[clip_id] = []
     return manifest
+
+
+def _normalize_csv_doubled_quote_pairs(text: str) -> str:
+    """Convert CSV-doubled quote pairs around fields into valid Python quotes.
+
+    Example:
+        ('spk', ""THAT'S FINE"", 0.0, 1.0)
+    becomes:
+        ('spk', "THAT'S FINE", 0.0, 1.0)
+    """
+    return re.sub(r'""(.*?)""', r'"\1"', text)
+
+
+def _quote_unquoted_transcript_fields(text: str) -> str:
+    """Add quotes around unquoted transcript fields in tuple literals.
+
+    This is a recovery path for malformed inputs such as:
+    ('spk', NO BUT THAT'S FINE, 1.0, 2.0)
+    where the transcript field lost its surrounding quotes before parsing.
+    """
+
+    def _is_quoted(value: str) -> bool:
+        value = value.strip()
+        return (len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'})
+
+    def _escape_for_double_quotes(value: str) -> str:
+        return value.replace("\\", "\\\\").replace('"', '\\"')
+
+    def _fix_4tuple(match: re.Match) -> str:
+        spk, transcript, start_t, end_t = match.groups()
+        transcript = transcript.strip()
+        if _is_quoted(transcript):
+            return match.group(0)
+        transcript = _escape_for_double_quotes(transcript)
+        return f"({spk}, \"{transcript}\", {start_t}, {end_t})"
+
+    def _fix_2tuple(match: re.Match) -> str:
+        spk, transcript = match.groups()
+        transcript = transcript.strip()
+        if _is_quoted(transcript):
+            return match.group(0)
+        transcript = _escape_for_double_quotes(transcript)
+        return f"({spk}, \"{transcript}\")"
+
+    spk_pat = r"(?:'(?:[^'\\]|\\.)*'|\"(?:[^\"\\]|\\.)*\")"
+    four_tuple_pat = re.compile(
+        rf"\(\s*({spk_pat})\s*,\s*(.*?)\s*,\s*([+-]?\d+(?:\.\d+)?)\s*,\s*([+-]?\d+(?:\.\d+)?)\s*\)"
+    )
+    # For 2-tuples, only repair cases where the second field has no extra top-level
+    # commas; this avoids accidentally swallowing timestamp fields from 4-tuples.
+    two_tuple_pat = re.compile(rf"\(\s*({spk_pat})\s*,\s*([^,\)]*?)\s*\)")
+
+    fixed = four_tuple_pat.sub(_fix_4tuple, text)
+    fixed = two_tuple_pat.sub(_fix_2tuple, fixed)
+    return fixed
+
+
+def _parse_transcript_literal(raw_value: object) -> List[Tuple[str, str, float, float]]:
+    """Parse transcript literals while tolerating CSV-escaped doubled quotes.
+
+    Some rows may contain doubled double-quotes ("") when CSV escaping is
+    preserved by an upstream read/write path. We try the raw value first, then
+    a normalized variant with doubled quotes collapsed.
+    """
+    if raw_value is None:
+        return []
+
+    text = str(raw_value).strip()
+    if not text:
+        return []
+
+    candidates = [text]
+    if '""' in text:
+        candidates.append(_normalize_csv_doubled_quote_pairs(text))
+        candidates.append(text.replace('""', '"'))
+
+    last_error: Optional[Exception] = None
+    for candidate in candidates:
+        try:
+            parsed = ast.literal_eval(candidate)
+            return parsed if isinstance(parsed, list) else []
+        except (ValueError, SyntaxError) as err:
+            last_error = err
+
+    if last_error is not None:
+        repaired = _quote_unquoted_transcript_fields(candidates[-1])
+        try:
+            parsed = ast.literal_eval(repaired)
+            return parsed if isinstance(parsed, list) else []
+        except (ValueError, SyntaxError):
+            raise last_error
+    return []
 
 
 def get_hypothesis_transcription(
@@ -112,9 +218,55 @@ def _flatten_transcript_words(segments: List[Tuple[str, str]]) -> List[str]:
     return words
 
 
-def _is_no_overlap_clip(clip_id: str) -> bool:
-    parts = clip_id.split("_")
-    return len(parts) >= 3 and parts[2] == "0.00"
+def _split_into_speaker_texts(segments: List[Tuple[str, str]]) -> List[str]:
+    if isinstance(segments, str):
+        segments = ast.literal_eval(segments)
+
+    speaker_order: List[str] = []
+    speaker_words: Dict[str, List[str]] = {}
+    for seg in segments:
+        if len(seg) < 2:
+            continue
+        spk = seg[0]
+        if spk not in speaker_words:
+            speaker_words[spk] = []
+            speaker_order.append(spk)
+        speaker_words[spk].extend(_normalize_words_from_text(seg[1]))
+
+    return [" ".join(speaker_words[spk]) for spk in speaker_order if speaker_words[spk]]
+
+
+def _normalize_metric_name(raw_metric: str) -> str:
+    normalized = raw_metric.strip().lower().replace("-", "_").replace(" ", "_")
+    aliases = {
+        "mrs": "mrs_wer",
+        "mrswer": "mrs_wer",
+        "orc": "orc_wer",
+        "orcwer": "orc_wer",
+    }
+    return aliases.get(normalized, normalized)
+
+
+def _parse_metric_selection(raw_metric: Optional[str]) -> Optional[Set[str]]:
+    if raw_metric is None:
+        return None
+
+    tokens = [tok for tok in raw_metric.split(",") if tok.strip()]
+    if not tokens:
+        return None
+
+    selected: Set[str] = set()
+    for token in tokens:
+        metric = _normalize_metric_name(token)
+        if metric in {"all", "*"}:
+            return None
+        if metric not in VALID_METRICS:
+            raise ValueError(
+                f"Unsupported metric '{token}'. Choose from: wer, mrs_wer, cpwer, orc_wer"
+            )
+        selected.add(metric)
+
+    return selected if selected else None
 
 
 def evaluate_wer_for_clip(
@@ -122,12 +274,14 @@ def evaluate_wer_for_clip(
     model_name: str,
     asr_data: Dict,
     manifest_data: Dict,
-    normalize_ref: bool = True
+    normalize_ref: bool = True,
+    selected_metrics: Optional[Set[str]] = None,
 ) -> Dict:
     # Get hypothesis
     print(f"Evaluating {clip_id} with model {model_name}...")
     hyp = get_hypothesis_transcription(asr_data, clip_id, model_name)
     if hyp is None:
+        print(f"Skipped: Hypothesis not found for {clip_id} and model {model_name}")
         return {
             'clip_id': clip_id,
             'model_name': model_name,
@@ -168,53 +322,57 @@ def evaluate_wer_for_clip(
     hyp_words = _flatten_transcript_words(hyp)
     ref_text = ' '.join(ref_words)
     hyp_text = ' '.join(hyp_words)
-    use_plain_wer = _is_no_overlap_clip(clip_id)
+    ref_chain_a, ref_chain_b = _split_into_two_chains(ref_normalized)
+    ref_speaker_texts = _split_into_speaker_texts(ref_normalized)
+    hyp_speaker_texts = _split_into_speaker_texts(hyp)
     
     try:
-        if is_segmented:
-            # Use cpWER for segmented transcriptions
+        metric_set = selected_metrics or VALID_METRICS
+
+        if 'wer' in metric_set:
+            result['metrics']['wer'] = wer(ref_text, hyp_text)
+
+        if 'mrs_wer' in metric_set:
+            beam_result = mrs_wer_beam_2chain(
+                ref_chain_a,
+                ref_chain_b,
+                hyp_words,
+                beam_width=MRS_BEAM_WIDTH,
+                heuristic_weight=MRS_HEURISTIC_WEIGHT,
+                normalize=True,
+                return_alignment=False,
+                lookahead=MRS_LOOKAHEAD,
+                max_expansions=MRS_MAX_EXPANSIONS,
+            )
+            result['metrics']['mrs_wer'] = beam_result['wer']
+
+        if 'cpwer' in metric_set:
             result['metrics']['cpwer'] = cpWER(ref_normalized, hyp)
-            # Original concatenated-WER evaluation kept for reference.
-            # result['metrics']['wer'] = wer(ref_text, hyp_text)
 
-            if use_plain_wer:
-                result['metrics']['wer'] = wer(ref_text, hyp_text)
-                result['wer_method'] = 'wer'
-            else:
-                ref_chain_a, ref_chain_b = _split_into_two_chains(ref_normalized)
-                beam_result = mrs_wer_beam_2chain(
-                    ref_chain_a,
-                    ref_chain_b,
-                    hyp_words,
-                    beam_width=64,
-                    heuristic_weight=1.0,
-                    normalize=True,
-                    return_alignment=False,
+        if 'orc_wer' in metric_set:
+            if meeteval is None:
+                raise RuntimeError(
+                    "ORC-WER requested but meeteval is not installed. Install with: pip install meeteval"
                 )
-                result['metrics']['wer'] = beam_result['wer']
-                result['wer_method'] = 'mrs'
-            result['metric_type'] = 'segmented'  # Both cpWER and concatenated WER
+            orc_result = meeteval.wer.wer.orc.orc_word_error_rate(
+                reference=ref_speaker_texts,
+                hypothesis=hyp_speaker_texts,
+            )
+            result['metrics']['orc_wer'] = float(orc_result.error_rate)
+
+        if {'wer', 'mrs_wer'}.issubset(metric_set):
+            result['wer_method'] = 'both'
+        elif 'wer' in metric_set:
+            result['wer_method'] = 'wer_only'
+        elif 'mrs_wer' in metric_set:
+            result['wer_method'] = 'mrs_wer_only'
         else:
-            # Original concatenated-WER evaluation kept for reference.
-            # result['metrics']['wer'] = wer(ref_text, hyp_text)
+            result['wer_method'] = 'n/a'
 
-            if use_plain_wer:
-                result['metrics']['wer'] = wer(ref_text, hyp_text)
-                result['wer_method'] = 'wer'
-            else:
-                ref_chain_a, ref_chain_b = _split_into_two_chains(ref_normalized)
-                beam_result = mrs_wer_beam_2chain(
-                    ref_chain_a,
-                    ref_chain_b,
-                    hyp_words,
-                    beam_width=64,
-                    heuristic_weight=1.0,
-                    normalize=True,
-                    return_alignment=False,
-                )
-                result['metrics']['wer'] = beam_result['wer']
-                result['wer_method'] = 'mrs'
-            result['metric_type'] = 'wer'  # Simple WER for single segment
+        if is_segmented:
+            result['metric_type'] = 'segmented'
+        else:
+            result['metric_type'] = 'not segmented'
         
         return result
     except Exception as e:
@@ -229,12 +387,19 @@ def evaluate_wer_batch(
     model_name: str,
     asr_data: Dict,
     manifest_data: Dict,
-    verbose: bool = True
+    verbose: bool = True,
+    selected_metrics: Optional[Set[str]] = None,
 ) -> List[Dict]:
     results = []
     
     for i, clip_id in enumerate(clip_ids):
-        result = evaluate_wer_for_clip(clip_id, model_name, asr_data, manifest_data)
+        result = evaluate_wer_for_clip(
+            clip_id,
+            model_name,
+            asr_data,
+            manifest_data,
+            selected_metrics=selected_metrics,
+        )
         results.append(result)
         
         if verbose and (i + 1) % max(1, len(clip_ids) // 10) == 0:
@@ -255,7 +420,8 @@ def evaluate_all_models(
     clip_ids: List[str],
     asr_data: Dict,
     manifest_data: Dict,
-    verbose: bool = True
+    verbose: bool = True,
+    selected_metrics: Optional[Set[str]] = None,
 ) -> Dict[str, List[Dict]]:
     models = get_model_names(asr_data)
     results_by_model = {}
@@ -264,7 +430,12 @@ def evaluate_all_models(
         if verbose:
             print(f"\nEvaluating model: {model}")
         results_by_model[model] = evaluate_wer_batch(
-            clip_ids, model, asr_data, manifest_data, verbose
+            clip_ids,
+            model,
+            asr_data,
+            manifest_data,
+            verbose,
+            selected_metrics=selected_metrics,
         )
     
     return results_by_model
@@ -274,11 +445,17 @@ def compute_summary_statistics(results: List[Dict]) -> Dict:
     successful = [r for r in results if r['status'] == 'success']
     failed = [r for r in results if r['status'] == 'error']
     
-    # Separate results so segmented clips can contribute to both WER and cpWER.
+    # Separate results so segmented clips can contribute to cpWER and ORC-WER.
     wer_results = [r for r in successful if 'wer' in r.get('metrics', {})]
+    mrs_wer_results = [r for r in successful if 'mrs_wer' in r.get('metrics', {})]
     cpwer_results = [r for r in successful if 'cpwer' in r.get('metrics', {})]
-    wer_segmented_results = [r for r in successful if 'wer' in r.get('metrics', {}) and 'cpwer' in r.get('metrics', {})]
-    wer_nonsegmented_results = [r for r in successful if 'wer' in r.get('metrics', {}) and 'cpwer' not in r.get('metrics', {})]
+    orc_wer_results = [r for r in successful if 'orc_wer' in r.get('metrics', {})]
+    wer_segmented_results = [
+        r for r in successful if 'wer' in r.get('metrics', {}) and r.get('is_segmented') is True
+    ]
+    wer_nonsegmented_results = [
+        r for r in successful if 'wer' in r.get('metrics', {}) and r.get('is_segmented') is False
+    ]
     
     def compute_stats_for_metric(metric_results, metric_name):
         """Compute stats for a specific metric."""
@@ -307,7 +484,9 @@ def compute_summary_statistics(results: List[Dict]) -> Dict:
         'successful': len(successful),
         'failed': len(failed),
         'wer_count': len(wer_results),
+        'mrs_wer_count': len(mrs_wer_results),
         'cpwer_count': len(cpwer_results),
+        'orc_wer_count': len(orc_wer_results),
         'wer_segmented_count': len(wer_segmented_results),
         'wer_nonsegmented_count': len(wer_nonsegmented_results),
     }
@@ -317,9 +496,15 @@ def compute_summary_statistics(results: List[Dict]) -> Dict:
     wer_segmented_stats = compute_stats_for_metric(wer_segmented_results, 'wer')
     stats.update({k: v for k, v in wer_nonsegmented_stats.items() if k != 'wer_count'})
     stats.update({f'wer_segmented_{k[len("wer_"):]}' : v for k, v in wer_segmented_stats.items() if k != 'wer_count'})
+
+    # Add MRS-WER statistics
+    stats.update(compute_stats_for_metric(mrs_wer_results, 'mrs_wer'))
     
     # Add cpWER statistics
     stats.update(compute_stats_for_metric(cpwer_results, 'cpwer'))
+
+    # Add ORC-WER statistics
+    stats.update(compute_stats_for_metric(orc_wer_results, 'orc_wer'))
     
     return stats
 
@@ -408,19 +593,35 @@ if __name__ == "__main__":
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n"
                "  python wer_evaluation.py                          # Evaluate all models\n"
-               "  python wer_evaluation.py --model faster-whisper   # Evaluate specific model\n"
+               "  python wer_evaluation.py --only-model faster-whisper   # Evaluate only one model\n"
+               "  python wer_evaluation.py --model faster-whisper        # Backward-compatible alias\n"
                "  python wer_evaluation.py --list                   # List available models"
     )
     parser.add_argument(
         "--model",
         type=str,
         default=None,
-        help="Specific model name to evaluate (e.g., 'faster-whisper'). If not specified, evaluates all models."
+        help="Backward-compatible alias for --only-model."
+    )
+    parser.add_argument(
+        "--only-model",
+        type=str,
+        default=None,
+        help="Evaluate only the specified model (e.g., 'faster-whisper'). If not specified, evaluates all models."
     )
     parser.add_argument(
         "--list",
         action="store_true",
         help="List available models and exit"
+    )
+    parser.add_argument(
+        "--metric",
+        type=str,
+        default=None,
+        help=(
+            "Optional metric selector. Use one or more comma-separated values from "
+            "wer,mrs_wer,cpwer,orc_wer. Examples: --metric wer or --metric cpwer,orc_wer"
+        ),
     )
     
     args = parser.parse_args()
@@ -428,6 +629,12 @@ if __name__ == "__main__":
     # Load data
     asr_data = load_asr_transcriptions()
     manifest_data = load_manifest()
+
+    try:
+        selected_metrics = _parse_metric_selection(args.metric)
+    except ValueError as metric_err:
+        print(f"Error: {metric_err}")
+        sys.exit(1)
     
     # Get list of all clip IDs from manifest
     clip_ids = list(manifest_data.keys())  # Evaluate all clips
@@ -444,12 +651,18 @@ if __name__ == "__main__":
         sys.exit(0)
     
     # Determine which models to evaluate
-    if args.model:
+    if args.model and args.only_model and args.model != args.only_model:
+        print(f"Error: --model ({args.model}) and --only-model ({args.only_model}) disagree. Use only one.")
+        sys.exit(1)
+
+    selected_model = args.only_model or args.model
+
+    if selected_model:
         # Evaluate specific model
-        if args.model not in models:
-            print(f"Error: Model '{args.model}' not found in available models: {models}")
+        if selected_model not in models:
+            print(f"Error: Model '{selected_model}' not found in available models: {models}")
             sys.exit(1)
-        models_to_eval = [args.model]
+        models_to_eval = [selected_model]
     else:
         # Evaluate all models
         models_to_eval = models
@@ -458,7 +671,18 @@ if __name__ == "__main__":
     results_by_model = {}
     for model_name in models_to_eval:
         print(f"\nEvaluating {model_name} on {len(clip_ids)} clips...")
-        results = evaluate_wer_batch(clip_ids, model_name, asr_data, manifest_data, verbose=False)
+        if selected_metrics is None:
+            print("Metrics: all (wer, mrs_wer, cpwer, orc_wer)")
+        else:
+            print(f"Metrics: {sorted(selected_metrics)}")
+        results = evaluate_wer_batch(
+            clip_ids,
+            model_name,
+            asr_data,
+            manifest_data,
+            verbose=False,
+            selected_metrics=selected_metrics,
+        )
         results_by_model[model_name] = results
         
         # Save results by clip in individual JSON files
@@ -480,8 +704,17 @@ if __name__ == "__main__":
         print(f"Successful: {stats['successful']}")
         print(f"Failed: {stats['failed']}")
         print(f"WER clips: {stats.get('wer_count', 0)}")
+        print(f"MRS-WER clips: {stats.get('mrs_wer_count', 0)}")
         print(f"cpWER clips: {stats.get('cpwer_count', 0)}")
+        print(f"ORC-WER clips: {stats.get('orc_wer_count', 0)}")
         print()
+
+        if stats.get('mrs_wer_count', 0) > 0:
+            print(f"All clips (MRS-WER) - {stats['mrs_wer_count']} clips:")
+            for key in ['mrs_wer_mean', 'mrs_wer_median', 'mrs_wer_min', 'mrs_wer_max', 'mrs_wer_std']:
+                if key in stats:
+                    print(f"  {key}: {stats[key]:.4f}")
+            print()
         
         if stats.get('wer_nonsegmented_count', 0) > 0:
             print(f"Non-Segmented (WER) - {stats['wer_nonsegmented_count']} clips:")
@@ -489,10 +722,17 @@ if __name__ == "__main__":
                 if key in stats:
                     print(f"  {key}: {stats[key]:.4f}")
         
-        if stats.get('wer_segmented_count', 0) > 0:
+        if stats.get('cpwer_count', 0) > 0:
             print()
-            print(f"Segmented (cpWER) - {stats['wer_segmented_count']} clips:")
+            print(f"cpWER - {stats['cpwer_count']} clips:")
             for key in ['cpwer_mean', 'cpwer_median', 'cpwer_min', 'cpwer_max', 'cpwer_std']:
+                if key in stats:
+                    print(f"  {key}: {stats[key]:.4f}")
+
+        if stats.get('orc_wer_count', 0) > 0:
+            print()
+            print(f"Segmented (ORC-WER) - {stats['orc_wer_count']} clips:")
+            for key in ['orc_wer_mean', 'orc_wer_median', 'orc_wer_min', 'orc_wer_max', 'orc_wer_std']:
                 if key in stats:
                     print(f"  {key}: {stats[key]:.4f}")
 

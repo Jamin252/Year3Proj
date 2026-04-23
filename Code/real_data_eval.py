@@ -11,6 +11,11 @@ import soundfile as sf
 import torch
 from transformers import pipeline
 
+try:
+	import meeteval
+except ImportError:
+	meeteval = None
+
 from asr_helper import (
 	transcribe_faster_whisper,
 	transcribe_parakeet,
@@ -18,7 +23,7 @@ from asr_helper import (
 	transcribe_whisperx,
 )
 from helper_class import MixtureMeta, MixtureTranscription
-from wer_helper import cpWER, wer
+from wer_helper import wer
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -336,6 +341,21 @@ def _flatten_text(segments: List[Tuple[str, str]]) -> str:
 	return " ".join(seg[1] for seg in segments)
 
 
+def _speaker_texts(segments: List[Tuple[str, str]]) -> List[str]:
+	speaker_order: List[str] = []
+	speaker_words: Dict[str, List[str]] = {}
+	for segment in segments:
+		if len(segment) < 2:
+			continue
+		spk, text = segment[0], segment[1]
+		if spk not in speaker_words:
+			speaker_words[spk] = []
+			speaker_order.append(spk)
+		speaker_words[spk].append(text)
+
+	return [" ".join(speaker_words[spk]) for spk in speaker_order if speaker_words[spk]]
+
+
 def evaluate_model_outputs(
 	refs: Dict[str, Dict[str, Any]],
 	hyps: Dict[str, MixtureTranscription],
@@ -360,8 +380,17 @@ def evaluate_model_outputs(
 
 			hyp_is_segmented = len(hyp_segments) > 1
 			if hyp_is_segmented:
-				score = cpWER(ref_segments, hyp_segments)
-				metric = "cpwer"
+				if meeteval is None:
+					raise RuntimeError(
+						"ORC-WER requires meeteval. Install with: pip install meeteval"
+					)
+				score = float(
+					meeteval.wer.wer.orc.orc_word_error_rate(
+						reference=_speaker_texts(ref_segments),
+						hypothesis=_speaker_texts(hyp_segments),
+					).error_rate
+				)
+				metric = "orc_wer"
 			else:
 				score = wer(_flatten_text(ref_segments), _flatten_text(hyp_segments))
 				metric = "wer"

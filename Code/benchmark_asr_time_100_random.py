@@ -25,16 +25,24 @@ MANIFEST_PATH = PROJECT_ROOT / "Output" / "manifest.csv"
 RESULT_PATH = PROJECT_ROOT / "timings_100_random.json"
 
 SAMPLE_SIZE = 100
-RANDOM_SEED = 42
+RANDOM_SEED = 1234
 
 def _parse_transcript(raw_value: Any) -> List[tuple]:
     if pd.isna(raw_value) or raw_value == "":
         return []
-    try:
-        parsed = ast.literal_eval(str(raw_value))
-    except Exception:
-        return []
-    return parsed if isinstance(parsed, list) else []
+
+    text = str(raw_value).strip()
+    candidates = [text]
+    if '""' in text:
+        candidates.append(text.replace('""', '"'))
+
+    for candidate in candidates:
+        try:
+            parsed = ast.literal_eval(candidate)
+            return parsed if isinstance(parsed, list) else []
+        except Exception:
+            continue
+    return []
 
 
 def _build_meta(row: pd.Series) -> MixtureMeta:

@@ -33,9 +33,9 @@ WER is used for clips with no overlap (OVR = 0\%) while cpWER is used for all cl
 \subsubsection{General Analysis Principles}
 
 All hypothesis tests will be two-sided with significance level
-\[
+\begin{equation}
 \alpha = 0.05.
-\]
+\end{equation}
 
 For each analysis, the response variable will be either WER or cpWER or DI-cpWER. Analysis is done with repeated-measures ANOVA.
 
@@ -55,9 +55,9 @@ Pairwise comparisons with different models under constant conditions will be cor
 
 Separate analyses will be conducted for WER, cpWER and DI-cpWER. 
 For $\text{WER}$, let $\mathcal S_c$ denote the set of clips in condition $c$ and let $\text{WER}_{i,m}$ denote the WER for clip \(i\) and ASR model \(m\). The model is
-\[
+\begin{equation}
 \overline{\text{WER}}_{c,m}=\frac1{|\mathcal S_c|}\sum_{s\in\mathcal S_c}\text{WER}_{i,m}
-\]
+\end{equation}
 similarly for $\text{cpWER}$ and $\text{DI-cpWER}$.
 
 
@@ -125,13 +125,13 @@ Where relevant, Brown--Forsythe tests will be used as a formal comparison of var
 \subsubsection{Transfer to Real-World Data}
 
 Transfer from synthetic to real-world data will be evaluated at selected operating points. The primary operating point will be
-\[
+\begin{equation}
 (\mathrm{OVR}, \mathrm{SNR}) = (14\%, 7.4\ \mathrm{dB}),
-\]
+\end{equation}
 and a secondary operating point will be
-\[
+\begin{equation}
 (\mathrm{OVR}, \mathrm{SNR}) = (20\%, 0\ \mathrm{dB}).
-\]
+\end{equation}
 
 For each operating point, ASR models will be evaluated on:
 \begin{enumerate}
@@ -183,9 +183,9 @@ If multiple clips share the same speaker, source recording, or meeting session, 
     \varepsilon_{ijmr},
 \end{equation}
 where
-\[
+\begin{equation}
 u_r \sim \mathcal{N}(0,\sigma_u^2).
-\]
+\end{equation}
 
 \subsubsection{Assumption Checks}
 

@@ -1,3 +1,4 @@
+\chapter{Statistical Analysis}
 \section{Overview and Principles}
 All statistical analysis is performed at the \emph{clip level}, where each clip is evaluated under
 multiple paired conditions (e.g., preprocessing A vs B) on the \emph{same} audio content. This
@@ -40,13 +41,12 @@ Because multiple preprocessing comparisons are performed across many conditions 
 $p$-values are adjusted using Holm--Bonferroni correction.
 
 \section{Main Effects and Interactions (Model-Based Analysis)}
-To quantify interactions such as preprocessing $\times$ overlap ratio and model $\times$ overlap ratio,
+To quantify interactions such as SNR $\times$ overlap ratio and model $\times$ overlap ratio,
 a regression-style analysis is applied on clip-level scores. Let the design factors be:
-overlap ratio (OR), max concurrent speakers ($K$), SNR, noise type, preprocessing pipeline, ASR model,
-and speaker embedding availability (when relevant). The analysis focuses on:
+overlap ratio (OR), unique speaker count ($K$), SNR, noise type, ASR model. The analysis focuses on:
 \begin{itemize}
-  \item \textbf{main effects}: OR, $K$, SNR, preprocessing, model;
-  \item \textbf{key interactions}: OR$\times$preprocessing, OR$\times$model, preprocessing$\times$model.
+  \item \textbf{main effects}: OR, $K$, SNR,  model;
+  \item \textbf{key interactions}: OR$\times$SNR, OR$\times$model, SNR$\times$model.
 \end{itemize}
 
 A mixed-effects model is used when feasible to account for repeated measurements per clip:
