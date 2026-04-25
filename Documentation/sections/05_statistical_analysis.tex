@@ -1,7 +1,7 @@
 \chapter{Statistical Analysis}
 \label{chap:statistical_analysis}
 \section{Analytical Aims and Data Provenance}
-This chapter analysis the outcomes produced by the architectural design in \Cref{chap:arch_design} and the experimental design in \Cref{chap:experimental_design}. The primary aim is to answer the research questions outlined in \Cref{sec:research_questions}. The analysis will focus on the following key questions:
+This chapter analyses the outcomes produced by the architectural design in \Cref{chap:arch_design} and the experimental design in \Cref{chap:experimental_design}. The primary aim is to answer the research questions outlined in \Cref{sec:research_questions}. The analysis will focus on the following key questions:
 \begin{enumerate}[label=\textbf{RQ\arabic*:}, leftmargin=*]
     \item How do \emph{overlap ratio} and \emph{background noise} affect ASR accuracy under controlled synthetic conditions?
     \item How do publicly available ASR models compare across different overlap and noise operating points?
@@ -21,11 +21,11 @@ Two analysis scopes are kept separate:
         \{\mathrm{OVR}=0.14,\ \mathrm{noise}=T,\ \mathrm{SNR}\in\{\mathrm{clean},7.4,0,-5\}\}.
         \end{split}
     \end{equation}
-    Each combination of factors contains 100 clips with a total of 700 clips per model as shown in \Cref{fig:stat_cross_model_scope_support}. 
+    Each combination of factors contains 100 clips, for a total of 700 per model, as shown in \Cref{fig:stat_cross_model_scope_support}. 
     \item the full set of 4800 clips for the \texttt{wav2vec-2.0} model, which is the only model evaluated across all conditions.   
 \end{enumerate}
 
-The first scope allows direct comparison of the 4 ASR models across the same set of clips. The reason for not using the full 4800 clips for all models is due to runtime and computational constraints. This is suitable for fair model ranking but should not be used to make claims about effects of SNR-overlap combinations for every models. The second scope allows a more comprehensive analysis of the effects of overlap and noise on the ASR performance of \texttt{wav2vec-2.0}, which has the best balance of performance and runtime among the models evaluated.
+The first scope allows direct comparison of the 4 ASR models across the same set of clips. The reason for not using the full 4800 clips for all models is due to runtime and computational constraints. This is suitable for fair model ranking but should not be used to make claims about the effects of SNR-overlap combinations across all models. The second scope allows a more comprehensive analysis of the effects of overlap and noise on the ASR performance of \texttt{wav2vec-2.0}, which has the best balance of performance and runtime among the models evaluated.
 
 \begin{figure}[htbp]
     \centering
@@ -36,19 +36,19 @@ The first scope allows direct comparison of the 4 ASR models across the same set
 
 \section{Variable Selection}
 \subsection{Dependent Variables}
-The primary dependent variable is the clip-level Word Error Rate (WER). The reason for choosing WER is that it is the de-facto metric for ASR evaluation \cite{sasindran2023hevalnewhybridevaluation} and it is available for all four models including segmented and non-segmented hypothesis.
+The primary dependent variable is the clip-level Word Error Rate (WER). The reason for choosing WER is that it is the de facto metric for ASR evaluation \cite{sasindran2023hevalnewhybridevaluation} and is available for all four models, including segmented and non-segmented hypotheses.
 
-ORC-WER and DSS-WER are also available where ORC-WER is only available for the segmented hypothesis (from \texttt{faster-whisper} and \texttt{whisperX}) and DSS-WER is available for all models. They act as secondary metrics to provide additional insights into the performance. They are valuable as they are designed to handle different situations. ORC-WER is designed to represent the speaker-agnostic lexical accuracy of the segmented hypothesis while DSS-WER is designed to evaluate the specific case of comparing a two-stream reference with a single-stream hypothesis, which is the case for this evaluation. However, since it is proposed in this dissertation, it is important to evaluate its behaviour and suitability before applying it as the primary metric. Therefore, WER is the most suitable and thus chosen as the primary metric for model comparison, while DSS-WER will be tested for its suitability and insights as a secondary metric.
+ORC-WER and DSS-WER are also available, where ORC-WER is only available for the segmented hypothesis (from \texttt{faster-whisper} and \texttt{WhisperX}) and DSS-WER is available for all models. They act as secondary metrics to provide additional insights into the performance. They are valuable as they are designed to handle different situations. ORC-WER is designed to represent the speaker-agnostic lexical accuracy of the segmented hypothesis. In contrast, DSS-WER is designed to evaluate the specific case of comparing a two-stream reference with a single-stream hypothesis, which is the case for this evaluation. However, since it is proposed in this dissertation, it is important to evaluate its behaviour and suitability before applying it as the primary metric. Therefore, WER is the most suitable and thus chosen as the primary metric for model comparison. At the same time, DSS-WER will be tested for its suitability and insights as a secondary metric.
 
 \subsection{Explanatory Variables}
-The main explanatory variables are signal-to-noise ratio (SNR), overlap ratio (OVR), noise type and ASR model. SNR and OVR represent the two main factors, noise and overlap, of interest in ASR evaluation. Overlap is the central phenonmenon being investigated in this dissertation. Noise type is included as it might interact with the effects of SNR and OVR. ASR model is included as it is important understand how different models perform under the same conditions, and whether the effects of SNR and OVR affect different models differently.
+The main explanatory variables are signal-to-noise ratio (SNR), overlap ratio (OVR), noise type and ASR model. SNR and OVR are the two main factors of interest in ASR evaluation: noise and overlap. Overlap is the central phenomenon being investigated in this dissertation. Noise type is included as it might interact with the effects of SNR and OVR. The ASR model is included because it is important to understand how different models perform under the same conditions and whether the effects of SNR and OVR differ across models.
 
-The speaker count is held constant at 2 for all clips. The makes OVR more interpretable as a controlled measure of two-speaker overlap rather than a more complex interaction between overlap and speaker count. The clip duration is also held at 60 seconds, which support comparability across clips and models, containing enough speech content while keeping the inference time manageable.
+The speaker count is held constant at 2 for all clips. This makes OVR more interpretable as a controlled measure of two-speaker overlap rather than a more complex interaction between overlap and speaker count. The clip duration is also set to 60 seconds, which supports comparability across clips and models, providing enough speech content while keeping inference time manageable.
 
 \section{Statistical Methods}
-All reported results use the clip as the unit of analysis. The design is a factorial design with repeated measures, where same base audio is used across different SNR and noise type conditions, cross-model analysis uses the same clip IDs system across models. For this reason, the analysis will focus on matched condition summaries and comparisons.
+All reported results use the clip as the unit of analysis. The design is a factorial design with repeated measures, where the same base audio is used across different SNR and noise type conditions; cross-model analysis uses the same clip IDs system across models. For this reason, the analysis will focus on matched condition summaries and comparisons.
 
-WER is non-negative and often skewed, so the mean is reported as the primary summary statistic, but the median and standard deviation are also reported to provide a more complete picture.
+WER is non-negative and often skewed, so the mean is reported as the primary summary statistic. Still, the median and standard deviation are also reported to provide a more complete picture.
 
 \section{Overview of the Evaluation Results}
 \subsection{Scope 1: Cross-Model Comparison}
@@ -88,7 +88,7 @@ Parakeet  & 0.503 & 0.525 & 0.208  & - & 0.515\\
 
 
 
-\Cref{tab:cross_model_metric_availability} shows the availability of each metric across the different models. ORC-WER is not available for\texttt{wav2vec-2.0} and \texttt{Parakeet} as OCR-WER is designed for segmented hypothesis while wav2vec-2.0 and Parakeet output one continuous sequence. \Cref{tab:cross_model_wer_first} shows the mean, median and standard deviation of WER for each of the models. The results show that \texttt{faster-whisper} has the lowest mean WER, while \texttt{Parakeet} has the highest mean WER. 
+\Cref{tab:cross_model_metric_availability} shows the availability of each metric across the different models. ORC-WER is not available for \texttt{wav2vec-2.0} and \texttt{Parakeet}, as OCR-WER is designed for segmented hypotheses, while wav2vec-2.0 and Parakeet output a single continuous sequence. \Cref{tab:cross_model_wer_first} shows the mean, median and standard deviation of WER for each of the models. The results show that \texttt{faster-whisper} has the lowest mean WER, while \texttt{Parakeet} has the highest mean WER. \Cref{fig:stat_cross_model_wer_box} shows the distribution of WER across the four models. The results show that \texttt{faster-whisper} and \texttt{WhisperX} are more right-skewed than the other two, which might be due to their lower WER values.
 
 
 \begin{figure}[htbp]
@@ -98,10 +98,12 @@ Parakeet  & 0.503 & 0.525 & 0.208  & - & 0.515\\
     \label{fig:stat_cross_model_wer_box}
 \end{figure}
 
+
+
 \subsection{Inference Time}
 The timing benchmark uses 100 randomly selected clips from the same synthetic corpus. Time per
-clip is computed as total processing time divided by the number of clips. RTFx is computed as
-the total audio duration divided by total processing time; a larger value therefore indicates
+The clip is computed as the total processing time divided by the number of clips. RTFx is computed as
+the total audio duration divided by total processing time; a larger value, therefore, indicates
 faster-than-real-time processing. In \Cref{fig:stat_time_per_clip_bar} and \Cref{tab:timing_efficiency}, \texttt{wav2vec-2.0} is the fastest model with a mean inference time of 0.754 seconds per clip, while \texttt{faster-whisper} is the slowest with a mean inference time of 27.736 seconds per clip. The RTFx values indicate the length of audio that can be processed in one second of real time, with \texttt{wav2vec-2.0} achieving the highest RTFx of 88.951. As shown in \Cref{fig:stat_accuracy_latency_tradeoff_panel}, the combination of relatively low WER and high RTFx makes \texttt{wav2vec-2.0} the candidate for the second scope of analysis, which focuses on the effects of SNR and OVR on a single model.
 
 \begin{table}[htbp]
@@ -146,13 +148,23 @@ faster-whisper & 100 & 27.736 & 2.419 \\
     \caption{WER heatmap for wav2vec-2.0 across different SNR and overlap conditions.}
     \label{fig:stat_wav2vec2_snr_overlap_heatmap}
 \end{figure}
-\Cref{fig:stat_wav2vec2_snr_overlap_heatmap} shows the WER heatmap for \texttt{wav2vec-2.0} across different SNR and overlap conditions. There are in total 48 conditions 
+
+\begin{figure}[htbp]
+    \centering
+    \includefigure[width=0.68\linewidth]{figures/stat_wav2vec2_noise_type.png}
+    \caption{wav2vec2 mean WER by DEMAND noise category. Error bars show approximate 95\% confidence intervals.}
+    \label{fig:stat_wav2vec2_noise}
+\end{figure}
+
+There are 48 conditions in total.
 \begin{equation}
     \mathcal{S}_{\mathrm{full}} = \{\mathrm{OVR}\in\{0.00,0.14,0.20,0.40\},\ \mathrm{noise}\in\{D, P, T\},\ \mathrm{SNR}\in\{\mathrm{clean},7.4,0,-5\}\},
 \end{equation}
-where each condition contains 100 clips. The heatmap shows a clear tread of increasing WER with higher overlap and lower SNR (noisier conditions).
+where each condition contains 100 clips, the heatmap shows a clear trend of increasing WER with higher overlap and lower SNR (noisier conditions).
 
-This section went through the coverage and reliability of the evaluation outputs. The following sections analyse the results by research question, starting with the effects of overlap ratio and signal-to-noise ratio.
+\Cref{fig:stat_wav2vec2_snr_overlap_heatmap} shows the WER heatmap for \texttt{wav2vec-2.0} across different SNR and overlap conditions. The results show a clear trend of increasing WER with higher overlap and lower SNR (noisier conditions). In \Cref{fig:stat_wav2vec2_noise}, the WER is compared across the three noise types. The results show that public noise (P) has the highest WER, followed by domestic noise (D) and transportation noise (T). There is a marginal difference between the noise types, with (P) being almost 0.3 WER higher than the lowest noise type (T). This suggests that public noise might be more challenging for ASR, owing to its potentially more irregular and unpredictable nature, compared to the other two, while transportation noise might be the least challenging due to its more consistent and predictable acoustic patterns. 
+
+This section went through the coverage and reliability of the evaluation outputs. The following sections analyse the results by research question, starting with the effects of the overlap ratio and signal-to-noise ratio.
 
 \section{RQ1: Effects of Overlap Ratio and Signal-to-Noise Ratio}
 
@@ -192,31 +204,31 @@ This section went through the coverage and reliability of the evaluation outputs
         \caption{Delta WER against SNR, stratified by OVR.}
         \label{fig:stat_wav2vec2_delta_vs_snr_panel}
     \end{subfigure}
-    \caption{Delta WER for wav2vec-2.0. Delta (a) is computed relative to the clean condition at the same overlap ratio  while Delta (b) is computed relative to the zero overlap condition at the same SNR.}
+    \caption{Delta WER for wav2vec-2.0. Delta (a) is computed relative to the clean condition at the same overlap ratio, while Delta (b) is computed relative to the zero overlap condition at the same SNR.}
     \label{fig:stat_wav2vec2_delta_vs_ovr}
 \end{figure}
 \subsection{Effect of Overlap Ratio}
-\Cref{fig:stat_wav2vec2_wer_vs_ovr} shows the general trends of WER against overlap ratio. The results shows that there is a significant increase in WER as the overlap ratio increases. 
+\Cref{fig:stat_wav2vec2_wer_vs_ovr} shows the general trends of WER against the overlap ratio. The results show a notable increase in WER as the overlap ratio increases. 
 
 \Cref{fig:stat_wav2vec2_delta_vs_snr_panel} shows the delta WER $\Delta_\text{WER, 0\% OVR}$ against SNR, where
 \begin{equation}
     \Delta_\text{WER, 0\% OVR} = \text{WER}_{\mathrm{SNR}, 0\%} - \text{WER}_{\mathrm{SNR}, \mathrm{OVR}}.
 \end{equation}
-This isolate the effect of overlap as SNR changes. The results show that the $\Delta_\text{WER, 0\% OVR}$ increases as the SNR decreases, which suggests that the effect of overlap is more significant when SNR is low (noisier conditions). The $\Delta_\text{WER, 0\% OVR}$ diverges across different overlap ratio conditions as the SNR decreases, which matches the observation from \Cref{fig:stat_wav2vec2_delta_vs_ovr_panel} that the effect of overlap becomes more significant as the SNR decreases.
+This isolates the effect of overlap as SNR changes. The results show that the $\Delta_\text{WER, 0\% OVR}$ increases as the SNR decreases, which suggests that the effect of overlap is more substantial when SNR is low (noisier conditions). The $\Delta_\text{WER, 0\% OVR}$ diverges across different overlap ratio conditions as the SNR decreases, which matches the observation from \Cref{fig:stat_wav2vec2_delta_vs_ovr_panel} that the effect of overlap becomes more notable as the SNR decreases.
 
 \subsection{Effect of Signal-to-Noise Ratio}
-\Cref{fig:stat_wav2vec2_wer_vs_snr} shows the general trends of WER against SNR. The results shows that there is a significant increase in WER as the SNR decreases (gets noisier).
+\Cref{fig:stat_wav2vec2_wer_vs_snr} shows the general trends of WER against SNR. The results show a considerable increase in WER as the SNR decreases (i.e., the signal becomes noisier).
 \Cref{fig:stat_wav2vec2_delta_vs_ovr_panel} shows the delta WER $\Delta_\text{WER, clean SNR}$ against overlap ratio, where
 \begin{equation}
     \Delta_\text{WER, clean SNR} = \text{WER}_{\mathrm{SNR}, \mathrm{OVR}} - \text{WER}_{\mathrm{clean}, \mathrm{OVR}}.
 \end{equation}
-This isolate the effect of noise as overlap ratio changes. The results show that the $\Delta_\text{WER, clean SNR}$ decreases as the overlap ratio increases, which suggests that the effect of noise is more significant when overlap ratio is low, and decreases as the overlap ratio increases. The $\Delta_\text{WER, clean SNR}$ starts to converge across different SNR conditions as the overlap ratio increases, which suggests that the effect of noise starts to become dominated by the effect of overlap as the overlap ratio increases.
+This isolates the effect of noise as the overlap ratio changes. The results show that the $\Delta_\text{WER, clean SNR}$ decreases as the overlap ratio increases, which suggests that the effect of noise is more substantial when the overlap ratio is low, and decreases as the overlap ratio increases. The $\Delta_\text{WER, clean SNR}$ starts to converge across different SNR conditions as the overlap ratio increases, which suggests that the effect of noise starts to become dominated by the effect of overlap as the overlap ratio increases.
 
 \Cref{fig:stat_wav2vec2_delta_vs_snr_panel} shows the delta WER $\Delta_\text{WER, 0\% OVR}$ against SNR, where
 \begin{equation}
     \Delta_\text{WER, 0\% OVR} = \text{WER}_{\mathrm{SNR}, 0\%} - \text{WER}_{\mathrm{SNR}, \mathrm{OVR}}.
 \end{equation}
-This isolate the effect of overlap as SNR changes. The results show that the $\Delta_\text{WER, 0\% OVR}$ increases as the SNR decreases, which suggests that the effect of overlap is more significant when SNR is low (noisier conditions). The $\Delta_\text{WER, 0\% OVR}$ diverges across different overlap ratio conditions as the SNR decreases, which matches the observation from \Cref{fig:stat_wav2vec2_delta_vs_ovr_panel} that the effect of overlap becomes more significant as the SNR decreases.
+This isolates the effect of overlap as SNR changes. The results show that the $\Delta_\text{WER, 0\% OVR}$ increases as the SNR decreases, which suggests that the effect of overlap is more substantial when SNR is low (noisier conditions). The $\Delta_\text{WER, 0\% OVR}$ diverges across different overlap ratio conditions as the SNR decreases, which matches the observation from \Cref{fig:stat_wav2vec2_delta_vs_ovr_panel} that the effect of overlap becomes more notable as the SNR decreases.
 
 To summarise the trend as a continuous estimating equation, SNR is converted to an amplitude noise ratio
 \begin{equation}
@@ -239,10 +251,10 @@ The interaction term is retained because the noise penalty is not constant acros
     \mathrm{MAE} = \frac{1}{16}\sum_{i \in \mathrm{\{\mathrm{SNR} \times \mathrm{OVR}\}}}|\mathrm{WER}_i - \widehat{\mathrm{WER}}_i|,
 \end{equation}
 where $\mathrm{R}^2$ is the coefficient of determination, $\mathrm{MAE}$ is the mean absolute error, and $\overline{\mathrm{WER}}$ is the mean WER across the 16 conditions. 
-The clip-level fit is lower ($R^2=0.433$, MAE $=0.148$ WER) because individual clips vary substantially in lexical content and acoustic difficulty. The result shows that the OVR dominates the WER increase as it has a larger coefficient than the noise term. However, the negative interaction term suggests that there is a antagonistic interaction between noise and overlap, suggesting that the effect of noise and overlap reduce each other's impact.
+The clip-level fit is lower ($R^2=0.433$, MAE $=0.148$ WER) because individual clips vary substantially in lexical content and acoustic difficulty. The result shows that the OVR dominates the WER increase as it has a larger coefficient than the noise term. However, the negative interaction term indicates an antagonistic relationship between noise and overlap, suggesting the marginal effect of one degradation factor is smaller when the other is already severe.
 
 \subsection{Summary}
-The results show a positive relationship between WER and overlap ratio, and between WER and noise (noiser conditions have higher WER than clean condition). The effect of overlap ratio is more significant in noisier conditions, while the effect of noise is more significant in lower overlap conditions. The fitted equation suggests that the effect of overlap ratio is more significant than the effect of noise, but they interact in an antagonistic way, where they reduce each other's impact on WER.
+The results show a positive relationship between WER and the overlap ratio, and between WER and noise (noisy conditions have higher WER than the clean condition). The effect of the overlap ratio is more substantial in noisier conditions, while the effect of noise is stronger in lower overlap conditions. The fitted equation suggests that the effect of overlap ratio is more significant than that of noise, but they interact in an antagonistic manner, reducing each other's impact on WER.
 
 
 \section{RQ2: Comparison of ASR Models}
@@ -268,14 +280,38 @@ The results show a positive relationship between WER and overlap ratio, and betw
 \end{figure}
 
 \subsection{Overall Comparison}
-\Cref{tab:cross_model_wer_first} records the WER, ORC-WER and DSS-WER for the four ASR models on the matched 700-clip subset. The results show that \texttt{faster-whisper} has the lowest mean WER of  0.159, while \texttt{Parakeet} has the highest mean WER of 0.503, with a substantial gap between the second-highest model \texttt{wav2vec-2.0} of 0.228. The ORC-WER and DSS-WER values are generally consistent with the WER ranking, with \texttt{faster-whisper} having the lowest DSS-WER.
+\Cref{tab:cross_model_wer_first} records the WER, ORC-WER and DSS-WER for the four ASR models on the matched 700-clip subset. The results show that \texttt{faster-whisper} has the lowest mean WER of  0.159, while \texttt{Parakeet} has the highest mean WER of 0.503, with a substantial gap between the second-highest model \texttt{wav2vec-2.0} of 0.228. The ORC-WER and DSS-WER values are generally consistent with the WER ranking, with \texttt{faster-whisper} having the lowest DSS-WER. However, the ORC-WER values for \texttt{faster-whisper} are higher than \texttt{WhisperX} even though \texttt{faster-whisper} has a lower WER. This suggests that \texttt{faster-whisper} might have a better lexical accuracy but worse segmentation accuracy than \texttt{WhisperX}.
 
-\Cref{fig:stat_cross_model_wer_trends} shows the WER trends against overlap ratio and SNR for the four ASR models. Both shows the same ranking of the models across conditions, with $\texttt{faster-whisper} < \texttt{WhisperX} < \texttt{wav2vec-2.0} < \texttt{Parakeet}$, which is consistent with the overall WER ranking in \Cref{tab:cross_model_wer_first}. The gap between the models remain relatively consistent as overlap ratio increases, but the gap decreases as SNR decreases. It is interesting to note that the performance of \texttt{Parakeet} is counter-intuitively better as noise increases, which might be due to difference in pretraining data and architecture. In addition, it has a dip in WER (slight increase in WER) from 0.14 OVR to 0.20 OVR. Both of these behaviours are not observed in the other three models, which might suggest that \texttt{Parakeet} and the architectural design (conformer and transducer-based architecture) is more resistant to noise. This is an interesting finding that warrants further experimentation and analysis, but it is not the main focus of this dissertation, so it will not be further investigated in this chapter.
+\Cref{fig:stat_cross_model_wer_trends} shows the WER trends against overlap ratio and SNR for the four ASR models. Both show the same ranking of the models across conditions, with $\texttt{faster-whisper} < \texttt{WhisperX} < \texttt{wav2vec-2.0} < \texttt{Parakeet}$, which is consistent with the overall WER ranking in \Cref{tab:cross_model_wer_first}. The gap between the models remains relatively consistent as the overlap ratio increases, but the gap decreases as the SNR decreases. It is interesting to note that \texttt{Parakeet} 's performance is counterintuitively better as noise increases, which might be due to differences in the pretraining data and architecture. In addition, it has a dip in WER (slight increase in WER) from 0.14 OVR to 0.20 OVR. Neither of these behaviours is observed in the other three models, which might suggest that \texttt{Parakeet} and the architectural design (conformer and transducer-based architecture) are more resistant to noise. This is an interesting finding that warrants further experimentation and analysis, but it is not the main focus of this dissertation, so it will not be further investigated in this chapter.
 
 \subsection{Extreme Cases}
-This section analyses the extreme cases of the worst performing clip for each model. 
+This section analyses the worst-performing clip for each model. 
 
-\paragraph{Worst WER for \texttt{faster-whisper}.}
+\begin{table}[htbp]
+\centering
+\caption{Distribution of high-WER outliers by model (IQR rule: $\mathrm{WER}>Q_3+1.5\,\mathrm{IQR}$). Proportions are within each model's outlier set.}
+\label{tab:outlier_condition_distribution}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccccccccc}
+\toprule
+\textbf{Model} & \textbf{$n_{\text{out}}/n$} & \textbf{Rate (\%)} & \multicolumn{4}{c}{\textbf{OVR (\%)}} & \multicolumn{4}{c}{\textbf{SNR (\%)}} \\
+\cmidrule(lr){4-7}\cmidrule(lr){8-11}
+ &  &  & \textbf{0.00} & \textbf{0.14} & \textbf{0.20} & \textbf{0.40} & \textbf{clean} & \textbf{7.4} & \textbf{0} & \textbf{-5} \\
+\midrule
+faster-whisper & 20/700 & 2.86 & 5.0 & 40.0 & 20.0 & 35.0 & 10.0 & 70.0 & 5.0 & 15.0 \\
+WhisperX & 9/700 & 1.29 & 0.0 & 44.4 & 22.2 & 33.3 & 11.1 & 66.7 & 11.1 & 11.1 \\
+wav2vec-2.0 & 19/4800 & 0.40 & 31.6 & 21.1 & 31.6 & 15.8 & 0.0 & 0.0 & 10.5 & 89.5 \\
+Parakeet & 0/700 & 0.00 & -- & -- & -- & -- & -- & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\setlength{\tabcolsep}{6pt}
+\normalsize
+\end{table}
+
+As shown in \Cref{tab:outlier_condition_distribution}, outliers are sparse across models, but when present, they are concentrated in specific operating points. The outliers are heavily concentrated in the SNR $=7.4$ condition for \texttt{faster-whisper} and \texttt{WhisperX} with outliers, which is the second-best SNR condition. This is counterintuitive, as one would expect more outliers in the noisiest condition (SNR $=-5$). This might suggest that at an SNR of 7.4, the noise is more likely to trigger hallucinations in the models. It might be that quieter noise is more likely to be misinterpreted as speech, forcing the models to generate some words. In comparison, louder noise is more likely to be correctly identified as noise and thus less likely to trigger hallucination. This warrants further investigation, but it is outside the scope of this study. In contrast, the outliers for \texttt{wav2vec-2.0} are heavily concentrated in the noisiest condition (SNR $=-5$), which is more intuitive as the model might be more likely to miss or misrecognise speech in the noisiest condition, leading to higher WER. On the other hand, there are zero outliers for \texttt{Parakeet}, which is consistent with the fact that it has the highest mean WER and standard deviation, suggesting that the performance of \texttt{Parakeet} varies widely across clips but does not have extreme outliers (due to the larger IQR).
+
+\paragraph{\texttt{faster-whisper}.} The worst performing clip:
 Clip ID: \texttt{mix\_0004361\_0.40\_2\_7.4\_T}; WER: 1.033; Condition: OVR $=0.40$, SNR $=7.4$, noise type $=T$.
 
 \begin{asrexample}
@@ -283,15 +319,184 @@ Clip ID: \texttt{mix\_0004361\_0.40\_2\_7.4\_T}; WER: 1.033; Condition: OVR $=0.
 \textbf{Hypothesis (excerpt):}
 The project ... the director. Thank you for watching. If you like this video, please subscribe to the channel. ...
 \end{asrexample}
-In the example above, after the relevant hypothesis is finished, the \"Thank you for watching. If you like this video, please subscribe to the channel.\" are repeated twice and then \"If you like this video, please subscribe to the channel.\" is repeated 11 more times. It is worth noting that this specific repeating sentence or anything similar is not in any part of the audio. Also, every \"Thank you for watching.\" and \"If you like this video, please subscribe to the channel.\" are output as standalone segments. So this sentence is purely hallucination. Hence, the hypothesis exhibits severe hallucination and repetition, which is likely due to the LLM-based decoding strategy of \texttt{faster-whisper} that is more prone to halucination, especially under difficult conditions. If the hallucinated tokens (all prefixing "Thank you for watching. If you like this video, please subscribe to the channel.") are removed, the WER would be reduced to 0.509, which is still a high WER but much more in line with the other results in the same condition. After inspecting the worst outliers for \texttt{faster-whisper} (3 worst being \texttt{mix\_0004361\_0.40\_2\_7.4\_T}, \texttt{mix\_0003509\_0.20\_2\_7.4\_T}, \texttt{mix\_0001484\_0.14\_2\_0\_T}), it is found that they all contain severe hallucination. However, there is no clear pattern in terms of the condition of the clips, as they varied across different SNR and OVR conditions.
-%to be continue
+In the example above, after the relevant hypothesis is finished, the \"Thank you for watching. If you like this video, please subscribe to the channel.\" is repeated twice and then \"If you like this video, please subscribe to the channel.\" is repeated 11 more times. It is worth noting that this specific repeating sentence or anything similar is not in any part of the audio. Also, every \"Thank you for watching.\" and \"If you like this video, please subscribe to the channel.\" are output as standalone segments. After inspecting the audio of the clip, it is confirmed that there is no corresponding audio for these repeated sentences. So this sentence is purely hallucinatory. Hence, the hypothesis exhibits severe hallucinations and repetition, likely due to \texttt{faster-whisper} 's LLM-based decoding strategy, which is more prone to hallucinations, especially under difficult conditions. If the hallucinated tokens (all prefixing "Thank you for watching. If you like this video, please subscribe to the channel.") are removed, the WER would be reduced to 0.509, which is still a high WER but much more in line with the other results in the same condition. After inspecting the worst outliers for \texttt{faster-whisper} (3 worst being \texttt{mix\_0004361\_0.40\_2\_7.4\_T}, \texttt{mix\_0003509\_0.20\_2\_7.4\_T}, \texttt{mix\_0001484\_0.14\_2\_0\_T}), it is found that they all contain severe hallucination. However, there is no clear pattern in terms of the condition of the clips, as they varied across different SNR and OVR conditions. \Cref{tab:outlier_condition_distribution} shows that the outliers show no clear relationship in OVR but show a strong relationship with SNR, with 70\% of the outliers in the SNR $=7.4$ condition. This might be due to the reason mentioned above: quieter noise is more likely to be misrecognised as speech and thus trigger hallucinations. 
 
-\paragraph{Worst WER for \texttt{WhisperX}.}
+
+\paragraph{\texttt{WhisperX}.} The worst performing clip:
 Clip ID: \texttt{mix\_0002729\_0.20\_2\_7.4\_T}; WER: 0.818; Condition: OVR $=0.20$, SNR $=7.4$, noise type $=T$.
 \begin{asrexample}
 \footnotesize
 \textbf{Hypothesis (excerpt):}
-A week later ... need of him.\" From that day forth, Duke was never referred to. ... From that day forth and equipped with ...
+A week later ... need for him.\" From that day forth, Duke was never referred to. ... From that day forth and equipped with ...
 \end{asrexample}
 
-In this example, the setence \"From that day forth, Duke was never referred to." is repeated 18 times but it came back to the correct sentence \"From that day forth and equipped with ...\" at the end. The whole hallucinated part is part of the same segment of hypothesis output by the model, which is different from the hallucination in \texttt{faster-whisper}. This suggests that the hallucination might be due to the decoding strategy of \texttt{WhisperX}, where \texttt{faster-whisper} and \texttt{WhisperX} might have different decoding strategies that lead to different pattern of hallucination. If the 
+In this example, the sentence "From that day forth, Duke was never referred to." is repeated 18 times, but it came back to the correct sentence \"From that day forth and equipped with ...\" at the end. After inspecting the audio of this clip, it is confirmed that there is clear speech in the region where the hallucination occurs, indicating that the model starts repeating the last recognised sentence without any apparent trigger, while missing everything during that time. The hallucinated part is part of the same segment of the model's hypothesis output, unlike the hallucination in \texttt{faster-whisper}. This suggests that the hallucination might be due to the decoding strategy of \texttt{WhisperX}, where \texttt{faster-whisper} and \texttt{WhisperX} may use different strategies, leading to distinct hallucination patterns. If the hallucinated portion is removed, the WER would drop to 0.484. After inspecting the worst outliers (3 worst being  \texttt{mix\_0002729\_0.20\_2\_7.4\_T}, \texttt{mix\_0004133\_0.40\_2\_7.4\_T}, \texttt{mix\_0003917\_0.40\_2\_7.4\_T}), where they all contain hallucination. Similar to \texttt{faster-whisper}, there is no clear pattern in terms of the overlap ratio, but outliers are concentrated in the SNR $=7.4$ condition, with 66.7\% of the outliers.
+
+\paragraph{\texttt{wav2vec-2.0}.} The worst performing clip:
+Clip ID: \texttt{mix\_0000454\_0.00\_2\_-5\_P}; WER: 1.0; Condition: OVR $=0.00$, SNR $=-5$, noise type $=P$.
+\begin{asrexample}
+\footnotesize
+\textbf{Hypothesis (excerpt):}
+O
+\end{asrexample}
+
+In this example, the hypothesis is just a single character "O", which is likely due to the model completely missing the speech content in the clip, which is consistent with the fact that this clip is in the noisiest condition (SNR $=-5$). After inspecting the worst outliers, where the second worst clip is \texttt{mix\_0000586\_0.00\_2\_-5\_P} and WER of 1.0 with 
+\begin{asrexample}
+\footnotesize
+\textbf{Hypothesis (excerpt):}
+MAASOO BERAE RAIOAAEAO OEMAASSA AOSA
+\end{asrexample}
+and third worst clip is \texttt{mix\_0000742\_0.00\_2\_-5\_P} and WER of 1.0 with 
+\begin{asrexample}
+\footnotesize
+\textbf{Hypothesis (excerpt):}EANOEAOAAIIOAOA
+\end{asrexample}
+All of the worst outliers for \texttt{wav2vec-2.0} are in the noisiest condition (SNR $=-5$). After listening to the clips, the speech content was in the noisiest condition. It also suggests that wav2vec-2.0's LM component might play a lighter role in decoding or be less prone to hallucination, as the outliers are more likely due to missing speech content than to hallucination. 
+
+\paragraph{\texttt{Parakeet}.} There is not outlier for \texttt{Parakeet} but the worst performing clip is:
+Clip ID: \texttt{mix\_0001358\_0.14\_2\_None\_T}; WER: 1.0; Condition: OVR $=0.14$, SNR $=None$, noise type $=T$.
+\begin{asrexample}
+\footnotesize
+\textbf{Hypothesis (excerpt):}
+\end{asrexample}
+In this example, the hypothesis is empty, which is counterintuitive as the clip is in a relatively easy condition with a clean condition. This might be an error in the decoding process of \texttt{Parakeet}, as it has not happened with any other models. After inspecting the audio, there is no clear issue, so it is likely the model just failed to generate any output for this clip.
+
+\subsection{Inference Efficiency}
+\Cref{fig:stat_accuracy_latency_tradeoff_panel} shows the WER-latency trade-off across the four ASR models. The horizontal axis is the log scale of the mean inference time per clip, and the vertical axis is the mean WER on the matched 700-clip subset. The results show that \texttt{wav2vec-2.0} offers the best trade-off, with a relatively low WER and the lowest inference time. \texttt{Parakeet} has the worst trade-off with the highest WER and the second-lowest inference time. \texttt{faster-whisper} has the lowest WER but the highest inference time, while \texttt{WhisperX} has a slightly higher WER but lower inference time. In \Cref{tab:timing_efficiency}, the \texttt{wav2vec-2.0} has an RTFx of 89, which means it can process 89 times the length of audio in one second of processing time, which makes it most suitable for real-time applications among the four models. \texttt{faster-whisper} has an RTFx of 2.4, which makes it less suitable for real-time applications, but it has the lowest WER, which makes it a good model if accuracy is the primary concern and inference time is not a constraint. However, since all four models have an RTFx greater than 1, they can all process in real time. Hence, the choice of model depends on the specific requirements of the application, such as the acceptable WER and available computational resources.
+
+\subsection{Summary}
+The results show that, in terms of WER, \texttt{faster-whisper} has the best performance, while in terms of inference time, \texttt{wav2vec-2.0} has the best performance. The WER trends across SNR and OVR are generally consistent and intuitive across the four models, with higher WER in higher OVR and lower SNR conditions. Overall, \texttt{wav2vec-2.0} has the best accuracy-latency trade-off, while \texttt{faster-whisper} has the best accuracy but the worst latency. \texttt{WhisperX} is a balancing option between \texttt{faster-whisper} and \texttt{wav2vec-2.0}, with a slightly higher WER than \texttt{faster-whisper} but much lower inference time. \texttt{Parakeet} has the worst WER but a relatively low inference time, which makes it not the best choice for either accuracy or latency. In conclusion, the rank of the model will be as follows:
+In terms of WER: $\texttt{faster-whisper}$ < $\texttt{WhisperX}$ < $\texttt{wav2vec-2.0}$ < $\texttt{Parakeet}$; in terms of inference time: $\texttt{wav2vec-2.0}$ < $\texttt{Parakeet}$ < $\texttt{WhisperX}$ < $\texttt{faster-whisper}$; in terms of accuracy-latency trade-off: $\texttt{wav2vec-2.0}$ < $\texttt{WhisperX}$ < $\texttt{faster-whisper}$ < $\texttt{Parakeet}$.
+
+\section{RQ3: Transferability of ASR Performance Trends}
+\label{sec:rq3_transferability}
+
+To test the transferability of the synthetic benchmark results to real audio, the cross-model subset results are compared with those on 100 real CHiME-6 clips. The 100 real clips are segments of the longer CHiME-6 eval \texttt{S01} recordings, which are 2 hours of real conversational audio recorded in a dinner party setting. The 100 clips are at least 60 seconds long and feature audio from multiple speakers. The WER and OCR-WER are computed for the 100 real clips.
+
+\begin{figure}[htbp]
+    \centering
+    \includefigure[width=0.72\linewidth]{figures/stat_real_transfer_wer_change.png}
+    \caption{Change in mean WER from the matched synthetic 700-clip subset to the 100 real CHiME-6 clips. The legend reports the real-minus-synthetic change in mean WER.}
+    \label{fig:stat_real_transfer_wer_change}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Synthetic-to-real transferability summary. Synthetic WER is computed on the matched 700-clip subset; real WER and real ORC-WER are computed on 100 CHiME-6 clips. Parentheses show standard deviation. ORC-WER is only available for segmented hypotheses.}
+\label{tab:real_transferability_summary}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Model} & \textbf{Synth. WER (std)}  & \textbf{Real WER (std)} & \textbf{Real med.} & \textbf{$\Delta$ mean} & \textbf{Real ORC} & \textbf{Rank} \\
+\midrule
+faster-whisper & 0.159 (0.128) & 0.458 (0.182) & 0.427 & +0.299 & 0.797 & 1 $\rightarrow$ 3 \\
+WhisperX & 0.181 (0.150) & 0.436 (0.143) & 0.413 & +0.255 & 0.761 & 2 $\rightarrow$ 2 \\
+wav2vec-2.0 & 0.228 (0.133) & 0.723 (0.123) & 0.731 & +0.495 & -- & 3 $\rightarrow$ 4 \\
+Parakeet & 0.503 (0.208) & 0.389 (0.129) & 0.357 & -0.115 & -- & 4 $\rightarrow$ 1 \\
+\bottomrule
+\end{tabular}
+\setlength{\tabcolsep}{6pt}
+\normalsize
+\end{table}
+
+\Cref{fig:stat_real_transfer_wer_change} and \Cref{tab:real_transferability_summary} show that the synthetic ranking only partially transfers to the real conversational setting. \texttt{WhisperX} and \texttt{faster-whisper} show a similar increase in WER from synthetic to real of about 0.4, with \texttt{faster-whisper} having a slightly higher increase. \texttt{wav2vec-2.0} has the highest degradation in WER of 0.495, while \texttt{Parakeet} has the largest reversal, where it shows a decrease in WER of about 0.1. In terms of ranking, \texttt{Parakeet} has become the best performing model in the real setting, while \texttt{faster-whisper} has dropped from first to third and \texttt{wav2vec-2.0} has dropped from third to fourth. In terms of ORC-WER, the two models with segmentation (\texttt{faster-whisper} and \texttt{WhisperX}) show a similar ORC-WER of around 0.8, which is much higher than the WER, suggesting that it is much more difficult for the models to segment the real audio correctly.
+
+This suggests that the synthetic benchmarks are useful for understanding the relative effects of OVR and SNR, but have limited utility for ranking models in real conversational settings and thus should not be used as the sole basis for model selection in real-world applications. The real data includes additional information, such as natural speaker interaction, reverberation, and other acoustic factors (e.g., simultaneous conversations between two pairs of speakers) that are not fully captured in the synthetic data, which can significantly influence model performance. The results also suggest that \texttt{Parakeet} might be the most robust model in real conversational settings.
+
+However, it is worth noting that the test set is relatively small, with only 100 clips, which may not fully reflect the actual performance. In addition, all the real clips are derived from the same recording, which might only represent a specific type of real conversational setting. Therefore, further testing on larger and more diverse datasets is needed to confirm the transferability of the synthetic dataset.
+
+\section{RQ4: Evaluation of DSS-WER}
+\label{sec:rq4_evaluation_of_dss_wer}
+
+This section evaluates how DSS-WER behaves compared to ordinary WER, and whether it shows the expected behaviour based on the experimental design in \Cref{sec:dss_wer_algorithm} and \Cref{sec:t3_dss_wer_hypothesis_testing}. This analysis uses all successful synthetic results from all four ASR models. This means, 700 clips for \texttt{faster-whisper}, \texttt{WhisperX}, and \texttt{Parakeet}, and 4800 clips for \texttt{wav2vec-2.0}. The results are split into non-overlapping clips $\mathrm{OVR} = 0.00$ and overlapping clips $\mathrm{OVR} > 0.00$.
+
+For each clip-model pair, the difference is measured as
+\begin{equation}
+    d_i = \mathrm{DSS\text{-}WER}_i - \mathrm{WER}_i.
+\end{equation}
+Negative values of $d_i$ mean that DSS-WER gives a lower error estimate than WER. Following the experimental design in \Cref{sec:t3_dss_wer_hypothesis_testing}, the permutation tests use 10,000 random sign flips of the paired differences. The non-overlap test is two-sided because DSS-WER should ideally match WER exactly when there is no interleaving. The overlap test is one-sided in the lower-tail direction because the expected effect is that DSS-WER should be less than WER when there is interleaving. The confidence intervals are 95\% bootstrap intervals for the mean paired difference, based on 10,000 resamples.
+
+\begin{table}[htbp]
+\centering
+\caption{DSS-WER versus WER on \emph{non-overlapping} synthetic clips. Differences are DSS-WER minus WER. The p-values are from two-sided Monte Carlo paired sign-flip tests with 10,000 permutations.}
+\label{tab:dss_wer_non_overlap_test}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{Model} & \textbf{$n$} & \textbf{WER mean (SD)} & \textbf{DSS mean (SD)} & \textbf{Mean diff. [95\% CI]} & \textbf{$p$} \\
+\midrule
+faster-whisper & 100 & 0.052 (0.065) & 0.061 (0.087) & +0.0089 [0.0036, 0.0155] & $<0.001$ \\
+WhisperX & 100 & 0.038 (0.039) & 0.039 (0.040) & +0.0007 [0.0002, 0.0016] & 0.015 \\
+wav2vec-2.0 & 1200 & 0.246 (0.317) & 0.245 (0.313) & -0.0002 [-0.0009, 0.0004] & 0.519 \\
+Parakeet & 100 & 0.307 (0.232) & 0.316 (0.243) & +0.0094 [0.0045, 0.0156] & $<0.001$ \\
+All models & 1500 & 0.223 (0.299) & 0.224 (0.297) & +0.0011 [0.0004, 0.0019] & 0.005 \\
+\bottomrule
+\end{tabular}
+\setlength{\tabcolsep}{6pt}
+\normalsize
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{DSS-WER versus WER on overlapping synthetic clips. Differences are DSS-WER minus WER. The p-values are from one-sided lower-tail Monte Carlo paired sign-flip tests with 10,000 permutations.}
+\label{tab:dss_wer_overlap_test}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{Model} & \textbf{$n$} & \textbf{WER mean (SD)} & \textbf{DSS mean (SD)} & \textbf{Mean diff. [95\% CI]} & \textbf{$p$} \\
+\midrule
+faster-whisper & 600 & 0.176 (0.128) & 0.172 (0.123) & -0.0049 [-0.0075, -0.0023] & $<0.001$ \\
+WhisperX & 600 & 0.205 (0.148) & 0.202 (0.149) & -0.0030 [-0.0052, -0.0009] & 0.002 \\
+wav2vec-2.0 & 3600 & 0.433 (0.241) & 0.405 (0.241) & -0.0277 [-0.0287, -0.0267] & $<0.001$ \\
+Parakeet & 600 & 0.536 (0.184) & 0.548 (0.195) & +0.0116 [0.0086, 0.0147] & 1.000 \\
+All models & 5400 & 0.390 (0.243) & 0.372 (0.243) & -0.0180 [-0.0190, -0.0171] & $<0.001$ \\
+\bottomrule
+\end{tabular}
+\setlength{\tabcolsep}{6pt}
+\normalsize
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Direction of the paired DSS-WER and WER differences. Percentages are within each model and overlap subset.}
+\label{tab:dss_wer_direction_counts}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrrr}
+\toprule
+\textbf{Subset} & \textbf{Model} & \textbf{DSS = WER} & \textbf{DSS < WER} & \textbf{DSS > WER} \\
+\midrule
+\multirow{5}{*}{Non-overlap}
+& faster-whisper & 81 (81.0\%) & 2 (2.0\%) & 17 (17.0\%) \\
+& WhisperX & 93 (93.0\%) & 0 (0.0\%) & 7 (7.0\%) \\
+& wav2vec-2.0 & 759 (63.3\%) & 197 (16.4\%) & 244 (20.3\%) \\
+& Parakeet & 72 (72.0\%) & 4 (4.0\%) & 24 (24.0\%) \\
+& All models & 1005 (67.0\%) & 203 (13.5\%) & 292 (19.5\%) \\
+\midrule
+\multirow{5}{*}{Overlap}
+& faster-whisper & 279 (46.5\%) & 215 (35.8\%) & 106 (17.7\%) \\
+& WhisperX & 365 (60.8\%) & 152 (25.3\%) & 83 (13.8\%) \\
+& wav2vec-2.0 & 312 (8.7\%) & 2999 (83.3\%) & 289 (8.0\%) \\
+& Parakeet & 246 (41.0\%) & 166 (27.7\%) & 188 (31.3\%) \\
+& All models & 1202 (22.3\%) & 3532 (65.4\%) & 666 (12.3\%) \\
+\bottomrule
+\end{tabular}
+\setlength{\tabcolsep}{6pt}
+\normalsize
+\end{table}
+
+\Cref{tab:dss_wer_non_overlap_test} shows that DSS-WER and WER are very close in the non-overlapping condition, with mean paired differences of $0.0011$. However, the differences are statistically significant overall, as it contains 1500 pairs. That means even though the control condition doesn't show a large mean difference, the approximation is not perfect and still overestimates the error by a small amount on average. The model exception is \texttt{wav2vec-2.0}, where the confidence interval includes zero, and the p-value is not significant ($p=0.519$), which suggests that DSS-WER is a very close approximation to WER. This suggests that the DSS-WER algorithm is not just simply giving a lower error estimate but is actually able to find the correct path when there is no interleaving. 
+
+\Cref{tab:dss_wer_overlap_test} shows the advantage of DSS-WER over WER in the overlapping condition, with mean paired differences of $-0.0180$ overall, a confidence interval that does not include zero ($[-0.0190, -0.0171]$) and a p-value of $<0.001$. The strongest result is for \texttt{wav2vec-2.0}, where the mean paired difference is $-0.0277$ with a confidence interval of $[-0.0287, -0.0267]$ and a p-value of $<0.001$ while \texttt{faster-whisper} and \texttt{WhisperX} also show a statistically significant reduction. This suggests that DSS-WER can significantly reduce the overestimation of error under overlapping speech for \texttt{wav2vec-2.0}. However, for \texttt{Parakeet}, the mean paired difference is positive at $+0.0116$ with a confidence interval of $[0.0086, 0.0147]$ and a p-value of 1.000, which indicates that DSS-WER actually gives a higher estimate than WER on average. This might be because \texttt{Parakeet} performs much worse than the other models, so the beam search algorithm of DSS-WER might be more likely to miss the correct path in the search space. In the case of a correct hypothesis, there are paths with significantly lower error, so the algorithm can easily narrow down to a few paths. On the other hand, if the hypothesis completely missed the reference, there might be many equally bad paths. Since the algorithm has a fixed beam width, it might not be able to explore all paths and thus miss the correct path, leading to a higher error rate. This suggests that the advantage of DSS-WER over WER under overlapping might depend on the hypothesis's accuracy.
+
+\Cref{tab:dss_wer_direction_counts} gives the clip-level direction of the paired differences. In the non-overlapping condition, about 67\% of pairs have DSS-WER equal to WER, supporting the use of non-overlapping clips as a control. In the overlapping condition, about 88\% of the pairs have DSS-WER less than or equal to WER, which supports the expected advantage of DSS-WER under overlapping speech. However, it also suggests that 12\% of the pairs have DSS-WER greater than WER, which should be kept in mind when interpreting the results.
+
+Overall, the results suggest that DSS-WER gives a statistically significant but small overestimation of error in the non-overlapping condition, and a statistically significant reduction in error in the overlapping condition, especially for \texttt{wav2vec-2.0}. In further applications of DSS-WER, it is important to keep in mind that the advantage of DSS-WER under overlapping might depend on the hypothesis's accuracy. For future use, it might be worth revisiting WER if there is no overlap. On the other hand, to improve the algorithm, it might be worth considering doing some hyperparameter tuning of the beam search algorithm, such as increasing beam width or lookahead steps or changing the heuristic, to see if it can further reduce the error under overlapping speech. 
+
+\section{Summary of Findings}
+\label{sec:rq_summary_of_findings}
+This chapter has presented the results of the statistical analysis for all 4 research questions. For RQ1, the results show that WER increases with higher OVR and lower SNR, which is consistent with the expected trends. For RQ2, the results show that \texttt{faster-whisper} has the best WER but the worst inference time, while \texttt{wav2vec-2.0} has the best inference time but a higher WER, and \texttt{WhisperX} is a balance between the two. For RQ3, the results show that the synthetic ranking transfers only partially to real data, with \texttt{Parakeet} performing best among the four ASR models. For RQ4, the results show that DSS-WER provides a statistically significant advantage over WER under the overlapping condition but shows a small overestimation in the non-overlapping condition.
+

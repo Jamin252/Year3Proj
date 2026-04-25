@@ -57,16 +57,16 @@
 \contentsline {subsection}{\numberline {4.4.4}Experimental Conditions and Corpus Size}{28}{subsection.4.4.4}%
 \contentsline {paragraph}{Overlap Ratios Choice.}{29}{section*.24}%
 \contentsline {paragraph}{Maximum Concurrent Speakers Choice.}{29}{section*.25}%
-\contentsline {paragraph}{Signal-to-noise Raio Choice.}{29}{section*.26}%
+\contentsline {paragraph}{Signal-to-noise Ratio Choice.}{29}{section*.26}%
 \contentsline {paragraph}{Noise Type Choice.}{29}{section*.27}%
-\contentsline {section}{\numberline {4.5}Track 2: Real-world Data Transferability Evaluation}{30}{section.4.5}%
+\contentsline {section}{\numberline {4.5}Track 2: Real-world Data Transferability Evaluation}{29}{section.4.5}%
 \contentsline {section}{\numberline {4.6}ASR Models Under Evaluation}{30}{section.4.6}%
 \contentsline {section}{\numberline {4.7}Scoring Metrics}{30}{section.4.7}%
 \contentsline {subsection}{\numberline {4.7.1}Reference and Hypothesis Structure}{30}{subsection.4.7.1}%
 \contentsline {subsection}{\numberline {4.7.2}Metrics}{31}{subsection.4.7.2}%
 \contentsline {subsection}{\numberline {4.7.3}Metric Application Rules}{31}{subsection.4.7.3}%
 \contentsline {section}{\numberline {4.8}Experimental Unit and Comparison Strategy}{31}{section.4.8}%
-\contentsline {section}{\numberline {4.9}Track 3: Hypothesis Testing of DSS-WER}{32}{section.4.9}%
+\contentsline {section}{\numberline {4.9}Track 3: Hypothesis Testing of DSS-WER}{31}{section.4.9}%
 \contentsline {subsection}{\numberline {4.9.1}Primary Hypothesis}{32}{subsection.4.9.1}%
 \contentsline {subsection}{\numberline {4.9.2}Condition-Specific Hypotheses}{32}{subsection.4.9.2}%
 \contentsline {paragraph}{Non-overlapping clips.}{32}{section*.28}%
@@ -84,17 +84,24 @@
 \contentsline {section}{\numberline {5.4}Overview of the Evaluation Results}{36}{section.5.4}%
 \contentsline {subsection}{\numberline {5.4.1}Scope 1: Cross-Model Comparison}{36}{subsection.5.4.1}%
 \contentsline {subsection}{\numberline {5.4.2}Inference Time}{36}{subsection.5.4.2}%
-\contentsline {section}{\numberline {5.5}Scope 2: Full Condition Analysis of wav2vec-2.0}{38}{section.5.5}%
-\contentsline {section}{\numberline {5.6}RQ1: Effects of Overlap Ratio and Signal-to-Noise Ratio}{38}{section.5.6}%
-\contentsline {subsection}{\numberline {5.6.1}Effect of Overlap Ratio}{38}{subsection.5.6.1}%
-\contentsline {subsection}{\numberline {5.6.2}Effect of Signal-to-Noise Ratio}{39}{subsection.5.6.2}%
-\contentsline {subsection}{\numberline {5.6.3}Summary}{40}{subsection.5.6.3}%
-\contentsline {section}{\numberline {5.7}RQ2: Comparison of ASR Models}{40}{section.5.7}%
+\contentsline {section}{\numberline {5.5}Scope 2: Full Condition Analysis of wav2vec-2.0}{37}{section.5.5}%
+\contentsline {section}{\numberline {5.6}RQ1: Effects of Overlap Ratio and Signal-to-Noise Ratio}{39}{section.5.6}%
+\contentsline {subsection}{\numberline {5.6.1}Effect of Overlap Ratio}{39}{subsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.6.2}Effect of Signal-to-Noise Ratio}{40}{subsection.5.6.2}%
+\contentsline {subsection}{\numberline {5.6.3}Summary}{41}{subsection.5.6.3}%
+\contentsline {section}{\numberline {5.7}RQ2: Comparison of ASR Models}{41}{section.5.7}%
 \contentsline {subsection}{\numberline {5.7.1}Overall Comparison}{41}{subsection.5.7.1}%
-\contentsline {subsection}{\numberline {5.7.2}Extreme Cases}{41}{subsection.5.7.2}%
-\contentsline {paragraph}{Worst WER for \texttt {faster-whisper}.}{41}{section*.40}%
-\contentsline {paragraph}{Worst WER for \texttt {WhisperX}.}{41}{section*.41}%
-\contentsline {chapter}{\numberline {A}Pseudocode for DSS-WER Beam Search}{47}{appendix.A}%
-\contentsline {chapter}{\numberline {B}Software Configuration}{48}{appendix.B}%
-\contentsline {section}{\numberline {B.1}Software Dependencies}{48}{section.B.1}%
-\contentsline {section}{\numberline {B.2}ASR Models and Configurations}{48}{section.B.2}%
+\contentsline {subsection}{\numberline {5.7.2}Extreme Cases}{42}{subsection.5.7.2}%
+\contentsline {paragraph}{\texttt {faster-whisper}.}{42}{section*.42}%
+\contentsline {paragraph}{\texttt {WhisperX}.}{43}{section*.43}%
+\contentsline {paragraph}{\texttt {wav2vec-2.0}.}{43}{section*.44}%
+\contentsline {paragraph}{\texttt {Parakeet}.}{43}{section*.45}%
+\contentsline {subsection}{\numberline {5.7.3}Inference Efficiency}{44}{subsection.5.7.3}%
+\contentsline {subsection}{\numberline {5.7.4}Summary}{44}{subsection.5.7.4}%
+\contentsline {section}{\numberline {5.8}RQ3: Transferability of ASR Performance Trends}{44}{section.5.8}%
+\contentsline {section}{\numberline {5.9}RQ4: Evaluation of DSS-WER}{45}{section.5.9}%
+\contentsline {section}{\numberline {5.10}Summary of Findings}{47}{section.5.10}%
+\contentsline {chapter}{\numberline {A}Pseudocode for DSS-WER Beam Search}{52}{appendix.A}%
+\contentsline {chapter}{\numberline {B}Software Configuration}{53}{appendix.B}%
+\contentsline {section}{\numberline {B.1}Software Dependencies}{53}{section.B.1}%
+\contentsline {section}{\numberline {B.2}ASR Models and Configurations}{53}{section.B.2}%

@@ -1,0 +1,147 @@
+{
+  "faster-whisper": {
+    "n_outliers": 20,
+    "n_total": 700,
+    "outlier_condition_proportions": {
+      "noise_type": {
+        "T": 1.0
+      },
+      "overlap_ratio": {
+        "0.00": 0.05,
+        "0.14": 0.4,
+        "0.20": 0.2,
+        "0.40": 0.35
+      },
+      "snr_label": {
+        "-5": 0.15,
+        "0": 0.05,
+        "7.4": 0.7,
+        "clean": 0.1
+      }
+    },
+    "outlier_rate": 0.02857142857142857,
+    "outlier_side": {
+      "overlap": {
+        "high_share": 0.55,
+        "label": "higher_overlap_side",
+        "low_share": 0.45
+      },
+      "snr": {
+        "high_share": 0.7999999999999999,
+        "label": "higher_snr_side",
+        "low_share": 0.2
+      }
+    },
+    "wer_outlier_rule": {
+      "iqr": 0.1506492076574028,
+      "q1": 0.0699129353233831,
+      "q3": 0.22056214298078589,
+      "upper_fence": 0.4465359544668901
+    }
+  },
+  "parakeet": {
+    "n_outliers": 0,
+    "n_total": 700,
+    "outlier_condition_proportions": {
+      "noise_type": {},
+      "overlap_ratio": {},
+      "snr_label": {}
+    },
+    "outlier_rate": 0.0,
+    "outlier_side": {
+      "overlap": {
+        "high_share": 0.0,
+        "label": "none",
+        "low_share": 0.0
+      },
+      "snr": {
+        "high_share": 0.0,
+        "label": "none",
+        "low_share": 0.0
+      }
+    },
+    "wer_outlier_rule": {
+      "iqr": 0.29834168492961843,
+      "q1": 0.35542016503476315,
+      "q3": 0.6537618499643816,
+      "upper_fence": 1.1012743773588092
+    }
+  },
+  "wav2vec2": {
+    "n_outliers": 19,
+    "n_total": 4800,
+    "outlier_condition_proportions": {
+      "noise_type": {
+        "P": 1.0
+      },
+      "overlap_ratio": {
+        "0.00": 0.3157894736842105,
+        "0.14": 0.21052631578947367,
+        "0.20": 0.3157894736842105,
+        "0.40": 0.15789473684210525
+      },
+      "snr_label": {
+        "-5": 0.8947368421052632,
+        "0": 0.10526315789473684
+      }
+    },
+    "outlier_rate": 0.003958333333333334,
+    "outlier_side": {
+      "overlap": {
+        "high_share": 0.47368421052631576,
+        "label": "mixed",
+        "low_share": 0.5263157894736842
+      },
+      "snr": {
+        "high_share": 0.0,
+        "label": "lower_snr_side",
+        "low_share": 1.0
+      }
+    },
+    "wer_outlier_rule": {
+      "iqr": 0.32437457705595324,
+      "q1": 0.18877551020408162,
+      "q3": 0.5131500872600349,
+      "upper_fence": 0.9997119528439647
+    }
+  },
+  "whisperx": {
+    "n_outliers": 9,
+    "n_total": 700,
+    "outlier_condition_proportions": {
+      "noise_type": {
+        "T": 1.0
+      },
+      "overlap_ratio": {
+        "0.14": 0.4444444444444444,
+        "0.20": 0.2222222222222222,
+        "0.40": 0.3333333333333333
+      },
+      "snr_label": {
+        "-5": 0.1111111111111111,
+        "0": 0.1111111111111111,
+        "7.4": 0.6666666666666666,
+        "clean": 0.1111111111111111
+      }
+    },
+    "outlier_rate": 0.012857142857142857,
+    "outlier_side": {
+      "overlap": {
+        "high_share": 0.5555555555555556,
+        "label": "higher_overlap_side",
+        "low_share": 0.4444444444444444
+      },
+      "snr": {
+        "high_share": 0.7777777777777777,
+        "label": "higher_snr_side",
+        "low_share": 0.2222222222222222
+      }
+    },
+    "wer_outlier_rule": {
+      "iqr": 0.22020215129118245,
+      "q1": 0.05901284456631548,
+      "q3": 0.2792149958574979,
+      "upper_fence": 0.6095182227942716
+    }
+  }
+}

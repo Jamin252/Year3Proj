@@ -19,11 +19,15 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 FIGURE_DIR = PROJECT_ROOT / "Documentation" / "figures"
 SUMMARY_PATH = PROJECT_ROOT / "Documentation" / "statistical_analysis_summary.json"
 WORST_WER_PATH = PROJECT_ROOT / "Documentation" / "worst_wer_examples.json"
+WER_OUTLIER_CONDITIONS_PATH = PROJECT_ROOT / "Documentation" / "wer_outlier_condition_summary.json"
+REAL_EVAL_WER_ORC_PATH = PROJECT_ROOT / "Output" / "real_eval_wer_orc_results.json"
 
 CROSS_MODEL_CLIP_REGEX = re.compile(
     r"(^mix_[0-9]+_0\.(00|14|20|40)_2_7\.4_T$)"
     r"|(^mix_[0-9]+_0\.14_2_(None|7\.4|0|-5)_T$)"
 )
+
+CROSS_MODEL_CLIP_REGEX_PLAIN = re.compile(".*")
 
 MODELS = ["faster-whisper", "whisperx", "wav2vec2", "parakeet"]
 MODEL_LABELS = {
@@ -34,6 +38,9 @@ MODEL_LABELS = {
 }
 SNR_ORDER = ["clean", "7.4", "0", "-5"]
 OVR_ORDER = [0.00, 0.14, 0.20, 0.40]
+DSS_PERMUTATION_N = 10_000
+DSS_RANDOM_SEED = 20260425
+DSS_DIFF_TOLERANCE = 1e-12
 
 
 def _maybe_text(value: Any) -> str | None:
@@ -212,6 +219,69 @@ def load_model_results(model: str) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def load_real_eval_wer_orc_results() -> pd.DataFrame:
+    payload = json.loads(REAL_EVAL_WER_ORC_PATH.read_text(encoding="utf-8"))
+    rows: list[dict[str, Any]] = []
+    for clip_id, by_model in payload.get("by_clip", {}).items():
+        if not isinstance(by_model, dict):
+            continue
+        for model, values in by_model.items():
+            if model not in MODEL_LABELS or not isinstance(values, dict):
+                continue
+            rows.append(
+                {
+                    "clip_id": clip_id,
+                    "model": model,
+                    "model_label": MODEL_LABELS[model],
+                    "wer": values.get("wer"),
+                    "orc_wer": values.get("orc_wer"),
+                    "hyp_segment_count": values.get("hyp_segment_count"),
+                    "ref_segment_count": values.get("ref_segment_count"),
+                    "is_segmented_hypothesis": bool(values.get("is_segmented_hypothesis", False)),
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def build_real_transferability_summary(cross: pd.DataFrame, real_eval: pd.DataFrame) -> pd.DataFrame:
+    rows: list[dict[str, Any]] = []
+    for model in MODELS:
+        synthetic_wer = cross.loc[cross["model"] == model, "wer"].dropna()
+        real_model = real_eval[real_eval["model"] == model]
+        real_wer = real_model["wer"].dropna()
+        real_orc_wer = real_model["orc_wer"].dropna()
+        if synthetic_wer.empty or real_wer.empty:
+            continue
+
+        rows.append(
+            {
+                "model": model,
+                "model_label": MODEL_LABELS[model],
+                "synthetic_n": int(synthetic_wer.size),
+                "synthetic_mean": float(synthetic_wer.mean()),
+                "synthetic_median": float(synthetic_wer.median()),
+                "synthetic_sd": float(synthetic_wer.std(ddof=1)),
+                "real_n": int(real_wer.size),
+                "real_mean": float(real_wer.mean()),
+                "real_median": float(real_wer.median()),
+                "real_sd": float(real_wer.std(ddof=1)),
+                "real_orc_wer_n": int(real_orc_wer.size),
+                "real_orc_wer_mean": None if real_orc_wer.empty else float(real_orc_wer.mean()),
+                "delta_mean": float(real_wer.mean() - synthetic_wer.mean()),
+                "mean_ratio": float(real_wer.mean() / synthetic_wer.mean()),
+            }
+        )
+
+    summary = pd.DataFrame(rows)
+    if summary.empty:
+        return summary
+
+    summary["synthetic_rank"] = summary["synthetic_mean"].rank(method="min", ascending=True).astype(int)
+    summary["real_rank"] = summary["real_mean"].rank(method="min", ascending=True).astype(int)
+    summary["rank_shift"] = summary["real_rank"] - summary["synthetic_rank"]
+    return summary
+
+
 def summarise(values: pd.Series) -> dict[str, float]:
     values = values.dropna()
     return {
@@ -223,6 +293,143 @@ def summarise(values: pd.Series) -> dict[str, float]:
         "max": float(values.max()),
         "pct_gt_1": float((values > 1.0).mean() * 100),
     }
+
+
+def _stable_seed(*parts: Any) -> int:
+    text = "|".join(str(part) for part in parts)
+    offset = sum((idx + 1) * ord(char) for idx, char in enumerate(text))
+    return int((DSS_RANDOM_SEED + offset) % (2**32 - 1))
+
+
+def _paired_permutation_p_value(
+    differences: np.ndarray,
+    alternative: str,
+    n_permutations: int = DSS_PERMUTATION_N,
+    seed: int = DSS_RANDOM_SEED,
+    chunk_size: int = 500,
+) -> float:
+    if differences.size == 0:
+        return float("nan")
+
+    observed = float(np.mean(differences))
+    rng = np.random.default_rng(seed)
+    extreme_count = 0
+    completed = 0
+
+    while completed < n_permutations:
+        take = min(chunk_size, n_permutations - completed)
+        signs = rng.choice(np.array([-1.0, 1.0]), size=(take, differences.size))
+        null_means = (signs @ differences) / differences.size
+
+        if alternative == "less":
+            extreme_count += int(np.sum(null_means <= observed))
+        elif alternative == "greater":
+            extreme_count += int(np.sum(null_means >= observed))
+        elif alternative == "two-sided":
+            extreme_count += int(np.sum(np.abs(null_means) >= abs(observed)))
+        else:
+            raise ValueError(f"Unsupported alternative: {alternative}")
+
+        completed += take
+
+    return float((1 + extreme_count) / (n_permutations + 1))
+
+
+def _bootstrap_mean_ci(
+    differences: np.ndarray,
+    n_resamples: int = DSS_PERMUTATION_N,
+    seed: int = DSS_RANDOM_SEED,
+    chunk_size: int = 500,
+) -> tuple[float, float]:
+    if differences.size == 0:
+        return float("nan"), float("nan")
+
+    rng = np.random.default_rng(seed)
+    means = np.empty(n_resamples, dtype=float)
+    completed = 0
+
+    while completed < n_resamples:
+        take = min(chunk_size, n_resamples - completed)
+        indices = rng.integers(0, differences.size, size=(take, differences.size))
+        means[completed : completed + take] = differences[indices].mean(axis=1)
+        completed += take
+
+    low, high = np.percentile(means, [2.5, 97.5])
+    return float(low), float(high)
+
+
+def analyse_dss_wer_hypothesis_tests(results: pd.DataFrame) -> pd.DataFrame:
+    frame = results.copy()
+    if "status" in frame.columns:
+        frame = frame[frame["status"] == "success"]
+    frame = frame.dropna(subset=["model", "model_label", "wer", "dss_wer", "overlap_ratio"]).copy()
+    non_overlap_mask = np.isclose(frame["overlap_ratio"], 0.0)
+    frame["overlap_scope"] = np.where(non_overlap_mask, "non_overlap", "overlap")
+    frame["overlap_scope_label"] = np.where(frame["overlap_scope"] == "non_overlap", "Non-overlap", "Overlap")
+    frame["dss_minus_wer"] = frame["dss_wer"] - frame["wer"]
+
+    rows: list[dict[str, Any]] = []
+    scopes = [("non_overlap", "Non-overlap", "two-sided"), ("overlap", "Overlap", "less")]
+
+    for scope, scope_label, alternative in scopes:
+        scope_df = frame[frame["overlap_scope"] == scope].copy()
+        groups: list[tuple[str, str, pd.DataFrame]] = [
+            (model, MODEL_LABELS[model], scope_df[scope_df["model"] == model].copy())
+            for model in MODELS
+        ]
+        groups.append(("all_models", "All models", scope_df))
+
+        for model, model_label, group in groups:
+            if group.empty:
+                continue
+
+            differences = group["dss_minus_wer"].to_numpy(dtype=float)
+            ci_low, ci_high = _bootstrap_mean_ci(
+                differences,
+                seed=_stable_seed("bootstrap", scope, model),
+            )
+            p_value = _paired_permutation_p_value(
+                differences,
+                alternative=alternative,
+                seed=_stable_seed("permutation", scope, model),
+            )
+
+            equal_mask = np.isclose(differences, 0.0, atol=DSS_DIFF_TOLERANCE, rtol=0.0)
+            less_mask = differences < -DSS_DIFF_TOLERANCE
+            greater_mask = differences > DSS_DIFF_TOLERANCE
+            n = int(differences.size)
+
+            rows.append(
+                {
+                    "overlap_scope": scope,
+                    "overlap_scope_label": scope_label,
+                    "model": model,
+                    "model_label": model_label,
+                    "n": n,
+                    "wer_mean": float(group["wer"].mean()),
+                    "wer_median": float(group["wer"].median()),
+                    "wer_sd": float(group["wer"].std(ddof=1)),
+                    "dss_wer_mean": float(group["dss_wer"].mean()),
+                    "dss_wer_median": float(group["dss_wer"].median()),
+                    "dss_wer_sd": float(group["dss_wer"].std(ddof=1)),
+                    "mean_difference": float(np.mean(differences)),
+                    "median_difference": float(np.median(differences)),
+                    "difference_sd": float(np.std(differences, ddof=1)),
+                    "ci_low": ci_low,
+                    "ci_high": ci_high,
+                    "permutation_p": p_value,
+                    "permutation_alternative": alternative,
+                    "n_permutations": int(DSS_PERMUTATION_N),
+                    "dss_equal_wer_n": int(np.sum(equal_mask)),
+                    "dss_less_than_wer_n": int(np.sum(less_mask)),
+                    "dss_greater_than_wer_n": int(np.sum(greater_mask)),
+                    "dss_equal_wer_pct": float(np.mean(equal_mask) * 100.0),
+                    "dss_less_than_wer_pct": float(np.mean(less_mask) * 100.0),
+                    "dss_greater_than_wer_pct": float(np.mean(greater_mask) * 100.0),
+                }
+            )
+
+    return pd.DataFrame(rows)
 
 
 def summarise_wer_outlier_conditions_by_model(results: pd.DataFrame) -> dict[str, Any]:
@@ -258,6 +465,27 @@ def summarise_wer_outlier_conditions_by_model(results: pd.DataFrame) -> dict[str
             keys = sorted(keys)
         return {key: float(counts.get(key, 0) / n_total) for key in keys}
 
+    def _side_summary(
+        low_share: float,
+        high_share: float,
+        low_label: str,
+        high_label: str,
+        tolerance: float = 0.10,
+    ) -> dict[str, Any]:
+        if (low_share + high_share) == 0.0:
+            side_label = "none"
+        elif abs(high_share - low_share) <= tolerance:
+            side_label = "mixed"
+        elif high_share > low_share:
+            side_label = high_label
+        else:
+            side_label = low_label
+        return {
+            "label": side_label,
+            "low_share": float(low_share),
+            "high_share": float(high_share),
+        }
+
     summary: dict[str, Any] = {}
     model_order = [model for model in MODELS if model in frame["model"].unique()]
     extra_models = sorted(model for model in frame["model"].unique() if model not in MODELS)
@@ -278,6 +506,21 @@ def summarise_wer_outlier_conditions_by_model(results: pd.DataFrame) -> dict[str
         overlap_as_text = outliers["overlap_ratio"].map(
             lambda value: "unknown" if pd.isna(value) else f"{float(value):.2f}"
         )
+        ovr_proportions = _proportion_dict(
+            overlap_as_text,
+            n_outliers,
+            preferred_order=[f"{value:.2f}" for value in OVR_ORDER] + ["unknown"],
+        )
+        snr_proportions = _proportion_dict(
+            outliers["snr_label"],
+            n_outliers,
+            preferred_order=SNR_ORDER + ["unknown"],
+        )
+
+        ovr_low_share = float(ovr_proportions.get("0.00", 0.0) + ovr_proportions.get("0.14", 0.0))
+        ovr_high_share = float(ovr_proportions.get("0.20", 0.0) + ovr_proportions.get("0.40", 0.0))
+        snr_high_share = float(snr_proportions.get("clean", 0.0) + snr_proportions.get("7.4", 0.0))
+        snr_low_share = float(snr_proportions.get("0", 0.0) + snr_proportions.get("-5", 0.0))
 
         summary[model] = {
             "n_total": total,
@@ -290,17 +533,23 @@ def summarise_wer_outlier_conditions_by_model(results: pd.DataFrame) -> dict[str
                 "upper_fence": float(upper_fence),
             },
             "outlier_condition_proportions": {
-                "overlap_ratio": _proportion_dict(
-                    overlap_as_text,
-                    n_outliers,
-                    preferred_order=[f"{value:.2f}" for value in OVR_ORDER] + ["unknown"],
-                ),
-                "snr_label": _proportion_dict(
-                    outliers["snr_label"],
-                    n_outliers,
-                    preferred_order=SNR_ORDER + ["unknown"],
-                ),
+                "overlap_ratio": ovr_proportions,
+                "snr_label": snr_proportions,
                 "noise_type": _proportion_dict(outliers["noise_type"], n_outliers),
+            },
+            "outlier_side": {
+                "overlap": _side_summary(
+                    low_share=ovr_low_share,
+                    high_share=ovr_high_share,
+                    low_label="lower_overlap_side",
+                    high_label="higher_overlap_side",
+                ),
+                "snr": _side_summary(
+                    low_share=snr_low_share,
+                    high_share=snr_high_share,
+                    low_label="lower_snr_side",
+                    high_label="higher_snr_side",
+                ),
             },
         }
 
@@ -846,6 +1095,8 @@ def plot_timing_bar(timing_df: pd.DataFrame) -> None:
 
 
 def plot_timing_tradeoff(cross: pd.DataFrame, timing_df: pd.DataFrame) -> None:
+    cross_model_mask = cross["clip_id"].astype(str).str.match(CROSS_MODEL_CLIP_REGEX.pattern, na=False)
+    cross = cross[cross_model_mask].copy()
     timing_df = timing_df[
         ["model", "model_label", "seconds_per_clip", "rtfx"]
     ].copy()
@@ -861,6 +1112,36 @@ def plot_timing_tradeoff(cross: pd.DataFrame, timing_df: pd.DataFrame) -> None:
     ax.set_ylabel("Mean WER on cross-model subset")
     ax.grid(True, alpha=0.25)
     save(fig, "stat_accuracy_latency_tradeoff.png")
+
+
+def plot_real_transfer_wer_change(transfer: pd.DataFrame) -> None:
+    if transfer.empty:
+        return
+
+    colors = _model_colors()
+    fig, ax = plt.subplots(figsize=(7.0, 4.5))
+    x_positions = [0, 1]
+    for _, row in transfer.sort_values("synthetic_rank").iterrows():
+        values = [row["synthetic_mean"], row["real_mean"]]
+        ax.plot(
+            x_positions,
+            values,
+            marker="o",
+            linewidth=2.0,
+            markersize=5,
+            color=colors[row["model_label"]],
+            label=f"{row['model_label']} ({row['delta_mean']:+.3f})",
+        )
+
+    ax.set_xticks(x_positions)
+    ax.set_xticklabels(["Synthetic matched subset\n(n=700/model)", "Real CHiME-6 clips\n(n=100/model)"])
+    ax.set_xlim(-0.08, 1.08)
+    ax.set_ylabel("Mean WER")
+    ax.set_title("Transfer from synthetic subset to real conversational data")
+    ax.grid(axis="y", alpha=0.25)
+    ax.legend(title=r"$\Delta$ mean WER", fontsize=7, title_fontsize=8, loc="upper left")
+    ax.set_ylim(0, max(transfer["real_mean"].max(), transfer["synthetic_mean"].max()) * 1.18)
+    save(fig, "stat_real_transfer_wer_change.png")
 
 
 def _draw_heatmap(
@@ -924,6 +1205,23 @@ def _model_colors() -> dict[str, str]:
     }
 
 
+def _json_ready_records(frame: pd.DataFrame) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for row in frame.to_dict(orient="records"):
+        clean_row: dict[str, Any] = {}
+        for key, value in row.items():
+            if pd.isna(value):
+                clean_row[key] = None
+            elif isinstance(value, (np.integer,)):
+                clean_row[key] = int(value)
+            elif isinstance(value, (np.floating,)):
+                clean_row[key] = float(value)
+            else:
+                clean_row[key] = value
+        records.append(clean_row)
+    return records
+
+
 def main(k_worst: int = 3) -> None:
     plt.rcParams.update(
         {
@@ -939,6 +1237,9 @@ def main(k_worst: int = 3) -> None:
     wav2 = success[success["model"] == "wav2vec2"].copy()
     cross = success[success["is_cross_model_clip"]].copy()
     timing = load_timing_results()
+    real_eval = load_real_eval_wer_orc_results()
+    real_transfer = build_real_transferability_summary(cross, real_eval)
+    dss_wer_tests = analyse_dss_wer_hypothesis_tests(success)
     wav2_wer_surface = fit_wav2vec2_wer_surface(wav2)
     wav2_effect_sizes = compute_effect_sizes(wav2)
 
@@ -955,7 +1256,9 @@ def main(k_worst: int = 3) -> None:
     cross_support = plot_cross_model_scope_support(cross)
     plot_timing_bar(timing)
     plot_timing_tradeoff(cross, timing)
+    plot_real_transfer_wer_change(real_transfer)
     worst_wer_examples = get_k_worst_wer_examples(k=k_worst)
+    wer_outlier_conditions = summarise_wer_outlier_conditions_by_model(all_results)
 
     summary = {
         "source_files": [f"WER_results_{model}.json" for model in MODELS],
@@ -1032,6 +1335,21 @@ def main(k_worst: int = 3) -> None:
             .unstack()
             .to_dict()
         ),
+        "real_transferability": {
+            "source_file": str(REAL_EVAL_WER_ORC_PATH),
+            "synthetic_source": "Matched 700-clip subset selected by cross_model_clip_regex",
+            "real_source": "100 CHiME-6 S01 clips scored in Output/real_eval_wer_orc_results.json",
+            "model_stats": _json_ready_records(real_transfer),
+        },
+        "dss_wer_hypothesis_tests": {
+            "difference": "dss_wer - wer",
+            "non_overlap_test": "two-sided Monte Carlo paired sign-flip test",
+            "overlap_test": "one-sided lower-tail Monte Carlo paired sign-flip test",
+            "n_permutations": int(DSS_PERMUTATION_N),
+            "bootstrap_resamples_for_ci": int(DSS_PERMUTATION_N),
+            "random_seed": int(DSS_RANDOM_SEED),
+            "rows": _json_ready_records(dss_wer_tests),
+        },
     }
     SUMMARY_PATH.write_text(json.dumps(summary, indent=2, sort_keys=True), encoding="utf-8")
     worst_payload = {
@@ -1040,9 +1358,14 @@ def main(k_worst: int = 3) -> None:
         "items_by_model": worst_wer_examples,
     }
     WORST_WER_PATH.write_text(json.dumps(worst_payload, indent=2, sort_keys=True), encoding="utf-8")
+    WER_OUTLIER_CONDITIONS_PATH.write_text(
+        json.dumps(wer_outlier_conditions, indent=2, sort_keys=True),
+        encoding="utf-8",
+    )
     print(f"Wrote figures to {FIGURE_DIR}")
     print(f"Wrote summary to {SUMMARY_PATH}")
     print(f"Wrote worst-WER examples to {WORST_WER_PATH}")
+    print(f"Wrote WER outlier condition summary to {WER_OUTLIER_CONDITIONS_PATH}")
 
 
 if __name__ == "__main__":

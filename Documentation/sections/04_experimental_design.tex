@@ -107,8 +107,6 @@ $0.40$ & $100$ & $12$ & $1200$ \\
 \end{table}
 \Cref{tab:design_factors} documents the levels of the main experimental factors. In the implementation, all conditions use 100 base mixtures. Each base mixture is expanded across all factors $\text{SNR} \times \text{noise type}$, yielding a total of 4800 corpus summarised in \Cref{tab:synthetic_counts}.
 
-The asymmetry in the number of base mixtures between 0\% and non-zero overlap conditions is a pragmatic choice to balance the need for a control condition with the computational cost of generating and evaluating a large number of mixtures. It does not invalidate the control condition, but it does mean that the diversity of the 0\% overlap condition is lower. Later analysis therefore will treats the 0\% overlap condition as a control point rather than a fully representative condition, and the focus will be on the trends across the non-zero overlap conditions.
-
 \paragraph{Overlap Ratios Choice.} The overlap ratios are chosen to represent a range of realistic and challenging conditions for ASR:
 \begin{itemize}
     \item 0\% is chosen to be the control where it represent completely clean audio in which there is no overlapping.
@@ -119,7 +117,7 @@ The asymmetry in the number of base mixtures between 0\% and non-zero overlap co
 
 \paragraph{Maximum Concurrent Speakers Choice.} Speaker count is chosen to be 2 for practicality and to isolate the effect of overlap and noise.
 
-\paragraph{Signal-to-noise Raio Choice.} The SNR levels are chosen to represent a range of realistic and challenging noise conditions:
+\paragraph{Signal-to-noise Ratio Choice.} The SNR levels are chosen to represent a range of realistic and challenging noise conditions:
 \begin{itemize}
     \item \textit{clean} is chosen to be the control where it represent clean background with no noise.
     \item 7.4dB is chosen to represent the noisy environment as it is the mean SNR for noisy environment \cite{wu2018characteristics}.
@@ -158,7 +156,7 @@ These models are chosen as representation of the mainstream ASR architectures. F
 
 \section{Scoring Metrics}
 \subsection{Reference and Hypothesis Structure}
-For synthetic data, the reference transcripts are loaded from the manifest and reduced to $(speaker, text)$ pairs (removing timestamps) as not all ASR models provide timeed output. Depending on the model, the hypothesis may be a single stream of text or as multiple segments. This structure determines what metrics can be calculated as some metrics assume a segmented output while some do not. The normalisation function used in scoring is applied to both reference and hypothesis. It strips punctuation and converts text to lowercase. This is to isolate the evaluation to the core lexical robustness under overlap and noise rather than punctuation and casing.
+For synthetic data, the reference transcripts are loaded from the manifest and reduced to $(speaker, text)$ pairs (removing timestamps) as not all ASR models provide timed output. Depending on the model, the hypothesis may be a single stream of text or as multiple segments. This structure determines what metrics can be calculated as some metrics assume a segmented output while some do not. The normalisation function used in scoring is applied to both reference and hypothesis. It strips punctuation and converts text to lowercase. This is to isolate the evaluation to the core lexical robustness under overlap and noise rather than punctuation and casing.
 
 \subsection{Metrics}
 Three metrics are used in the synthetic scoring pipeline:
@@ -173,7 +171,7 @@ The DSS-WER implementation is based on the beam-search approximation algorithm i
 The choice of metrics are based on the following rules:
 \begin{itemize}
     \item For single-stream hypothesis output, WER and DSS-WER are used.
-    \item For segmented hypothesis output, all three WER, ORC-WER and DRS-WER are used.
+    \item For segmented hypothesis output, all three WER, ORC-WER and DSS-WER are used.
 \end{itemize}
 
 \section{Experimental Unit and Comparison Strategy}
@@ -185,13 +183,14 @@ The fundamental unit of comparison is the (clip, model) pair with related metada
 This pairing structure supports stronger inference than purely between-subjects design. When a model performs different in lower SNR or higher overlap, the degradation or improvement can be attributed more confidently to the change in condition rather than the change in lexical content or other confounding factors. 
 
 \section{Track 3: Hypothesis Testing of DSS-WER}
+\label{sec:t3_dss_wer_hypothesis_testing}
 This track evaluates whether the proposed Double-Stream Serialisation WER (DSS-WER) approximation algorithm differs systematically from standard WER, and whether it occurs in the expected settings and direction. Since DSS-WER is designed to relax the strict serialisation assumption of WER, the primary questions are whether DSS-WER yields lower scores than WER in overlapped setting while remaining similar in non-overlapped setting.
 
 Let 
 \begin{equation}
     d_i = M_{\text{DSS},i} - M_{\text{WER},i},
 \end{equation}
-where $M_{\text{DSS},i}$ and $M_{\text{WER},i}$ are the DSS-WER approximationand ordinary WER for the $i$-th clip. A negative value of $d_i$ will therefore indicate that DSS-WER yields a lower score than WER on the $i$-th clip. 
+where $M_{\text{DSS},i}$ and $M_{\text{WER},i}$ are the DSS-WER approximation and ordinary WER for the $i$-th clip. A negative value of $d_i$ will therefore indicate that DSS-WER yields a lower score than WER on the $i$-th clip. 
 \subsection{Primary Hypothesis}
 The main hypothesis is that examines whether DSS-WER approximation is lower than WER on average:
 \begin{equation}
@@ -245,8 +244,8 @@ The experimental design combines precisely controlled synthetic benchmarking wit
 However, the limitation is clear. They are as follows: 
 \begin{itemize}
     \item the comparative system only cover four ASR models
-    \item Not every model is runned on every clip due to runtime and implementation constraints, which may introduce bias in the comparison.
-    \item ORC-WER is only calculated for segmented output (faster-whisper and whisperX) as not every model provides segment-level output
+    \item Not every model is run on every clip due to runtime and implementation constraints, which may introduce bias in the comparison.
+    \item ORC-WER is only calculated for segmented output (faster-whisper and WhisperX) as not every model provides segment-level output
     \item Real-world evaluation only cover one session in CHiME-6 rather than a balanced sampling of real-world conditions
 \end{itemize}
 However, these limitations do not invalidate the design. They define the scope of the dissertation and the interpretation of the results.
