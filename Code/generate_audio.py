@@ -219,15 +219,19 @@ def build_base_mixture(
     min_length = mins_lengths[0] if overlap_ratio_target <= 0.5 else mins_lengths[1]
     last_speaker = None
     speaker_occurrences: Dict[str, int] = {s: 0 for s in speakers}
+    used_speech_paths = set()
     
     while current_length <= sample_length * (1 + overlap_ratio_target):
         speaker = random.choices(speakers, weights=[1.0 / ( speaker_occurrences[s] + EPSILON) if s != last_speaker else 0 for s in speakers], k=1)[0]
         last_speaker = speaker
         speaker_occurrences[speaker] += 1
         speech_path = random.choice(speech_files[speaker])
+        while speech_path in used_speech_paths:
+            speech_path = random.choice(speech_files[speaker])
         # while speech_path in chosen:
         #     speech_path = random.choice(speech_files[speaker])
         chosen.append(speech_path)
+        used_speech_paths.add(speech_path)
         
         audio, sr = sf.read(speech_path)
         if audio.ndim > 1:
@@ -248,8 +252,9 @@ def build_base_mixture(
             tLength = len(audio)
             while tLength < sample_rate * min_length:
                 tspeech_path = random.choice(speech_files[speaker])
-                # while tspeech_path in chosen:
-                #     tspeech_path = random.choice(speech_files[speaker])
+                while tspeech_path in used_speech_paths:
+                    tspeech_path = random.choice(speech_files[speaker])
+                used_speech_paths.add(tspeech_path)
                 chosen.append(tspeech_path)
                 taudio, sr = sf.read(tspeech_path)
                 if taudio.ndim > 1:
@@ -388,7 +393,7 @@ def main() -> None:
         for k in factors["speaker_count"]:
             # Build base overlapped mixtures once, then vary SNR/noise over the same base
             base_mixtures = []
-            for _ in range(10 if oratio == 0 else n_per_condition):
+            for _ in range(cfg["n_mixtures_clean"] if oratio == 0 else n_per_condition):
                 b = None
                 while b is None:
                     b = build_base_mixture(

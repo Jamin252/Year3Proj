@@ -17,7 +17,7 @@ factors:
   speaker_spacing: 
     mu: 0.2
     sigma: 0.1
-  overlap_std_ratio: 0.01
+  overlap_std_ratio: 0.1
 
 asr_models:
   - faster_whisper
@@ -29,5 +29,5 @@ asr_models:
 
 min_length_s: 10
 min_length_s_0.75: 20
-n_mixtures_clean: 10
+n_mixtures_clean: 100
 n_mixtures_per_condition: 100

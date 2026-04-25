@@ -22,7 +22,14 @@
 \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
 \usepackage[nameinlink,noabbrev]{cleveref}
 \usepackage{subcaption}
-
+\usepackage[most]{tcolorbox}
+\newtcolorbox{asrexample}{
+  colback=gray!5,
+  colframe=gray!50,
+  boxrule=0.5pt,
+  arc=2pt,
+  left=6pt,right=6pt,top=6pt,bottom=6pt
+}
 \lstdefinestyle{codeblock}{
 	basicstyle=\ttfamily\small,
 	frame=single,
@@ -57,10 +64,9 @@
 \input{sections/03_architectural_design}
 
 \input{sections/04_experimental_design}
-% \input{sections/c4}
 
-% \input{sections/05_statistical_analysis}
-
+\input{sections/05_statistical_analysis}
+% \input{sections/c5}
 
 % \input{sections/datasets_models}
 

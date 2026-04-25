@@ -3,7 +3,7 @@ import os
 from Code.mrs_beam_wer import benchmark_wav2vec2_sample
 
 # Parameters
-seed = 42
+seed = 1234
 sample_size = 10
 normalize = True
 beam_widths = [64, 96, 128, 160, 192]

@@ -8,7 +8,7 @@ configs = [
     (128, 24), (160, 24), (192, 24)
 ]
 
-seed = 42
+seed = 1234
 sample_size = 50
 normalize = True
 threshold = 1.0

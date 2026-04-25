@@ -17,7 +17,7 @@ This chapter describes the software architecture for synthetic mixture generatio
 \begin{figure}[ht]
 \centering
 \includefigure[width=\linewidth]{figures/system_overview.png}
-\caption{High-level data flow through the experimental system. Clean speech and noise recordings were transformed into synthetic mixtures, transcribed by ASR models, and passed to evaluation, benchmarking, and statistical analysis.}
+\caption[High-level data flow through the experimental system.]{High-level data flow through the experimental system. Clean speech and noise recordings were transformed into synthetic mixtures, transcribed by ASR models, and passed to evaluation, benchmarking, and statistical analysis. (Generated with SmartDraw~\cite{smartdraw2026_app}.)}
 \label{fig:general_flow}
 \end{figure}
 
@@ -781,6 +781,11 @@ Inference-time benchmarking was used to compare the operational cost of the ASR 
 
 The runtime metric recorded was measured using \texttt{time.perf\_counter()} to capture the total wall-clock time taken for inference on the sampled set. This captures the end-to-end time instead of just the decoding time, as it reflects the actual user experience and operational cost.
 
+The time taken per clip was computed by dividing the total runtime by the number of clips in the sampled set, while the Inverse Real-Time Factor (RTFx) was computed as:
+\begin{equation}
+\mathrm{RTFx} = \frac{\text{total audio duration}}{\text{Processing time}}
+\end{equation}
+
 Execution was performed on CUDA. The implementation used batch size $100$ \texttt{parakeet} as it allows batch inferencing, while the other systems were evaluated sequentially on the sampled clips. GPU cache clearing and garbage collection were applied between runs, but GPU memory usage was not logged as an output statistic. Likewise, failed runs were not recorded through a separate structured logging system.
 
 \section{Real-Data Segmentation and Evaluation Pipeline}
@@ -821,4 +826,3 @@ This section discusses the design trade-offs and limitations of the architectura
     \item[Random Seed] 1234
 \end{description}
 Software dependencies and configuration details are documented in \Cref{ch:software_config}
-

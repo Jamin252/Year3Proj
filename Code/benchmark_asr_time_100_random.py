@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import wave
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -71,6 +72,17 @@ def _sample_metas(sample_size: int = SAMPLE_SIZE, seed: int = RANDOM_SEED) -> Li
     for clip_id in sampled["clip_id"].head(5).tolist():
         print(f"- {clip_id}")
     return [_build_meta(row) for _, row in sampled.iterrows()]
+
+
+def _audio_duration_sec(audio_path: str) -> float:
+    with wave.open(audio_path, "rb") as wav_handle:
+        frames = wav_handle.getnframes()
+        rate = wav_handle.getframerate()
+    return float(frames) / float(rate) if rate else 0.0
+
+
+def _total_audio_duration_sec(metas: List[MixtureMeta]) -> float:
+    return float(sum(_audio_duration_sec(meta.audio_path) for meta in metas))
 
 
 def _time_faster_whisper(metas: List[MixtureMeta]) -> float:
@@ -203,6 +215,8 @@ def main(model_name: str = None) -> None:
                    If None, runs all models.
     """
     metas = _sample_metas()
+    total_audio_duration_sec = _total_audio_duration_sec(metas)
+    print(f"Total sample audio duration: {total_audio_duration_sec:.3f}s")
     
     timings = {
         "faster-whisper": _time_faster_whisper,
@@ -220,6 +234,13 @@ def main(model_name: str = None) -> None:
     else:
         existing_results = []
         sample_size = len(metas)
+
+    # Backfill legacy timing records so partial reruns still produce complete schema.
+    for result in existing_results:
+        processing_time = result.get("total_processing_time_sec", result.get("duration_sec", 0.0))
+        result["total_processing_time_sec"] = processing_time
+        if processing_time and processing_time > 0:
+            result["rtfx"] = total_audio_duration_sec / processing_time
     
     # Determine which models to run
     if model_name:
@@ -245,21 +266,29 @@ def main(model_name: str = None) -> None:
             torch.cuda.reset_peak_memory_stats()
         
         duration_sec = timer(metas)
+        total_processing_time_sec = duration_sec
+        rtfx = total_audio_duration_sec / total_processing_time_sec if total_processing_time_sec > 0 else 0.0
         result = {
             "model": name,
             "sample_count": len(metas),
             "duration_sec": duration_sec,
+            "total_processing_time_sec": total_processing_time_sec,
             "sec_per_audio": duration_sec / len(metas),
+            "rtfx": rtfx,
             "sample_clip_ids": [meta.clip_id for meta in metas],
         }
         existing_results.append(result)
-        print(f"{name}: {duration_sec:.3f}s total, {result['sec_per_audio']:.4f}s/audio")
+        print(
+            f"{name}: total_processing_time={total_processing_time_sec:.3f}s, "
+            f"sec_per_audio={result['sec_per_audio']:.4f}, rtfx={rtfx:.4f}x"
+        )
     
     # Save updated results
     payload = {
         "sample_size": sample_size,
         "seed": RANDOM_SEED,
         "sample_filter": None,
+        "total_audio_duration_sec": total_audio_duration_sec,
         "results": existing_results,
     }
 

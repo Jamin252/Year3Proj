@@ -1,7 +1,7 @@
 from Code.mrs_beam_wer import benchmark_wav2vec2_sample
 
 configs = [(64, 20), (96, 20), (128, 24)]
-seed = 42
+seed = 1234
 sample_size = 10
 
 for bw, lh in configs:

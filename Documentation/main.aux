@@ -80,6 +80,8 @@
 \citation{von_Neumann_2025}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Unified Metrics for Multi-Speaker ASR Evaluation}{8}{subsection.2.3.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Summary}{9}{subsection.2.3.4}\protected@file@percent }
+\citation{smartdraw2026_app}
+\citation{smartdraw2026_app}
 \@writefile{toc}{\contentsline {chapter}{\numberline {3}Architectural Design}{10}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -130,92 +132,185 @@
 \@writefile{toc}{\contentsline {section}{\numberline {3.7}Benchmarking}{19}{section.3.7}\protected@file@percent }
 \newlabel{subsec:inference_time_benchmarking}{{3.7}{19}{Benchmarking}{section.3.7}{}}
 \newlabel{subsec:inference_time_benchmarking@cref}{{[section][7][3]3.7}{[1][19][]19}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.8}Real-Data Segmentation and Evaluation Pipeline}{19}{section.3.8}\protected@file@percent }
-\newlabel{subsec:real_data_pipeline}{{3.8}{19}{Real-Data Segmentation and Evaluation Pipeline}{section.3.8}{}}
-\newlabel{subsec:real_data_pipeline@cref}{{[section][8][3]3.8}{[1][19][]19}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.8}Real-Data Segmentation and Evaluation Pipeline}{20}{section.3.8}\protected@file@percent }
+\newlabel{subsec:real_data_pipeline}{{3.8}{20}{Real-Data Segmentation and Evaluation Pipeline}{section.3.8}{}}
+\newlabel{subsec:real_data_pipeline@cref}{{[section][8][3]3.8}{[1][19][]20}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.9}Statistical Analysis Module}{20}{section.3.9}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {3.10}Design Trade-offs and Limitations}{20}{section.3.10}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {3.11}Reproducibility and Experimental Setup}{20}{section.3.11}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces High-level data flow through the experimental system. Clean speech and noise recordings were transformed into synthetic mixtures, transcribed by ASR models, and passed to evaluation, benchmarking, and statistical analysis.\relax }}{21}{figure.caption.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces High-level data flow through the experimental system.}}{22}{figure.caption.2}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:general_flow}{{3.1}{21}{High-level data flow through the experimental system. Clean speech and noise recordings were transformed into synthetic mixtures, transcribed by ASR models, and passed to evaluation, benchmarking, and statistical analysis.\relax }{figure.caption.2}{}}
-\newlabel{fig:general_flow@cref}{{[figure][1][3]3.1}{[1][10][]21}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Speaker and Clip Selection Process. The stopping criteria are based on the required source duration, which is adjusted by the overlap ratio to account for occupied time by the overlapping region.\relax }}{21}{figure.caption.5}\protected@file@percent }
-\newlabel{fig:clip_selection}{{3.2}{21}{Speaker and Clip Selection Process. The stopping criteria are based on the required source duration, which is adjusted by the overlap ratio to account for occupied time by the overlapping region.\relax }{figure.caption.5}{}}
-\newlabel{fig:clip_selection@cref}{{[figure][2][3]3.2}{[1][12][]21}}
-\newlabel{fig:overlap_allocation}{{\caption@xref {fig:overlap_allocation}{ on input line 299}}{22}{Offset Scheduling}{figure.caption.6}{}}
-\newlabel{fig:overlap_allocation@cref}{{[subsection][2][3,4]3.4.2}{[1][13][]22}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Offset Scheduling Process. The left diagram shows the top-level decision flow between non-overlapping and overlapping cases. The diagram on the right shows the overlap allocation process when the overlap ratio is greater than zero.\relax }}{22}{figure.caption.6}\protected@file@percent }
-\newlabel{fig:offset_scheduling}{{3.3}{22}{Offset Scheduling Process. The left diagram shows the top-level decision flow between non-overlapping and overlapping cases. The diagram on the right shows the overlap allocation process when the overlap ratio is greater than zero.\relax }{figure.caption.6}{}}
-\newlabel{fig:offset_scheduling@cref}{{[figure][3][3]3.3}{[1][13][]22}}
-\newlabel{fig:dsswer_diff_toy}{{3.4a}{23}{A toy lexical example in which the hypothesis forms a valid interleaving of the two reference streams.\relax }{figure.caption.10}{}}
-\newlabel{fig:dsswer_diff_toy@cref}{{[subfigure][1][3,4]3.4a}{[1][16][]23}}
-\newlabel{sub@fig:dsswer_diff_toy}{{a}{23}{A toy lexical example in which the hypothesis forms a valid interleaving of the two reference streams.\relax }{figure.caption.10}{}}
-\newlabel{sub@fig:dsswer_diff_toy@cref}{{[subfigure][1][3,4]3.4a}{[1][16][]23}}
-\newlabel{fig:dsswer_diff_alternating}{{3.4b}{23}{An alternating interleaving example where ordinary WER and DSS-WER produce different scores.\relax }{figure.caption.10}{}}
-\newlabel{fig:dsswer_diff_alternating@cref}{{[subfigure][2][3,4]3.4b}{[1][16][]23}}
-\newlabel{sub@fig:dsswer_diff_alternating}{{b}{23}{An alternating interleaving example where ordinary WER and DSS-WER produce different scores.\relax }{figure.caption.10}{}}
-\newlabel{sub@fig:dsswer_diff_alternating@cref}{{[subfigure][2][3,4]3.4b}{[1][16][]23}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Examples illustrating the difference between ordinary WER and an interleaving-aware metric. In both cases, the hypothesis is a valid interleaving of the reference streams, so DSS-WER assigns zero error, whereas ordinary WER penalises the mismatch against a single serialised reference.\relax }}{23}{figure.caption.10}\protected@file@percent }
-\newlabel{fig:mrswer_diff_example}{{3.4}{23}{Examples illustrating the difference between ordinary WER and an interleaving-aware metric. In both cases, the hypothesis is a valid interleaving of the reference streams, so DSS-WER assigns zero error, whereas ordinary WER penalises the mismatch against a single serialised reference.\relax }{figure.caption.10}{}}
-\newlabel{fig:mrswer_diff_example@cref}{{[figure][4][3]3.4}{[1][16][]23}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces High-level flow of the beam-search approximation algorithm for DSS-WER.\relax }}{24}{figure.caption.11}\protected@file@percent }
-\newlabel{fig:dss_wer_flow}{{3.5}{24}{High-level flow of the beam-search approximation algorithm for DSS-WER.\relax }{figure.caption.11}{}}
-\newlabel{fig:dss_wer_flow@cref}{{[figure][5][3]3.5}{[1][16][]24}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Experimental Design}{25}{chapter.4}\protected@file@percent }
+\newlabel{fig:general_flow}{{3.1}{22}{High-level data flow through the experimental system}{figure.caption.2}{}}
+\newlabel{fig:general_flow@cref}{{[figure][1][3]3.1}{[1][10][]22}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Speaker and Clip Selection Process. The stopping criteria are based on the required source duration, which is adjusted by the overlap ratio to account for occupied time by the overlapping region.\relax }}{22}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:clip_selection}{{3.2}{22}{Speaker and Clip Selection Process. The stopping criteria are based on the required source duration, which is adjusted by the overlap ratio to account for occupied time by the overlapping region.\relax }{figure.caption.5}{}}
+\newlabel{fig:clip_selection@cref}{{[figure][2][3]3.2}{[1][12][]22}}
+\newlabel{fig:overlap_allocation}{{\caption@xref {fig:overlap_allocation}{ on input line 299}}{23}{Offset Scheduling}{figure.caption.6}{}}
+\newlabel{fig:overlap_allocation@cref}{{[subsection][2][3,4]3.4.2}{[1][13][]23}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Offset Scheduling Process. The left diagram shows the top-level decision flow between non-overlapping and overlapping cases. The diagram on the right shows the overlap allocation process when the overlap ratio is greater than zero.\relax }}{23}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:offset_scheduling}{{3.3}{23}{Offset Scheduling Process. The left diagram shows the top-level decision flow between non-overlapping and overlapping cases. The diagram on the right shows the overlap allocation process when the overlap ratio is greater than zero.\relax }{figure.caption.6}{}}
+\newlabel{fig:offset_scheduling@cref}{{[figure][3][3]3.3}{[1][13][]23}}
+\newlabel{fig:dsswer_diff_toy}{{3.4a}{24}{A toy lexical example in which the hypothesis forms a valid interleaving of the two reference streams.\relax }{figure.caption.10}{}}
+\newlabel{fig:dsswer_diff_toy@cref}{{[subfigure][1][3,4]3.4a}{[1][16][]24}}
+\newlabel{sub@fig:dsswer_diff_toy}{{a}{24}{A toy lexical example in which the hypothesis forms a valid interleaving of the two reference streams.\relax }{figure.caption.10}{}}
+\newlabel{sub@fig:dsswer_diff_toy@cref}{{[subfigure][1][3,4]3.4a}{[1][16][]24}}
+\newlabel{fig:dsswer_diff_alternating}{{3.4b}{24}{An alternating interleaving example where ordinary WER and DSS-WER produce different scores.\relax }{figure.caption.10}{}}
+\newlabel{fig:dsswer_diff_alternating@cref}{{[subfigure][2][3,4]3.4b}{[1][16][]24}}
+\newlabel{sub@fig:dsswer_diff_alternating}{{b}{24}{An alternating interleaving example where ordinary WER and DSS-WER produce different scores.\relax }{figure.caption.10}{}}
+\newlabel{sub@fig:dsswer_diff_alternating@cref}{{[subfigure][2][3,4]3.4b}{[1][16][]24}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Examples illustrating the difference between ordinary WER and an interleaving-aware metric. In both cases, the hypothesis is a valid interleaving of the reference streams, so DSS-WER assigns zero error, whereas ordinary WER penalises the mismatch against a single serialised reference.\relax }}{24}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:mrswer_diff_example}{{3.4}{24}{Examples illustrating the difference between ordinary WER and an interleaving-aware metric. In both cases, the hypothesis is a valid interleaving of the reference streams, so DSS-WER assigns zero error, whereas ordinary WER penalises the mismatch against a single serialised reference.\relax }{figure.caption.10}{}}
+\newlabel{fig:mrswer_diff_example@cref}{{[figure][4][3]3.4}{[1][16][]24}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces High-level flow of the beam-search approximation algorithm for DSS-WER.\relax }}{25}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:dss_wer_flow}{{3.5}{25}{High-level flow of the beam-search approximation algorithm for DSS-WER.\relax }{figure.caption.11}{}}
+\newlabel{fig:dss_wer_flow@cref}{{[figure][5][3]3.5}{[1][16][]25}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Experimental Design}{26}{chapter.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{loa}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}Objective and Scope}{25}{section.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}Research Questions}{25}{section.4.2}\protected@file@percent }
+\newlabel{chap:experimental_design}{{4}{26}{Experimental Design}{chapter.4}{}}
+\newlabel{chap:experimental_design@cref}{{[chapter][4][]4}{[1][26][]26}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Objective and Scope}{26}{section.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Research Questions}{26}{section.4.2}\protected@file@percent }
+\newlabel{sec:research_questions}{{4.2}{26}{Research Questions}{section.4.2}{}}
+\newlabel{sec:research_questions@cref}{{[section][2][4]4.2}{[1][26][]26}}
 \citation{librispeech}
 \citation{voxceleb}
 \citation{demand}
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}Design Principles}{26}{section.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}Track 1: Controlled Synthetic Benchmark}{26}{section.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Speech and Noise Sources}{26}{subsection.4.4.1}\protected@file@percent }
-\newlabel{sec:speech_noise_sources}{{4.4.1}{26}{Speech and Noise Sources}{subsection.4.4.1}{}}
-\newlabel{sec:speech_noise_sources@cref}{{[subsection][1][4,4]4.4.1}{[1][26][]26}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Synthetic Mixture Generation}{27}{subsection.4.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.3}Noise Addition and SNR Control}{27}{subsection.4.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.4}Experimental Conditions and Corpus Size}{27}{subsection.4.4.4}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Experimental factors and planned levels.\relax }}{27}{table.caption.22}\protected@file@percent }
-\newlabel{tab:design_factors}{{4.1}{27}{Experimental factors and planned levels.\relax }{table.caption.22}{}}
-\newlabel{tab:design_factors@cref}{{[table][1][4]4.1}{[1][27][]27}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Synthetic corpus size in the current manifest.\relax }}{27}{table.caption.23}\protected@file@percent }
-\newlabel{tab:synthetic_counts}{{4.2}{27}{Synthetic corpus size in the current manifest.\relax }{table.caption.23}{}}
-\newlabel{tab:synthetic_counts@cref}{{[table][2][4]4.2}{[1][27][]27}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Design Principles}{27}{section.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}Track 1: Controlled Synthetic Benchmark}{27}{section.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Speech and Noise Sources}{27}{subsection.4.4.1}\protected@file@percent }
+\newlabel{sec:speech_noise_sources}{{4.4.1}{27}{Speech and Noise Sources}{subsection.4.4.1}{}}
+\newlabel{sec:speech_noise_sources@cref}{{[subsection][1][4,4]4.4.1}{[1][27][]27}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Synthetic Mixture Generation}{28}{subsection.4.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.3}Noise Addition and SNR Control}{28}{subsection.4.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.4}Experimental Conditions and Corpus Size}{28}{subsection.4.4.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Experimental factors and planned levels.\relax }}{28}{table.caption.22}\protected@file@percent }
+\newlabel{tab:design_factors}{{4.1}{28}{Experimental factors and planned levels.\relax }{table.caption.22}{}}
+\newlabel{tab:design_factors@cref}{{[table][1][4]4.1}{[1][28][]28}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Synthetic corpus size in the current manifest.\relax }}{28}{table.caption.23}\protected@file@percent }
+\newlabel{tab:synthetic_counts}{{4.2}{28}{Synthetic corpus size in the current manifest.\relax }{table.caption.23}{}}
+\newlabel{tab:synthetic_counts@cref}{{[table][2][4]4.2}{[1][28][]28}}
 \citation{Shriberg2001ObservationsOO}
 \citation{chen2020continuousspeechseparationdataset}
 \citation{cosentino2020librimixopensourcedatasetgeneralizable}
 \citation{chen2020continuousspeechseparationdataset}
 \citation{wu2018characteristics}
-\@writefile{toc}{\contentsline {paragraph}{Overlap Ratios Choice.}{28}{section*.24}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Maximum Concurrent Speakers Choice.}{28}{section*.25}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Signal-to-noise Raio Choice.}{28}{section*.26}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Noise Type Choice.}{28}{section*.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Overlap Ratios Choice.}{29}{section*.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Maximum Concurrent Speakers Choice.}{29}{section*.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Signal-to-noise Raio Choice.}{29}{section*.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Noise Type Choice.}{29}{section*.27}\protected@file@percent }
 \citation{chime6}
 \citation{github_openai_faster-whisper}
 \citation{bain2026whisperx_repo}
 \citation{facebook_wav2vec2-large-960h}
 \citation{nvidia/parakeet-tdt-0.6b-v3}
-\@writefile{toc}{\contentsline {section}{\numberline {4.5}Track 2: Real-world Data Transferability Evaluation}{29}{section.4.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.6}ASR Models Under Evaluation}{29}{section.4.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.7}Scoring Metrics}{29}{section.4.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.1}Reference and Hypothesis Structure}{29}{subsection.4.7.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.2}Metrics}{30}{subsection.4.7.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.3}Metric Application Rules}{30}{subsection.4.7.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.8}Experimental Unit and Comparison Strategy}{30}{section.4.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.9}Track 3: Hypothesis Testing of DSS-WER}{31}{section.4.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.9.1}Primary Hypothesis}{31}{subsection.4.9.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.9.2}Condition-Specific Hypotheses}{31}{subsection.4.9.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Non-overlapping clips.}{31}{section*.28}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Overlapping clips.}{31}{section*.29}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.9.3}Test Procedure}{31}{subsection.4.9.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}Track 2: Real-world Data Transferability Evaluation}{30}{section.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.6}ASR Models Under Evaluation}{30}{section.4.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.7}Scoring Metrics}{30}{section.4.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.1}Reference and Hypothesis Structure}{30}{subsection.4.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.2}Metrics}{31}{subsection.4.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.3}Metric Application Rules}{31}{subsection.4.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.8}Experimental Unit and Comparison Strategy}{31}{section.4.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.9}Track 3: Hypothesis Testing of DSS-WER}{32}{section.4.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.9.1}Primary Hypothesis}{32}{subsection.4.9.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.9.2}Condition-Specific Hypotheses}{32}{subsection.4.9.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Non-overlapping clips.}{32}{section*.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Overlapping clips.}{32}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.9.3}Test Procedure}{32}{subsection.4.9.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.9.4}Interpretation}{33}{subsection.4.9.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.10}Reproducibility}{33}{section.4.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.11}Scope and Limitations}{33}{section.4.11}\protected@file@percent }
+\citation{sasindran2023hevalnewhybridevaluation}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Statistical Analysis}{34}{chapter.5}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{loa}{\addvspace {10\p@ }}
+\newlabel{chap:statistical_analysis}{{5}{34}{Statistical Analysis}{chapter.5}{}}
+\newlabel{chap:statistical_analysis@cref}{{[chapter][5][]5}{[1][34][]34}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Analytical Aims and Data Provenance}{34}{section.5.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5.1}{\ignorespaces Unique mixture support in the cross-model comparison scope. Each included SNR--OVR condition contains 100 mixtures; grey cells are outside the planned matched subset.\relax }}{35}{figure.caption.30}\protected@file@percent }
+\newlabel{fig:stat_cross_model_scope_support}{{5.1}{35}{Unique mixture support in the cross-model comparison scope. Each included SNR--OVR condition contains 100 mixtures; grey cells are outside the planned matched subset.\relax }{figure.caption.30}{}}
+\newlabel{fig:stat_cross_model_scope_support@cref}{{[figure][1][5]5.1}{[1][34][]35}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}Variable Selection}{35}{section.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}Dependent Variables}{35}{subsection.5.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}Explanatory Variables}{35}{subsection.5.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}Statistical Methods}{36}{section.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.4}Overview of the Evaluation Results}{36}{section.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.1}Scope 1: Cross-Model Comparison}{36}{subsection.5.4.1}\protected@file@percent }
+\newlabel{sec:cross_model_comparison}{{5.4.1}{36}{Scope 1: Cross-Model Comparison}{subsection.5.4.1}{}}
+\newlabel{sec:cross_model_comparison@cref}{{[subsection][1][5,4]5.4.1}{[1][36][]36}}
+\newlabel{tab:cross_model_metric_availability}{{\caption@xref {tab:cross_model_metric_availability}{ on input line 58}}{36}{Scope 1: Cross-Model Comparison}{table.caption.31}{}}
+\newlabel{tab:cross_model_metric_availability@cref}{{[subsection][1][5,4]5.4.1}{[1][36][]36}}
+\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces Cross-model availability of WER, ORC-WER and DSS-WER.\relax }}{36}{table.caption.31}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.2}{\ignorespaces WER-first model comparison on the matched 700-clip subset.\relax }}{36}{table.caption.32}\protected@file@percent }
+\newlabel{tab:cross_model_wer_first}{{5.2}{36}{WER-first model comparison on the matched 700-clip subset.\relax }{table.caption.32}{}}
+\newlabel{tab:cross_model_wer_first@cref}{{[table][2][5]5.2}{[1][36][]36}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.2}Inference Time}{36}{subsection.5.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5.2}{\ignorespaces Violin plot of WER across different ASR models.\relax }}{37}{figure.caption.33}\protected@file@percent }
+\newlabel{fig:stat_cross_model_wer_box}{{5.2}{37}{Violin plot of WER across different ASR models.\relax }{figure.caption.33}{}}
+\newlabel{fig:stat_cross_model_wer_box@cref}{{[figure][2][5]5.2}{[1][36][]37}}
+\@writefile{lot}{\contentsline {table}{\numberline {5.3}{\ignorespaces Inference time and real-time factor on the 100-clip timing benchmark.\relax }}{37}{table.caption.34}\protected@file@percent }
+\newlabel{tab:timing_efficiency}{{5.3}{37}{Inference time and real-time factor on the 100-clip timing benchmark.\relax }{table.caption.34}{}}
+\newlabel{tab:timing_efficiency@cref}{{[table][3][5]5.3}{[1][36][]37}}
+\newlabel{fig:stat_time_per_clip_bar}{{5.3a}{37}{Inference time per clip.\relax }{figure.caption.35}{}}
+\newlabel{fig:stat_time_per_clip_bar@cref}{{[subfigure][1][5,3]5.3a}{[1][36][]37}}
+\newlabel{sub@fig:stat_time_per_clip_bar}{{a}{37}{Inference time per clip.\relax }{figure.caption.35}{}}
+\newlabel{sub@fig:stat_time_per_clip_bar@cref}{{[subfigure][1][5,3]5.3a}{[1][36][]37}}
+\newlabel{fig:stat_accuracy_latency_tradeoff_panel}{{5.3b}{37}{WER--latency trade-off.\relax }{figure.caption.35}{}}
+\newlabel{fig:stat_accuracy_latency_tradeoff_panel@cref}{{[subfigure][2][5,3]5.3b}{[1][36][]37}}
+\newlabel{sub@fig:stat_accuracy_latency_tradeoff_panel}{{b}{37}{WER--latency trade-off.\relax }{figure.caption.35}{}}
+\newlabel{sub@fig:stat_accuracy_latency_tradeoff_panel@cref}{{[subfigure][2][5,3]5.3b}{[1][36][]37}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.3}{\ignorespaces Inference efficiency across ASR models. The left panel reports mean inference time per approximately 60-second clip, while the right panel compares timing with matched-subset WER.\relax }}{37}{figure.caption.35}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.5}Scope 2: Full Condition Analysis of wav2vec-2.0}{38}{section.5.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5.4}{\ignorespaces WER heatmap for wav2vec-2.0 across different SNR and overlap conditions.\relax }}{38}{figure.caption.36}\protected@file@percent }
+\newlabel{fig:stat_wav2vec2_snr_overlap_heatmap}{{5.4}{38}{WER heatmap for wav2vec-2.0 across different SNR and overlap conditions.\relax }{figure.caption.36}{}}
+\newlabel{fig:stat_wav2vec2_snr_overlap_heatmap@cref}{{[figure][4][5]5.4}{[1][36][]38}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.6}RQ1: Effects of Overlap Ratio and Signal-to-Noise Ratio}{38}{section.5.6}\protected@file@percent }
+\newlabel{fig:stat_wav2vec2_wer_vs_ovr}{{5.5a}{38}{WER against overlap ratio, stratified by SNR.\relax }{figure.caption.37}{}}
+\newlabel{fig:stat_wav2vec2_wer_vs_ovr@cref}{{[subfigure][1][5,5]5.5a}{[1][38][]38}}
+\newlabel{sub@fig:stat_wav2vec2_wer_vs_ovr}{{a}{38}{WER against overlap ratio, stratified by SNR.\relax }{figure.caption.37}{}}
+\newlabel{sub@fig:stat_wav2vec2_wer_vs_ovr@cref}{{[subfigure][1][5,5]5.5a}{[1][38][]38}}
+\newlabel{fig:stat_wav2vec2_wer_vs_snr}{{5.5b}{38}{WER against SNR condition, stratified by OVR.\relax }{figure.caption.37}{}}
+\newlabel{fig:stat_wav2vec2_wer_vs_snr@cref}{{[subfigure][2][5,5]5.5b}{[1][38][]38}}
+\newlabel{sub@fig:stat_wav2vec2_wer_vs_snr}{{b}{38}{WER against SNR condition, stratified by OVR.\relax }{figure.caption.37}{}}
+\newlabel{sub@fig:stat_wav2vec2_wer_vs_snr@cref}{{[subfigure][2][5,5]5.5b}{[1][38][]38}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.5}{\ignorespaces Mean wav2vec-2.0 WER trends across the full synthetic sweep. Each panel includes condition-specific lines and an overall pooled mean.\relax }}{38}{figure.caption.37}\protected@file@percent }
+\newlabel{fig:stat_wav2vec2_wer_trends}{{5.5}{38}{Mean wav2vec-2.0 WER trends across the full synthetic sweep. Each panel includes condition-specific lines and an overall pooled mean.\relax }{figure.caption.37}{}}
+\newlabel{fig:stat_wav2vec2_wer_trends@cref}{{[figure][5][5]5.5}{[1][38][]38}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.1}Effect of Overlap Ratio}{38}{subsection.5.6.1}\protected@file@percent }
+\newlabel{fig:stat_wav2vec2_delta_vs_ovr_panel}{{5.6a}{39}{Delta WER against OVR, stratified by SNR.\relax }{figure.caption.38}{}}
+\newlabel{fig:stat_wav2vec2_delta_vs_ovr_panel@cref}{{[subfigure][1][5,6]5.6a}{[1][38][]39}}
+\newlabel{sub@fig:stat_wav2vec2_delta_vs_ovr_panel}{{a}{39}{Delta WER against OVR, stratified by SNR.\relax }{figure.caption.38}{}}
+\newlabel{sub@fig:stat_wav2vec2_delta_vs_ovr_panel@cref}{{[subfigure][1][5,6]5.6a}{[1][38][]39}}
+\newlabel{fig:stat_wav2vec2_delta_vs_snr_panel}{{5.6b}{39}{Delta WER against SNR, stratified by OVR.\relax }{figure.caption.38}{}}
+\newlabel{fig:stat_wav2vec2_delta_vs_snr_panel@cref}{{[subfigure][2][5,6]5.6b}{[1][38][]39}}
+\newlabel{sub@fig:stat_wav2vec2_delta_vs_snr_panel}{{b}{39}{Delta WER against SNR, stratified by OVR.\relax }{figure.caption.38}{}}
+\newlabel{sub@fig:stat_wav2vec2_delta_vs_snr_panel@cref}{{[subfigure][2][5,6]5.6b}{[1][38][]39}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.6}{\ignorespaces Delta WER for wav2vec-2.0. Delta (a) is computed relative to the clean condition at the same overlap ratio while Delta (b) is computed relative to the zero overlap condition at the same SNR.\relax }}{39}{figure.caption.38}\protected@file@percent }
+\newlabel{fig:stat_wav2vec2_delta_vs_ovr}{{5.6}{39}{Delta WER for wav2vec-2.0. Delta (a) is computed relative to the clean condition at the same overlap ratio while Delta (b) is computed relative to the zero overlap condition at the same SNR.\relax }{figure.caption.38}{}}
+\newlabel{fig:stat_wav2vec2_delta_vs_ovr@cref}{{[figure][6][5]5.6}{[1][38][]39}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.2}Effect of Signal-to-Noise Ratio}{39}{subsection.5.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.3}Summary}{40}{subsection.5.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.7}RQ2: Comparison of ASR Models}{40}{section.5.7}\protected@file@percent }
+\newlabel{sec:rq2_comparison_of_asr_models}{{5.7}{40}{RQ2: Comparison of ASR Models}{section.5.7}{}}
+\newlabel{sec:rq2_comparison_of_asr_models@cref}{{[section][7][5]5.7}{[1][40][]40}}
+\newlabel{fig:stat_cross_model_wer_vs_ovr}{{5.7a}{40}{WER against overlap ratio, stratified by SNR.\relax }{figure.caption.39}{}}
+\newlabel{fig:stat_cross_model_wer_vs_ovr@cref}{{[subfigure][1][5,7]5.7a}{[1][40][]40}}
+\newlabel{sub@fig:stat_cross_model_wer_vs_ovr}{{a}{40}{WER against overlap ratio, stratified by SNR.\relax }{figure.caption.39}{}}
+\newlabel{sub@fig:stat_cross_model_wer_vs_ovr@cref}{{[subfigure][1][5,7]5.7a}{[1][40][]40}}
+\newlabel{fig:stat_cross_model_wer_vs_snr}{{5.7b}{40}{WER against SNR condition, stratified by OVR.\relax }{figure.caption.39}{}}
+\newlabel{fig:stat_cross_model_wer_vs_snr@cref}{{[subfigure][2][5,7]5.7b}{[1][40][]40}}
+\newlabel{sub@fig:stat_cross_model_wer_vs_snr}{{b}{40}{WER against SNR condition, stratified by OVR.\relax }{figure.caption.39}{}}
+\newlabel{sub@fig:stat_cross_model_wer_vs_snr@cref}{{[subfigure][2][5,7]5.7b}{[1][40][]40}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.7}{\ignorespaces Mean WER trends across the cross-model subset. Each panel includes condition-specific lines and an overall pooled mean.\relax }}{40}{figure.caption.39}\protected@file@percent }
+\newlabel{fig:stat_cross_model_wer_trends}{{5.7}{40}{Mean WER trends across the cross-model subset. Each panel includes condition-specific lines and an overall pooled mean.\relax }{figure.caption.39}{}}
+\newlabel{fig:stat_cross_model_wer_trends@cref}{{[figure][7][5]5.7}{[1][40][]40}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.7.1}Overall Comparison}{41}{subsection.5.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.7.2}Extreme Cases}{41}{subsection.5.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Worst WER for \texttt  {faster-whisper}.}{41}{section*.40}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Worst WER for \texttt  {WhisperX}.}{41}{section*.41}\protected@file@percent }
 \bibdata{references}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.9.4}Interpretation}{32}{subsection.4.9.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.10}Reproducibility}{32}{section.4.10}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.11}Scope and Limitations}{32}{section.4.11}\protected@file@percent }
 \bibcite{ami-corpus}{{1}{2007}{{AMI}}{{}}}
 \bibcite{chime6}{{2}{2020}{{CHiME}}{{}}}
 \bibcite{chen2020continuousspeechseparationdataset}{{3}{2020{}}{{Chen et~al.}}{{Chen, Yoshioka, Lu, Zhou, Meng, Luo, Wu, Xiao, and Li}}}
@@ -247,29 +342,31 @@
 \bibcite{cui2024improvingspeakerassignmentspeakerattributed}{{29}{2024}{{Cui et~al.}}{{Cui, Sheikh, Sadeghi, and Vincent}}}
 \bibcite{raj2024speakerattributionsurt}{{30}{2024}{{Raj et~al.}}{{Raj, Wiesner, Maciejewski, Garcia-Perera, Povey, and Khudanpur}}}
 \bibcite{zheng2025dncasrendtoendtrainingspeakerattributed}{{31}{2025}{{Zheng et~al.}}{{Zheng, Zhang, and Woodland}}}
-\bibcite{librispeech}{{32}{2015}{{Vassil Panayotov and Daniel Povey}}{{}}}
-\bibcite{voxceleb}{{33}{2019}{{VoxCeleb}}{{}}}
-\bibcite{demand}{{34}{2013}{{Joachim Thiemann (IRISA-CNRS), Nobutaka Ito (University of Tokyo), and Emmanuel Vincent (Inria Rennes - Bretagne Atlantique)}}{{}}}
-\bibcite{Shriberg2001ObservationsOO}{{35}{2001}{{Shriberg et~al.}}{{Shriberg, Stolcke, and Baron}}}
-\bibcite{wu2018characteristics}{{36}{2018}{{YH et~al.}}{{YH, E, O, SS, A, and J}}}
-\bibcite{github_openai_faster-whisper}{{37}{2024}{{OpenAI}}{{}}}
-\bibcite{bain2026whisperx_repo}{{38}{2026}{{Bain and contributors}}{{}}}
-\bibcite{facebook_wav2vec2-large-960h}{{39}{2020}{{Meta AI}}{{}}}
-\bibcite{nvidia/parakeet-tdt-0.6b-v3}{{40}{2025}{{NVIDIA}}{{}}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {A}Pseudocode for DSS-WER Beam Search}{37}{appendix.A}\protected@file@percent }
+\bibcite{smartdraw2026_app}{{32}{2026}{{SmartDraw}}{{}}}
+\bibcite{librispeech}{{33}{2015}{{Vassil Panayotov and Daniel Povey}}{{}}}
+\bibcite{voxceleb}{{34}{2019}{{VoxCeleb}}{{}}}
+\bibcite{demand}{{35}{2013}{{Joachim Thiemann (IRISA-CNRS), Nobutaka Ito (University of Tokyo), and Emmanuel Vincent (Inria Rennes - Bretagne Atlantique)}}{{}}}
+\bibcite{Shriberg2001ObservationsOO}{{36}{2001}{{Shriberg et~al.}}{{Shriberg, Stolcke, and Baron}}}
+\bibcite{wu2018characteristics}{{37}{2018}{{YH et~al.}}{{YH, E, O, SS, A, and J}}}
+\bibcite{github_openai_faster-whisper}{{38}{2024}{{OpenAI}}{{}}}
+\bibcite{bain2026whisperx_repo}{{39}{2026}{{Bain and contributors}}{{}}}
+\bibcite{facebook_wav2vec2-large-960h}{{40}{2020}{{Meta AI}}{{}}}
+\bibcite{nvidia/parakeet-tdt-0.6b-v3}{{41}{2025}{{NVIDIA}}{{}}}
+\bibcite{sasindran2023hevalnewhybridevaluation}{{42}{2023}{{Sasindran et~al.}}{{Sasindran, Yelchuri, Prabhakar, and Rao}}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}Pseudocode for DSS-WER Beam Search}{47}{appendix.A}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{loa}{\addvspace {10\p@ }}
-\newlabel{ch:dss_wer_pseudocode}{{A}{37}{Pseudocode for DSS-WER Beam Search}{appendix.A}{}}
-\newlabel{ch:dss_wer_pseudocode@cref}{{[appendix][1][2147483647]A}{[1][37][]37}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces \textsc  {DSS-WER-Beam-2Chain}$(A,B,H)$\relax }}{37}{algocf.1}\protected@file@percent }
-\@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces \textsc  {BeamPass}$(A,B,H,\textit  {direction})$\relax }}{37}{algocf.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {B}Software Configuration}{38}{appendix.B}\protected@file@percent }
+\newlabel{ch:dss_wer_pseudocode}{{A}{47}{Pseudocode for DSS-WER Beam Search}{appendix.A}{}}
+\newlabel{ch:dss_wer_pseudocode@cref}{{[appendix][1][2147483647]A}{[1][47][]47}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces \textsc  {DSS-WER-Beam-2Chain}$(A,B,H)$\relax }}{47}{algocf.1}\protected@file@percent }
+\@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces \textsc  {BeamPass}$(A,B,H,\textit  {direction})$\relax }}{47}{algocf.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {B}Software Configuration}{48}{appendix.B}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{loa}{\addvspace {10\p@ }}
-\newlabel{ch:software_config}{{B}{38}{Software Configuration}{appendix.B}{}}
-\newlabel{ch:software_config@cref}{{[appendix][2][2147483647]B}{[1][38][]38}}
-\@writefile{toc}{\contentsline {section}{\numberline {B.1}Software Dependencies}{38}{section.B.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {B.2}ASR Models and Configurations}{38}{section.B.2}\protected@file@percent }
-\gdef \@abspage@last{39}
+\newlabel{ch:software_config}{{B}{48}{Software Configuration}{appendix.B}{}}
+\newlabel{ch:software_config@cref}{{[appendix][2][2147483647]B}{[1][48][]48}}
+\@writefile{toc}{\contentsline {section}{\numberline {B.1}Software Dependencies}{48}{section.B.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B.2}ASR Models and Configurations}{48}{section.B.2}\protected@file@percent }
+\gdef \@abspage@last{49}

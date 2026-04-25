@@ -1,0 +1,339 @@
+\chapter{Statistical Analysis}
+% \label{chap:statistical_analysis}
+
+\section{Analytical Aim and Data Provenance}
+This chapter analyses the empirical outputs produced by the experimental system described in
+\Cref{chap:arch_design} and the design factors in \Cref{tab:design_factors}. The purpose is not
+only to rank ASR models, but to explain which experimental variables account for changes in
+transcription error and where the comparison is statistically well controlled.
+
+The analysis uses the current top-level result files:
+\texttt{WER\_results\_faster-whisper.json},
+\texttt{WER\_results\_whisperx.json},
+\texttt{WER\_results\_wav2vec2.json}, and
+\texttt{WER\_results\_parakeet.json}. The accompanying figures and the numerical summary file
+\texttt{Documentation/statistical\_analysis\_summary.json} were generated from these files using
+\texttt{Code/generate\_statistical\_analysis\_outputs.py}. Two analysis scopes are kept separate:
+\begin{enumerate}
+    \item the full wav2vec2 synthetic sweep, containing 4,800 successful clip-level evaluations;
+    \item the matched cross-model subset, containing 700 successful clips for each of the four
+    ASR systems.
+\end{enumerate}
+
+This separation is necessary because wav2vec2 was evaluated on the full synthetic corpus, while
+the other three systems have hypotheses only for the planned model-comparison subset. The
+cross-model subset is the union of two controlled slices:
+\begin{equation}
+\begin{split}
+\mathcal{S}_{\mathrm{model}} ={}&
+\{\mathrm{SNR}=7.4,\ \mathrm{noise}=T,\ \mathrm{OVR}\in\{0.00,0.14,0.20,0.40\}\}\\
+&\cup
+\{\mathrm{OVR}=0.14,\ \mathrm{noise}=T,\ \mathrm{SNR}\in\{\mathrm{clean},7.4,0,-5\}\}.
+\end{split}
+\end{equation}
+The subset is therefore a matched ``plus'' design rather than a complete factorial grid. This
+is suitable for fair model ranking and for examining two one-factor profiles, but it should not
+be interpreted as evidence about every SNR--overlap--noise combination for every model.
+
+\section{Variable Selection and Justification}
+\subsection{Dependent Variable}
+The principal dependent variable is clip-level word error rate (WER). WER is selected as the
+primary response variable for three reasons. First, it is the standard reporting metric in ASR
+evaluation and is therefore interpretable against existing work. Second, it is available for all
+four systems in the matched subset, including both segmented and non-segmented hypotheses. Third,
+it has a direct operational interpretation: higher WER corresponds to more manual correction
+effort for a fixed transcript length.
+
+DSS-WER, ORC-WER and cpWER are retained as sensitivity checks rather than used as the primary
+cross-model score. This is a conservative choice. The alternative metrics are valuable for
+multi-speaker evaluation, but they also encode stronger assumptions about segmentation,
+speaker-attribution, or reference serialisation. Ordinary WER is therefore the most stable
+common denominator for the model-ranking analysis, while DSS-WER is used to test whether the
+standard serialisation assumption materially changes the conclusions.
+
+\subsection{Explanatory Variables}
+The explanatory variables are signal-to-noise ratio (SNR), overlap ratio (OVR), noise type, and
+model identity. SNR is included because additive acoustic interference is a direct stressor for
+ASR. OVR is included because overlapping speech is the central phenomenon studied in this
+dissertation. Noise type is included because two conditions with the same nominal SNR may differ
+in spectral and temporal structure. Model identity is included because the evaluated systems
+represent different architectural and decoding choices.
+
+Speaker count is held at two in the synthetic experiment. This makes OVR interpretable as a
+controlled measure of two-speaker concurrency rather than a mixture of overlap and speaker-count
+effects. Clip duration is approximately \SI{60}{\second}, which supports comparable timing and
+error estimates across conditions.
+
+\section{Statistical Procedure}
+All reported results use the clip as the unit of analysis. The design contains repeated
+structure: the same base material is reused across acoustic variants, and the cross-model subset
+uses the same clip IDs across systems. For this reason, the analysis emphasises matched
+condition summaries, distributional plots and practical effect sizes rather than treating every
+row as an independent sample from an unrelated population.
+
+WER is non-negative and right-skewed, so means are reported together with medians and standard
+deviations. Means are useful for estimating expected correction burden, while medians describe
+the typical clip and are less sensitive to difficult outliers. The full-factor wav2vec2 analysis
+is used for attribution of SNR, OVR and noise-type effects; cross-model claims are restricted to
+the matched 700-clip subset.
+
+\section{Full-Factor wav2vec2 Analysis}
+\subsection{Effect of SNR}
+Across the 4,800 successful wav2vec2 evaluations, the mean WER is 0.386 and the median WER is
+0.320. The SNR effect is monotonic: mean WER rises from 0.224 in the clean condition to 0.588
+at \(-5\) dB. This is an absolute increase of 0.364 WER, or approximately 2.6 times the clean
+condition mean.
+
+\begin{table}[htbp]
+\centering
+\caption{wav2vec2 WER by SNR on the full synthetic sweep.}
+\label{tab:wav2vec2_snr_summary}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{SNR condition} & \textbf{Clips} & \textbf{Mean WER} & \textbf{Median WER} & \textbf{SD} \\
+\midrule
+clean & 1,200 & 0.224 & 0.216 & 0.147 \\
+7.4 dB & 1,200 & 0.279 & 0.266 & 0.167 \\
+0 dB & 1,200 & 0.452 & 0.426 & 0.266 \\
+\(-5\) dB & 1,200 & 0.588 & 0.576 & 0.313 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+    \centering
+    \includefigure[width=0.82\linewidth]{figures/stat_wav2vec2_snr_box.png}
+    \caption{Distribution of clip-level WER for wav2vec2 by SNR condition.}
+    \label{fig:stat_wav2vec2_snr_box}
+\end{figure}
+
+\Cref{fig:stat_wav2vec2_snr_box} shows that the degradation is not merely a shift in a small
+number of extreme clips. Both the median and the upper tail move upward as the acoustic
+condition worsens. The standard deviation also increases from 0.147 in clean audio to 0.313 at
+\(-5\) dB, indicating that low-SNR transcription is less predictable as well as less accurate.
+
+\subsection{Effect of Overlap and Noise Type}
+The overlap effect is also monotonic in the wav2vec2 sweep. Mean WER rises from 0.246 at
+OVR \(=0.00\) to 0.540 at OVR \(=0.40\). The corresponding medians are 0.071 and 0.473. The large
+difference between mean and median at OVR \(=0.00\) reflects the fact that the zero-overlap
+condition still includes noisy variants; non-overlap is not the same as clean audio.
+
+\begin{table}[htbp]
+\centering
+\caption{wav2vec2 WER by overlap ratio on the full synthetic sweep.}
+\label{tab:wav2vec2_ovr_summary}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{OVR} & \textbf{Clips} & \textbf{Mean WER} & \textbf{Median WER} & \textbf{SD} \\
+\midrule
+0.00 & 1,200 & 0.246 & 0.071 & 0.317 \\
+0.14 & 1,200 & 0.350 & 0.222 & 0.261 \\
+0.20 & 1,200 & 0.407 & 0.296 & 0.234 \\
+0.40 & 1,200 & 0.540 & 0.473 & 0.179 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+    \centering
+    \includefigure[width=0.95\linewidth]{figures/stat_wav2vec2_snr_overlap_heatmap.png}
+    \caption{wav2vec2 mean WER and cell count across the SNR--OVR grid.}
+    \label{fig:stat_wav2vec2_heatmap}
+\end{figure}
+
+\Cref{fig:stat_wav2vec2_heatmap} gives the clearest view of the joint response surface. The
+lowest mean WER occurs for clean, non-overlapped speech (0.036), while the highest occurs at
+OVR \(=0.40\) and \(-5\) dB (0.680). The sample-count panel confirms balanced support: each
+SNR--OVR cell contains 300 clips. The interaction is not a simple linear amplification. At
+severe noise levels, WER is already high even without overlap, so the additional overlap penalty
+partly saturates. The practical conclusion is nevertheless clear: both lower SNR and higher OVR
+move the model towards a higher-error operating region.
+
+Noise type is a further source of variation. Public noise has the highest mean WER (0.569),
+followed by domestic noise (0.328) and transportation noise (0.260). Since the cross-model
+subset uses transportation noise only, the cross-model results should be read as a controlled
+comparison slice rather than as an average over all noise environments.
+
+\begin{figure}[htbp]
+    \centering
+    \includefigure[width=0.68\linewidth]{figures/stat_wav2vec2_noise_type.png}
+    \caption{wav2vec2 mean WER by DEMAND noise category. Error bars show approximate 95\% confidence intervals.}
+    \label{fig:stat_wav2vec2_noise}
+\end{figure}
+
+\section{Matched Cross-Model Comparison}
+\subsection{Pooled WER Ranking}
+The matched model-comparison subset contains 700 clips per model. The same clip IDs are used for
+all four systems, so differences in the pooled table reflect model behaviour on a common
+evaluation set rather than different data composition.
+
+% \begin{table}[htbp]
+% \centering
+% \caption{WER-first model comparison on the matched 700-clip subset.}
+% \label{tab:cross_model_wer_first}
+% \begin{tabular}{lrrrrr}
+% \toprule
+% \textbf{Model} & \textbf{Clips} & \textbf{Mean WER} & \textbf{Median WER} & \textbf{SD} & \textbf{\% WER \(>1\)} \\
+% \midrule
+% faster-whisper & 700 & 0.159 & 0.123 & 0.128 & 0.14 \\
+% WhisperX & 700 & 0.181 & 0.139 & 0.150 & 0.00 \\
+% wav2vec2 & 700 & 0.228 & 0.205 & 0.133 & 0.00 \\
+% Parakeet & 700 & 0.503 & 0.525 & 0.208 & 0.00 \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
+
+\begin{figure}[htbp]
+    \centering
+    \includefigure[width=0.82\linewidth]{figures/stat_cross_model_wer_box.png}
+    \caption{Distribution of WER by model on the matched cross-model subset.}
+    \label{fig:stat_cross_model_box}
+\end{figure}
+
+\Cref{tab:cross_model_wer_first} and \Cref{fig:stat_cross_model_box} show that faster-whisper
+has the lowest mean and median WER on this subset, followed by WhisperX, wav2vec2 and Parakeet.
+The gap between faster-whisper and WhisperX is modest (0.023 mean WER), while the gap between
+the first three systems and Parakeet is much larger. The model ranking is therefore driven by
+broad distributional shifts rather than by a small number of catastrophic cases.
+
+\subsection{Condition Profiles Within the Matched Subset}
+The pooled ranking hides two different controlled profiles. The first profile varies OVR while
+holding SNR at 7.4 dB and noise type at transportation. The second varies SNR while holding OVR
+at 0.14 and noise type at transportation.
+
+\begin{figure}[htbp]
+    \centering
+    \includefigure[width=0.96\linewidth]{figures/stat_cross_model_condition_profiles.png}
+    \caption{Cross-model WER profiles for the two matched comparison slices.}
+    \label{fig:stat_cross_model_profiles}
+\end{figure}
+
+In the overlap slice, the three lower-WER systems show the expected upward trend as OVR
+increases. At OVR \(=0.40\), faster-whisper, WhisperX and wav2vec2 have mean WERs of 0.339,
+0.383 and 0.431 respectively. Parakeet remains substantially higher across the slice, with mean
+WER 0.598 at OVR \(=0.40\). In the SNR slice, faster-whisper and WhisperX are comparatively
+stable across the four SNR levels, wav2vec2 degrades more clearly as SNR falls, and Parakeet
+shows a non-monotonic pattern. This exception is a useful warning against over-generalising from
+the pooled cross-model subset: the matched subset supports fair ranking under the selected
+conditions, but wav2vec2 remains the stronger basis for full-factor acoustic attribution.
+
+\section{Metric Sensitivity}
+The primary analysis uses WER, but the metric-sensitivity check compares WER against DSS-WER on
+the same 700 matched clips. In the JSON outputs, DSS-WER is stored as \texttt{mrs\_wer}. Define
+\begin{equation}
+    d_i = \mathrm{DSS\mbox{-}WER}_i - \mathrm{WER}_i.
+\end{equation}
+A negative value of \(d_i\) means that DSS-WER is more forgiving than ordinary WER for that clip.
+
+\begin{table}[htbp]
+\centering
+\caption{Metric sensitivity on the matched cross-model subset.}
+\label{tab:metric_sensitivity}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Model} & \textbf{Mean WER} & \textbf{Mean DSS-WER} & \textbf{Mean difference \(d\)} \\
+\midrule
+faster-whisper & 0.159 & 0.156 & -0.003 \\
+WhisperX & 0.181 & 0.179 & -0.002 \\
+wav2vec2 & 0.228 & 0.211 & -0.017 \\
+Parakeet & 0.503 & 0.515 & 0.011 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\Cref{tab:metric_sensitivity} shows that DSS-WER does not overturn the main WER ranking. For
+faster-whisper and WhisperX, the mean difference is very small. For wav2vec2, DSS-WER is lower
+by 0.017 on average, suggesting that some of its ordinary WER penalty is attributable to
+serialisation effects. Parakeet is the exception: its DSS-WER mean is slightly higher than its
+ordinary WER mean on this subset. This supports a cautious interpretation of the proposed
+metric. DSS-WER is useful as a diagnostic for overlapped references, but it should be reported
+alongside ordinary WER rather than used as a replacement ranking metric.
+
+\section{Efficiency Analysis}
+Accuracy is the primary criterion, but inference cost matters for deployment. The timing
+benchmark uses 100 randomly sampled clips and reports both time per clip and a real-time
+multiple:
+\begin{equation}
+    s_m = \frac{T_m}{N_m},
+    \qquad
+    \rho_m = \frac{D_m}{T_m},
+\end{equation}
+where \(T_m\) is total processing time, \(N_m\) is the number of clips and \(D_m\) is aggregate
+audio duration. Larger \(\rho_m\) indicates higher throughput.
+
+% \begin{table}[htbp]
+% \centering
+% \caption{Inference efficiency on the 100-clip timing benchmark.}
+% \label{tab:timing_efficiency}
+% \begin{tabular}{lrr}
+% \toprule
+% \textbf{Model} & \textbf{Seconds per clip} & \textbf{Real-time multiple \(\rho\)} \\
+% \midrule
+% wav2vec2 & 0.754 & 88.951 \\
+% Parakeet & 1.124 & 59.663 \\
+% WhisperX & 7.276 & 9.220 \\
+% faster-whisper & 27.736 & 2.419 \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
+
+\begin{figure}[htbp]
+    \centering
+    \includefigure[width=0.72\linewidth]{figures/stat_accuracy_latency_tradeoff.png}
+    \caption{Accuracy-latency trade-off using matched-subset WER and the 100-clip timing benchmark.}
+    \label{fig:stat_accuracy_latency}
+\end{figure}
+
+\Cref{tab:timing_efficiency} and \Cref{fig:stat_accuracy_latency} show a clear trade-off.
+wav2vec2 is the fastest system by a large margin, but it is not the most accurate on the matched
+subset. faster-whisper has the lowest WER but the highest latency. WhisperX lies between these
+two systems. Parakeet is fast, but its WER on the matched subset is high enough that speed alone
+does not make it the preferred system for this evaluation setting.
+
+\section{Real-Audio External Validity Check}
+The CHiME-6 real-audio evaluation contains 100 clips per model in
+\texttt{Output/real\_eval\_results.json}. These results are included only as an external
+validity check, because the scoring metric differs by output structure: segmented outputs are
+reported with cpWER, while single-stream outputs are reported with ordinary WER.
+
+\begin{table}[htbp]
+\centering
+\caption{Real-audio scores on the CHiME-6 segment set. Metrics differ by output structure and are not a strict WER-only ranking.}
+\label{tab:real_audio_summary}
+\begin{tabular}{llrr}
+\toprule
+\textbf{Model} & \textbf{Metric} & \textbf{Clips} & \textbf{Mean score} \\
+\midrule
+Parakeet & WER & 100 & 0.389 \\
+wav2vec2 & WER & 100 & 0.723 \\
+WhisperX & cpWER & 100 & 0.836 \\
+faster-whisper & cpWER & 100 & 0.895 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The real-audio results do not reproduce the synthetic matched-subset ranking. This is not a
+contradiction of the synthetic analysis; rather, it indicates limited transfer from controlled
+mixtures to far-field conversational audio. Real meetings include channel effects, natural turn
+taking, diarisation ambiguity and reference-alignment challenges that are not fully represented
+by the synthetic factorial design. The defensible conclusion is therefore two-stage: synthetic
+sweeps are appropriate for controlled factor attribution, while final deployment decisions
+require validation on real meeting audio.
+
+\section{Limitations}
+Three limitations should be made explicit. First, the cross-model subset is matched but not a
+complete factorial grid, so full SNR--OVR--noise interactions are estimated only for wav2vec2.
+Second, the model-comparison subset uses transportation noise, which is the easiest noise type
+for wav2vec2 in the full sweep; cross-model WERs should therefore not be treated as averages over
+all acoustic environments. Third, ordinary WER is necessary for comparability but incomplete for
+overlapped speech, which is why DSS-WER is reported as a sensitivity analysis rather than
+ignored.
+
+\section{Conclusion}
+The statistical evidence supports the central robustness claim of the dissertation. In the full
+wav2vec2 sweep, lower SNR, higher overlap ratio and noise type all materially affect WER. In the
+matched cross-model subset, faster-whisper gives the lowest WER, WhisperX is close behind,
+wav2vec2 trades accuracy for speed, and Parakeet is fast but substantially less accurate under
+the selected synthetic conditions. The combined analysis justifies evaluating ASR robustness as
+a joint function of acoustic condition, model identity, metric policy and computational cost,
+rather than relying on a single pooled WER value.

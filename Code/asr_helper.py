@@ -19,7 +19,7 @@ import pickle
 import gc
 import time
 
-BATCH_SIZE = 10
+BATCH_SIZE = 100
 CHECK_POINT = 100
 TIMINGS = {}
 def clear_gpu_cache(force_gc: bool = False):
@@ -72,6 +72,8 @@ def record_transcription(clip_id:str, model_name: str, transcription: List[Tuple
         dic[clip_id].transcript[model_name] = transcription
 
 
+
+# faster_whiper_model = WhisperModel("large-v3", device="cuda", compute_type="int8")
 @asr_model
 def transcribe_faster_whisper(metas: List[MixtureMeta], dic: Dict[str, MixtureTranscription], ind: int = 0, model_name: str = ""):
     """
@@ -82,7 +84,7 @@ def transcribe_faster_whisper(metas: List[MixtureMeta], dic: Dict[str, MixtureTr
     # batch_size = 1
     # model = WhisperModel("large-v3", device="cuda", compute_type=compute_type)
     model_name = MODEL_NAMES[0]
-    faster_whiper_model = WhisperModel("large-v3", device="cuda", compute_type="int8")
+    
     for meta in metas:
         segments, info = faster_whiper_model.transcribe(Path(meta.audio_path))
         trascription = [("dummy-speaker", seg.text) for seg in segments]
@@ -158,30 +160,31 @@ def transcribe_parakeet(metas: List[MixtureMeta], dic: Dict[str, MixtureTranscri
     temp_input_manifest.unlink()
     temp_output_json.unlink()
 
+# whisperx_model = whisperx.load_model("medium.en", "cuda", compute_type="int8")
 @asr_model
 def transcribe_whisperx(metas: List[MixtureMeta], dic: Dict[str, MixtureTranscription], ind: int = 0, model_name: str = ""):
     """
     WhisperX Transcription
     Transcription format: list of text with speaker labels (e.g., "speaker_1", "speaker_2", etc.)
     """
-    device = "cuda"   # or "cpu"
+    device = "cpu"   # or "cpu"
     batch_size = 1
     compute_type = "int8"
-    model = whisperx.load_model("large-v2", device, compute_type=compute_type)
+    # model = whisperx.load_model("large-v2", device, compute_type=compute_type)
     for meta in metas:
         audio_file = meta.audio_path
         
         audio = whisperx.load_audio(audio_file)
 
-        result = model.transcribe(audio, batch_size=batch_size)
+        result = whisperx_model.transcribe(audio, batch_size=batch_size)
         record_transcription(meta.clip_id, "whisperx", [("dummy-speaker", r["text"]) for r in result["segments"]], dic)
     
-    del model
+    # del whisperx_model
 
 @asr_model
 def transcribe_funasr(metas: List[MixtureMeta], dic: Dict[str, MixtureTranscription], ind: int = 0, model_name: str = ""):
     model_dir = "FunAudioLLM/Fun-ASR-Nano-2512"
-    m, kwargs = FunASRNano.from_pretrained(model=model_dir, device="cuda:0")
+    m, kwargs = FunASRNano.from_pretrained(model=model_dir, device="cuda")
     m.eval()
     for meta in metas:
         
@@ -218,7 +221,7 @@ def main():
 
     # audio_list = [meta_df[meta_df.clip_id.str.startswith("mix_0.14_2_None_D_0000144")].head(1), meta_df[meta_df.clip_id.str.startswith("mix_0.14_2_None_P_0000145")].head(1)]
     # run asr model on all meta rows 100 at a time (every row) and store the transcriptions in a dictionary with clip_id as key and transcription as value and update the json file after every 100 rows
-    start_ind = 0
+    start_ind = 3800
     num_files = 4000
     ind=start_ind
     # while i < len(meta_df):
@@ -229,8 +232,8 @@ def main():
         audio_list = [batch.iloc[j] for j in range(len(batch))]
         # transcribe_faster_whisper(audio_list, dic, ind = ind, model_name="faster-whisper")
         # print(dic)
-        # transcribe_wav2vec2(audio_list, dic, ind = ind, model_name="wav2vec2")
-        transcribe_parakeet(audio_list, dic, ind = ind, model_name="parakeet")
+        transcribe_wav2vec2(audio_list, dic, ind = ind, model_name="wav2vec2")
+        # transcribe_parakeet(audio_list, dic, ind = ind, model_name="parakeet")
         # transcribe_whisperx(audio_list, dic, ind = ind, model_name="whisperx")
         # transcribe_funasr(audio_list, dic, ind = ind, model_name="funasr")
         # print(dic.keys())

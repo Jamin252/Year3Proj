@@ -3,47 +3,44 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: unsrtnat.bst
 Database file #1: references.bib
-Warning--entry type for "bain2026whisperx_repo" isn't style-file defined
---line 555 of file references.bib
-You've used 40 entries,
+You've used 42 entries,
             2481 wiz_defined-function locations,
-            758 strings with 14656 characters,
-and the built_in function-call counts, 16225 in all, are:
-= -- 1093
-> -- 1384
-< -- 14
-+ -- 511
-- -- 428
-* -- 1341
-:= -- 2772
-add.period$ -- 143
-call.type$ -- 40
-change.case$ -- 80
-chr.to.int$ -- 37
-cite$ -- 40
-duplicate$ -- 638
-empty$ -- 1286
-format.name$ -- 472
-if$ -- 3342
+            767 strings with 14996 characters,
+and the built_in function-call counts, 16832 in all, are:
+= -- 1141
+> -- 1418
+< -- 15
++ -- 525
+- -- 438
+* -- 1377
+:= -- 2870
+add.period$ -- 150
+call.type$ -- 42
+change.case$ -- 84
+chr.to.int$ -- 39
+cite$ -- 42
+duplicate$ -- 666
+empty$ -- 1346
+format.name$ -- 484
+if$ -- 3473
 int.to.chr$ -- 4
-int.to.str$ -- 41
+int.to.str$ -- 43
 missing$ -- 8
-newline$ -- 230
-num.names$ -- 120
-pop$ -- 451
+newline$ -- 241
+num.names$ -- 126
+pop$ -- 475
 preamble$ -- 1
-purify$ -- 40
+purify$ -- 42
 quote$ -- 0
-skip$ -- 455
+skip$ -- 476
 stack$ -- 0
-substring$ -- 225
-swap$ -- 123
+substring$ -- 229
+swap$ -- 127
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 280
+type$ -- 294
 warning$ -- 0
-while$ -- 87
+while$ -- 91
 width$ -- 0
-write$ -- 537
-(There was 1 warning)
+write$ -- 563

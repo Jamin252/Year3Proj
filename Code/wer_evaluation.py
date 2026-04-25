@@ -7,6 +7,7 @@ import importlib
 import re
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Set
+from meeteval.wer.wer.siso import siso_word_error_rate 
 
 try:
     meeteval = importlib.import_module("meeteval")
@@ -26,6 +27,7 @@ from mrs_beam_wer import mrs_wer_beam_2chain
 
 
 VALID_METRICS = {"wer", "mrs_wer", "cpwer", "orc_wer"}
+METRIC_OUTPUT_ORDER = ("wer", "mrs_wer", "cpwer", "orc_wer")
 
 
 def load_asr_transcriptions(asr_json_path: str = "ASR_transcriptions.json") -> Dict:
@@ -269,6 +271,22 @@ def _parse_metric_selection(raw_metric: Optional[str]) -> Optional[Set[str]]:
     return selected if selected else None
 
 
+def _set_metric_metadata(result: Dict, metric_set: Set[str], is_segmented: bool) -> None:
+    if {'wer', 'mrs_wer'}.issubset(metric_set):
+        result['wer_method'] = 'both'
+    elif 'wer' in metric_set:
+        result['wer_method'] = 'wer_only'
+    elif 'mrs_wer' in metric_set:
+        result['wer_method'] = 'mrs_wer_only'
+    else:
+        result['wer_method'] = 'n/a'
+
+    if is_segmented:
+        result['metric_type'] = 'segmented'
+    else:
+        result['metric_type'] = 'not segmented'
+
+
 def evaluate_wer_for_clip(
     clip_id: str,
     model_name: str,
@@ -329,8 +347,15 @@ def evaluate_wer_for_clip(
     try:
         metric_set = selected_metrics or VALID_METRICS
 
+        if len(hyp_words) == 0:
+            for metric in METRIC_OUTPUT_ORDER:
+                if metric in metric_set:
+                    result['metrics'][metric] = 1.0
+            _set_metric_metadata(result, metric_set, is_segmented)
+            return result
+
         if 'wer' in metric_set:
-            result['metrics']['wer'] = wer(ref_text, hyp_text)
+            result['metrics']['wer'] = siso_word_error_rate(ref_text, hyp_text).error_rate
 
         if 'mrs_wer' in metric_set:
             beam_result = mrs_wer_beam_2chain(
@@ -360,19 +385,7 @@ def evaluate_wer_for_clip(
             )
             result['metrics']['orc_wer'] = float(orc_result.error_rate)
 
-        if {'wer', 'mrs_wer'}.issubset(metric_set):
-            result['wer_method'] = 'both'
-        elif 'wer' in metric_set:
-            result['wer_method'] = 'wer_only'
-        elif 'mrs_wer' in metric_set:
-            result['wer_method'] = 'mrs_wer_only'
-        else:
-            result['wer_method'] = 'n/a'
-
-        if is_segmented:
-            result['metric_type'] = 'segmented'
-        else:
-            result['metric_type'] = 'not segmented'
+        _set_metric_metadata(result, metric_set, is_segmented)
         
         return result
     except Exception as e:
@@ -739,7 +752,7 @@ if __name__ == "__main__":
         if stats.get('wer_segmented_count', 0) > 0:
             print()
             print(f"Segmented (WER on concatenated hyp) - {stats['wer_segmented_count']} clips:")
-            for key in ['wer_segmented_mean', 'wer_segmented_median', 'wer_segmented_min', 'wer_segmented_max', 'wer_segmented_std']:
+            for key in ['wer_mean', 'wer_median', 'wer_min', 'wer_max', 'wer_std']:
                 if key in stats:
                     print(f"  {key}: {stats[key]:.4f}")
 

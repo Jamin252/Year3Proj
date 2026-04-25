@@ -1,4 +1,4 @@
-\begin{thebibliography}{40}
+\begin{thebibliography}{42}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -255,6 +255,12 @@ Xianrui Zheng, Chao Zhang, and Philip~C. Woodland.
 \newblock Dncasr: End-to-end training for speaker-attributed asr, 2025.
 \newblock URL \url{https://arxiv.org/abs/2506.01916}.
 
+\bibitem[{SmartDraw}(2026)]{smartdraw2026_app}
+{SmartDraw}.
+\newblock Smartdraw online diagramming application.
+\newblock \url{https://app.smartdraw.com/}, 2026.
+\newblock Accessed: 2026-04-24.
+
 \bibitem[{Vassil Panayotov and Daniel Povey}(2015)]{librispeech}
 {Vassil Panayotov and Daniel Povey}.
 \newblock Librispeech asr corpus.
@@ -315,5 +321,12 @@ Max Bain and contributors.
 \newblock nvidia/parakeet-tdt-0.6b-v3.
 \newblock \url{https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3}, 2025.
 \newblock Accessed: 2026-02-14.
+
+\bibitem[Sasindran et~al.(2023)Sasindran, Yelchuri, Prabhakar, and
+  Rao]{sasindran2023hevalnewhybridevaluation}
+Zitha Sasindran, Harsha Yelchuri, T.~V. Prabhakar, and Supreeth Rao.
+\newblock H\_eval: A new hybrid evaluation metric for automatic speech
+  recognition tasks, 2023.
+\newblock URL \url{https://arxiv.org/abs/2211.01722}.
 
 \end{thebibliography}
