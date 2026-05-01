@@ -1,4 +1,4 @@
-\begin{thebibliography}{42}
+\begin{thebibliography}{46}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -107,9 +107,9 @@ Joris Cosentino, Manuel Pariente, Samuele Cornell, Antoine Deleforge, and
 \bibitem[Özgür Çetin and Shriberg(2006)]{cetin06_interspeech}
 Özgür Çetin and Elizabeth Shriberg.
 \newblock {Analysis of overlaps in meetings by dialog factors, hot spots,
-  speakers, and collection site: insights for automatic speech recognition}.
-\newblock In \emph{{Interspeech 2006}}, pages paper 1915--Mon2A2O.6, 2006.
-\newblock \doi{10.21437/Interspeech.2006-91}.
+  speakers, and collection site: insights for automatic speech recognition},
+  2006.
+\newblock ISSN 2958-1796.
 
 \bibitem[Yang et~al.(2022)Yang, Kanda, Wang, Wu, Sivasankaran, Chen, Li, and
   Yoshioka]{yang2022simulatingrealisticspeechoverlaps}
@@ -328,5 +328,36 @@ Zitha Sasindran, Harsha Yelchuri, T.~V. Prabhakar, and Supreeth Rao.
 \newblock H\_eval: A new hybrid evaluation metric for automatic speech
   recognition tasks, 2023.
 \newblock URL \url{https://arxiv.org/abs/2211.01722}.
+
+\bibitem[Morris et~al.(2004)Morris, Maier, and Green]{morris04_interspeech}
+Andrew~Cameron Morris, Viktoria Maier, and Phil Green.
+\newblock {From WER and RIL to MER and WIL: improved evaluation measures for
+  connected speech recognition}.
+\newblock In \emph{{Interspeech 2004}}, pages 2765--2768, 2004.
+\newblock \doi{10.21437/Interspeech.2004-668}.
+
+\bibitem[Barker et~al.(2017)Barker, Marxer, Vincent, and
+  Watanabe]{BARKER2017605}
+Jon Barker, Ricard Marxer, Emmanuel Vincent, and Shinji Watanabe.
+\newblock The third 'chime' speech separation and recognition challenge:
+  Analysis and outcomes.
+\newblock \emph{Computer Speech \& Language}, 46:\penalty0 605--626, 2017.
+\newblock ISSN 0885-2308.
+\newblock \doi{https://doi.org/10.1016/j.csl.2016.10.005}.
+\newblock URL
+  \url{https://www.sciencedirect.com/science/article/pii/S088523081630122X}.
+
+\bibitem[{CHiME Challenge}(2023)]{chime7}
+{CHiME Challenge}.
+\newblock Chime-7 speech separation and recognition challenge.
+\newblock \url{https://www.chimechallenge.org/challenges/chime7/index}, 2023.
+\newblock Accessed: 2026-04-17.
+
+\bibitem[{CHiME Challenge}(2024)]{chime8_task1}
+{CHiME Challenge}.
+\newblock Chime-8 task 1 - distant automatic speech recognition and speaker
+  diarization.
+\newblock \url{https://www.chimechallenge.org/challenges/chime8/task1/}, 2024.
+\newblock Accessed: 2026-04-17.
 
 \end{thebibliography}

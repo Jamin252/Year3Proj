@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.2.14)  27 APR 2026 10:21
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.2.14)  27 APR 2026 16:47
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/home/jamin/Year3Proj/Documentation/main.tex
-(/home/jamin/Year3Proj/Documentation/main.tex
+**/home/jamin/Year3Proj/Documentation_short/main_short.tex
+(/home/jamin/Year3Proj/Documentation_short/main_short.tex
 LaTeX2e <2021-11-15> patch level 1
 L3 programming layer <2022-01-21> (/usr/share/texlive/texmf-dist/tex/latex/base/report.cls
 Document Class: report 2021/10/04 v1.4n Standard LaTeX document class
@@ -803,8 +803,8 @@ Package translations Info: No language package found. I am going to use `english
 LaTeX Font Info:    Trying to load font information for T1+lmr on input line 59.
  (/usr/share/texmf/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
-) (./main.aux)
-\openout1 = `main.aux'.
+) (./main_short.aux)
+\openout1 = `main_short.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 59.
 LaTeX Font Info:    ... okay on input line 59.
@@ -918,319 +918,101 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 59.
 LaTeX Info: Redefining \pageref on input line 59.
 LaTeX Info: Redefining \nameref on input line 59.
- (./main.out) (./main.out)
+ (./main_short.out) (./main_short.out)
 \@outlinefile=\write4
-\openout4 = `main.out'.
+\openout4 = `main_short.out'.
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 61.
+
+Chapter 1.
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 66.
+(/usr/share/texmf/tex/latex/lm/ts1lmr.fd
+File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+) [1
+
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Chapter 2.
+[2
+
+]
+Chapter 3.
+[3
+
+]
+Chapter 4.
+[4
+
+]
+Chapter 5.
+[5
+
+]
+Chapter 6.
+(./main_short.bbl [6
+
+]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 68.
+ (/usr/share/texmf/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `lmtt' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 68.
  (/usr/share/texmf/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 61.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 68.
  (/usr/share/texmf/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 61.
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 68.
  (/usr/share/texmf/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 61.
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 68.
  (/usr/share/texmf/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 61.
+(Font)              <10.95> on input line 68.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 61.
+(Font)              <8> on input line 68.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 61.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 61.
+(Font)              <6> on input line 68.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 68.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 61.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 68.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-) [1
+)) [7
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./main.toc
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 3.
-pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.52 ...e {4.3}Design Principles}{28}{section.4.3}
-                                                  % [1
-
-] [2])
-\tf@toc=\write5
-\openout5 = `main.toc'.
-
- (./sections/01_introduction.tex [3]
-Chapter 1.
-[4
-
-] (/usr/share/texmf/tex/latex/lm/t1lmtt.fd)) (./sections/02_literature_review.tex [5]
-Chapter 2.
-[6
-
-] [7] [8]) [9] (./sections/03_architectural_design.tex [10]
-Chapter 3.
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 6.
-(/usr/share/texmf/tex/latex/lm/ts1lmr.fd
-File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-<figures/system_overview.png, id=697, 458.21187pt x 498.86375pt>
-File: figures/system_overview.png Graphic file (type png)
-<use figures/system_overview.png>
-Package pdftex.def Info: figures/system_overview.png  used on input line 19.
-(pdftex.def)             Requested size: 452.9679pt x 493.17633pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 36--36
-[]|\T1/lmr/m/n/10.95 (+20) Overlap ra-tio,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 37--37
-[]|\T1/lmr/m/n/10.95 (+20) Synthetic au-dio,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 37--37
-\T1/lmr/m/n/10.95 (+20) tran-scripts, and
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 40--40
-[]|\T1/lmr/m/n/10.95 (+20) DSS-WER beam
- []
-
-
-Underfull \hbox (badness 5161) in paragraph at lines 43--44
-[]|\T1/lmr/m/n/10.95 (+20) Approximate a word er-ror
- []
-
-
-Underfull \hbox (badness 2698) in paragraph at lines 43--44
-\T1/lmr/m/n/10.95 (+20) rate that per-mits in-ter-leav-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 50--50
-[]|\T1/lmr/m/n/10.95 (+20) Statistical note-
- []
-
-
-Underfull \hbox (badness 3088) in paragraph at lines 51--51
-\T1/lmr/m/n/10.95 (+20) WER val-ues for
- []
-
-
-Underfull \hbox (badness 3568) in paragraph at lines 51--51
-\T1/lmr/m/n/10.95 (+20) each model and
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 52--52
-[]|\T1/lmr/m/n/10.95 (+20) Statistical plots
- []
-
-
-Underfull \hbox (badness 1895) in paragraph at lines 53--54
-[]|\T1/lmr/m/n/10.95 (+20) Transform raw tran-scrip-tion
- []
-
-
-Overfull \hbox (13.28749pt too wide) in paragraph at lines 31--56
- [][] 
- []
-
-[11
-
-] [12]
-LaTeX Font Info:    Trying to load font information for T1+lmss on input line 177.
- (/usr/share/texmf/tex/latex/lm/t1lmss.fd
-File: t1lmss.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-Package microtype Info: Loading generic protrusion settings for font family
-(microtype)             `lmss' (encoding: T1).
-(microtype)             For optimal results, create family-specific settings.
-(microtype)             See the microtype manual for details.
- [13] [14] [15] [16]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 550.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 550.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 550.
-
-Overfull \hbox (11.68224pt too wide) in paragraph at lines 567--568
-\T1/lmr/m/n/10.95 (-20) the ref-er-ence, the time com-plex-ity of com-put-ing DSS-WER ex-actly is $\OML/lmm/m/it/10.95 O []$\T1/lmr/m/n/10.95 (-20) ,
- []
-
-[17] [18] [19] [20] [21]) (./sections/04_experimental_design.tex [22] [23 <./figures/system_overview.png>] [24] [25] [26]
-Chapter 4.
-[27
-
-] [28] [29] [30] [31] [32] [33]) (./sections/05_statistical_analysis.tex [34]
-Chapter 5.
-<figures/stat_cross_model_scope_support.png, id=950, 470.2368pt x 290.0436pt>
-File: figures/stat_cross_model_scope_support.png Graphic file (type png)
-<use figures/stat_cross_model_scope_support.png>
-Package pdftex.def Info: figures/stat_cross_model_scope_support.png  used on input line 32.
-(pdftex.def)             Requested size: 308.01485pt x 189.991pt.
-[35
-
-] [36 <./figures/stat_cross_model_scope_support.png>]
-<figures/stat_cross_model_wer_box.png, id=974, 485.1726pt x 309.7974pt>
-File: figures/stat_cross_model_wer_box.png Graphic file (type png)
-<use figures/stat_cross_model_wer_box.png>
-Package pdftex.def Info: figures/stat_cross_model_wer_box.png  used on input line 96.
-(pdftex.def)             Requested size: 430.31812pt x 274.7781pt.
- [37]
-<figures/stat_time_per_clip_bar.png, id=987, 512.8761pt x 301.125pt>
-File: figures/stat_time_per_clip_bar.png Graphic file (type png)
-<use figures/stat_time_per_clip_bar.png>
-Package pdftex.def Info: figures/stat_time_per_clip_bar.png  used on input line 129.
-(pdftex.def)             Requested size: 221.95676pt x 130.31747pt.
-<figures/stat_accuracy_latency_tradeoff.png, id=988, 476.2593pt x 288.5982pt>
-File: figures/stat_accuracy_latency_tradeoff.png Graphic file (type png)
-<use figures/stat_accuracy_latency_tradeoff.png>
-Package pdftex.def Info: figures/stat_accuracy_latency_tradeoff.png  used on input line 136.
-(pdftex.def)             Requested size: 221.95676pt x 134.50063pt.
-<figures/stat_wav2vec2_snr_overlap_heatmap.png, id=989, 774.2526pt x 311.7246pt>
-File: figures/stat_wav2vec2_snr_overlap_heatmap.png Graphic file (type png)
-<use figures/stat_wav2vec2_snr_overlap_heatmap.png>
-Package pdftex.def Info: figures/stat_wav2vec2_snr_overlap_heatmap.png  used on input line 147.
-(pdftex.def)             Requested size: 371.43698pt x 149.54524pt.
-<figures/stat_wav2vec2_noise_type.png, id=990, 406.8801pt x 278.7213pt>
-File: figures/stat_wav2vec2_noise_type.png Graphic file (type png)
-<use figures/stat_wav2vec2_noise_type.png>
-Package pdftex.def Info: figures/stat_wav2vec2_noise_type.png  used on input line 154.
-(pdftex.def)             Requested size: 308.01485pt x 210.9968pt.
- [38 <./figures/stat_cross_model_wer_box.png>] [39 <./figures/stat_time_per_clip_bar.png> <./figures/stat_accuracy_latency_tradeoff.png> <./figures/stat_wav2vec2_snr_overlap_heatmap.png> <./figures/stat_wav2vec2_noise_type.png>]
-<figures/stat_wav2vec2_wer_vs_ovr.png, id=1014, 429.2838pt x 301.125pt>
-File: figures/stat_wav2vec2_wer_vs_ovr.png Graphic file (type png)
-<use figures/stat_wav2vec2_wer_vs_ovr.png>
-Package pdftex.def Info: figures/stat_wav2vec2_wer_vs_ovr.png  used on input line 219.
-(pdftex.def)             Requested size: 221.95676pt x 155.68991pt.
-<figures/stat_wav2vec2_wer_vs_snr.png, id=1015, 429.2838pt x 301.125pt>
-File: figures/stat_wav2vec2_wer_vs_snr.png Graphic file (type png)
-<use figures/stat_wav2vec2_wer_vs_snr.png>
-Package pdftex.def Info: figures/stat_wav2vec2_wer_vs_snr.png  used on input line 226.
-(pdftex.def)             Requested size: 221.95676pt x 155.68991pt.
-<figures/stat_wav2vec2_delta_vs_ovr.png, id=1016, 429.2838pt x 301.125pt>
-File: figures/stat_wav2vec2_delta_vs_ovr.png Graphic file (type png)
-<use figures/stat_wav2vec2_delta_vs_ovr.png>
-Package pdftex.def Info: figures/stat_wav2vec2_delta_vs_ovr.png  used on input line 240.
-(pdftex.def)             Requested size: 221.95676pt x 155.68991pt.
-<figures/stat_wav2vec2_delta_vs_snr.png, id=1017, 430.2474pt x 301.125pt>
-File: figures/stat_wav2vec2_delta_vs_snr.png Graphic file (type png)
-<use figures/stat_wav2vec2_delta_vs_snr.png>
-Package pdftex.def Info: figures/stat_wav2vec2_delta_vs_snr.png  used on input line 247.
-(pdftex.def)             Requested size: 221.95676pt x 155.34529pt.
- [40 <./figures/stat_wav2vec2_wer_vs_ovr.png> <./figures/stat_wav2vec2_wer_vs_snr.png>] [41 <./figures/stat_wav2vec2_delta_vs_ovr.png> <./figures/stat_wav2vec2_delta_vs_snr.png>] [42]
-<figures/stat_cross_model_wer_vs_ovr.png, id=1055, 429.2838pt x 301.125pt>
-File: figures/stat_cross_model_wer_vs_ovr.png Graphic file (type png)
-<use figures/stat_cross_model_wer_vs_ovr.png>
-Package pdftex.def Info: figures/stat_cross_model_wer_vs_ovr.png  used on input line 344.
-(pdftex.def)             Requested size: 221.95676pt x 155.68991pt.
-<figures/stat_cross_model_wer_vs_snr.png, id=1056, 429.2838pt x 301.125pt>
-File: figures/stat_cross_model_wer_vs_snr.png Graphic file (type png)
-<use figures/stat_cross_model_wer_vs_snr.png>
-Package pdftex.def Info: figures/stat_cross_model_wer_vs_snr.png  used on input line 351.
-(pdftex.def)             Requested size: 221.95676pt x 155.68991pt.
- [43 <./figures/stat_cross_model_wer_vs_ovr.png> <./figures/stat_cross_model_wer_vs_snr.png>]
-LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 412.
- [44] [45]
-Underfull \hbox (badness 10000) in paragraph at lines 481--481
-[]|\T1/lmr/m/n/10 (+20) LLM-based de-cod-ing
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 481--481
-[]|\T1/lmr/m/n/10 (+20) Same as
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 481--481
-[]|\T1/lmr/m/n/10 (+20) Same as
- []
-
-[46]
-<figures/stat_real_transfer_wer_change.png, id=1093, 455.301pt x 304.0158pt>
-File: figures/stat_real_transfer_wer_change.png Graphic file (type png)
-<use figures/stat_real_transfer_wer_change.png>
-Package pdftex.def Info: figures/stat_real_transfer_wer_change.png  used on input line 495.
-(pdftex.def)             Requested size: 326.13744pt x 217.77786pt.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 506.
- [47 <./figures/stat_real_transfer_wer_change.png>] [48] [49]) (./sections/06_discussion.tex [50]
-Chapter 6.
-[51
-
-] [52] [53] [54] [55]) (./main.bbl [56]
-Underfull \hbox (badness 5681) in paragraph at lines 45--51
-[]\T1/lmr/m/n/10.95 (+20) John Hughes.  The prob-lem with word er-ror rate (wer).  Speech-mat-ics
- []
-
-
-Underfull \hbox (badness 3000) in paragraph at lines 45--51
-\T1/lmr/m/n/10.95 (+20) blog, 2025.  URL []$\T1/lmtt/m/n/10.95 https : / / www . speechmatics . com / company / articles-[]and-[]news /
- []
-
-[57
-
-] [58] [59]
-Underfull \hbox (badness 3746) in paragraph at lines 314--318
-[]\T1/lmr/m/n/10.95 (+20) Meta AI.  facebook/wav2vec2-large-960h.  []$\T1/lmtt/m/n/10.95 https : / / huggingface . co / facebook /
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 320--324
-[]\T1/lmr/m/n/10.95 (+20) NVIDIA.  nvidia/parakeet-tdt-0.6b-v3.  []$\T1/lmtt/m/n/10.95 https : / / huggingface . co / nvidia /
- []
-
-) (./sections/app_code.tex [60]
-Appendix A.
-Package microtype Info: Character `029' is missing
-(microtype)             in font `T1/lmr/m/sc/10.95'.
-(microtype)             Ignoring protrusion settings for this character.
-) (./sections/app_software_config.tex [61
-
-]
-Appendix B.
-
-Overfull \hbox (49.84346pt too wide) in paragraph at lines 20--21
-[]\T1/lmr/m/n/10.95 (-20) parakeet-tdt-0.6b-v3 with con-fig-u-ra-tion: \T1/lmtt/m/n/10.95 right_context_secs=2.0\T1/lmr/m/n/10.95 (-20) , \T1/lmtt/m/n/10.95 left_context_secs=10.0\T1/lmr/m/n/10.95 (-20) ,
- []
-
-) [62
-
-] (./main.aux)
-Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 4AD969D34EC48D36784F92994445BD95;20695.
+] (./main_short.aux)
+Package rerunfilecheck Info: File `main_short.out' has not changed.
+(rerunfilecheck)             Checksum: 9122B65727464C197BCFD4668D09E209;841.
  ) 
 Here is how much of TeX's memory you used:
- 40601 strings out of 480171
- 852199 string characters out of 5894489
- 1213752 words of memory out of 5000000
- 57161 multiletter control sequences out of 15000+600000
- 617244 words of font info for 283 fonts, out of 8000000 for 9000
+ 38881 strings out of 480171
+ 818037 string characters out of 5894489
+ 1134613 words of memory out of 5000000
+ 56095 multiletter control sequences out of 15000+600000
+ 510456 words of font info for 111 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
- 84i,16n,96p,2020b,1029s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ts1.enc}</usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx7.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx8.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx9.pfb></usr/share/texmf/fonts/type1/public/lm/lmcsc10.pfb></usr/share/texmf/fonts/type1/public/lm/lmex10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi12.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi6.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi8.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi9.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr9.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmss10.pfb></usr/share/texmf/fonts/type1/public/lm/lmss9.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy6.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy8.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy9.pfb></usr/share/texmf/fonts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (63 pages, 2212761 bytes).
+ 84i,5n,96p,1049b,767s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ts1.enc}</usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb>
+Output written on main_short.pdf (7 pages, 161113 bytes).
 PDF statistics:
- 1567 PDF objects out of 1728 (max. 8388607)
- 1369 compressed objects within 14 object streams
- 373 named destinations out of 1000 (max. 500000)
- 88095 words of extra memory for PDF output out of 89155 (max. 10000000)
+ 169 PDF objects out of 1000 (max. 8388607)
+ 123 compressed objects within 2 object streams
+ 26 named destinations out of 1000 (max. 500000)
+ 23245 words of extra memory for PDF output out of 24883 (max. 10000000)
 

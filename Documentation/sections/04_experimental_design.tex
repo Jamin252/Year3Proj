@@ -90,22 +90,26 @@ OVR std ratio & $0.1$ \\
 \end{table}
 \begin{table}[ht]
 \centering
-\caption{Synthetic corpus size in the current manifest.}
+\caption{Raw and effective synthetic corpus size in the current manifest.}
 \label{tab:synthetic_counts}
-\begin{tabular}{lccc}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrrr}
 \toprule
-\textbf{Target overlap ratio} & \textbf{Base mixtures} & \textbf{Derived variants per base} & \textbf{Total clips} \\
+\textbf{Target OVR} & \textbf{Base mixes} & \textbf{Raw var./base} & \textbf{Eff. var./base} & \textbf{Raw rows} & \textbf{Eff. rows} \\
 \midrule
-$0.00$ & $100$ & $12$ & $1200$ \\
-$0.14$ & $100$ & $12$ & $1200$ \\
-$0.20$ & $100$ & $12$ & $1200$ \\
-$0.40$ & $100$ & $12$ & $1200$ \\
+$0.00$ & $100$ & $12$ & $10$ & $1200$ & $1000$ \\
+$0.14$ & $100$ & $12$ & $10$ & $1200$ & $1000$ \\
+$0.20$ & $100$ & $12$ & $10$ & $1200$ & $1000$ \\
+$0.40$ & $100$ & $12$ & $10$ & $1200$ & $1000$ \\
 \midrule
-\textbf{Total} &  &  & \textbf{$4800$} \\
+\textbf{Total} &  &  &  & \textbf{$4800$} & \textbf{$4000$} \\
 \bottomrule
 \end{tabular}
+\setlength{\tabcolsep}{6pt}
+\normalsize
 \end{table}
-\Cref{tab:design_factors} documents the levels of the main experimental factors. In the implementation, all conditions use 100 base mixtures. Each base mixture is expanded across all factors $\text{SNR} \times \text{noise type}$, yielding a total of 4800 corpus summarised in \Cref{tab:synthetic_counts}.
+\Cref{tab:design_factors} documents the levels of the main experimental factors. In the implementation, all conditions use 100 base mixtures. Each base mixture is expanded across all factors $\text{SNR} \times \text{noise type}$, yielding 4800 raw rows. Since the clean SNR variants across the three noise labels contain the same no-noise audio, the statistical analysis treats them as 4000 effective rows, as summarised in \Cref{tab:synthetic_counts}.
 
 \paragraph{Overlap Ratios Choice.} The overlap ratios are chosen to represent a range of realistic and challenging conditions for ASR:
 \begin{itemize}
@@ -147,7 +151,7 @@ These design choice avoid clipping utterances mid-sentence, perserving the accur
 Although the framework is designed to be extensible to any ASR model, the evaluation will focus on the following publicly available models that represent a range of model architectures:
 \begin{itemize}
     \item \textbf{Faster Whisper} (OpenAI): Faster-whisper is a reimplementation of OpenAI's Whisper model using CTranslate2, which is a fast inference engine for Transformer models. \cite{github_openai_faster-whisper}
-    \item \textbf{WhisperX} (OpenAI): WhisperX is a ASR model trained on a large dataset of diverse audio \cite{bain2026whisperx_repo}.
+    \item \textbf{WhisperX} (OpenAI): WhisperX is an ASR model trained on a large dataset of diverse audio \cite{bain2026whisperx_repo}.
     \item \textbf{Wav2Vec2-Large-960h} (Meta AI): The large model pretrained and fine-tuned on 960 hours of Librispeech on 16kHz sampled speech audio. When using the model make sure that your speech input is also sampled at 16Khz. \cite{facebook_wav2vec2-large-960h}
     \item \textbf{parakeet-tdt-0.6b-v3} (NVIDIA): parakeet-tdt-0.6b-v3 is a 600-million-parameter multilingual automatic speech recognition (ASR) model designed for high-throughput speech-to-text transcription. \cite{nvidia/parakeet-tdt-0.6b-v3}
     
@@ -175,7 +179,7 @@ The choice of metrics are based on the following rules:
 \end{itemize}
 
 \section{Experimental Unit and Comparison Strategy}
-The fundamental unit of comparison is the (clip, model) pair with related metadata and transcript. For synthetic data, the comparison includes:
+The fundamental unit of comparison is the (clip ID, model) pair with related metadata and transcript. For synthetic data, the comparison includes:
 \begin{itemize}
     \item comparison across models are paired at clip level as all models are evaluated on the same set of clips;
     \item comparisons across SNR values are paired becauses noisy variants are derived from the same base mixture;
@@ -236,7 +240,7 @@ where $1[\cdot]$ is the indicator function. The confidence interval of the mean 
 This analysis does not intend to claim that DSS-WER is universally superior to WER. It test whether DSS-WER yields lower scores than WER in the double-stream reference single-stream hypothesis setting, where DSS-WER is designed to relax the interleaving restriction of WER. 
 
 \section{Reproducibility}
-The implemented framework traces every results (including synthetic mixture generation, ASR inferencing and metric calculation) to its generating condition. The manifest stores clip identifiers, audio paths, source-file provenance, noise-file provenance, target overlap ratio, realised overlap ratio, SNR, and noise category. Model outputs are written to JSON keyed by clip ID, and evaluation outputs are stored both per clip and per model. Combined with the fixed random seed in the configuration, this provides a reproducible record of how each reported score was obtained.
+The implemented framework traces every results (including synthetic mixture generation, ASR inference and metric calculation) to its generating condition. The manifest stores clip identifiers, audio paths, source-file provenance, noise-file provenance, target overlap ratio, realised overlap ratio, SNR, and noise category. Model outputs are written to JSON keyed by clip ID, and evaluation outputs are stored both per clip and per model. Combined with the fixed random seed in the configuration, this provides a reproducible record of how each reported score was obtained.
 
 \section{Scope and Limitations}
 The experimental design combines precisely controlled synthetic benchmarking with a narrower but meaningful real-world data evaluation. It separates overlap and noise as explicit variables, preserving the paired comparisons across conditions.
@@ -249,4 +253,3 @@ However, the limitation is clear. They are as follows:
     \item Real-world evaluation only cover one session in CHiME-6 rather than a balanced sampling of real-world conditions
 \end{itemize}
 However, these limitations do not invalidate the design. They define the scope of the dissertation and the interpretation of the results.
-

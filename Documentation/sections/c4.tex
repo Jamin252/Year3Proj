@@ -159,7 +159,7 @@ Three metrics are used in the synthetic scoring pipeline:
 \begin{itemize}
     \item \textbf{WER}: conventional single-stream word error rate, computed after concatenating all reference words and all hypothesis words into linear sequences.
     \item \textbf{cpWER}: concatenated minimum-permutation WER, computed when the hypothesis is segmented and can therefore be compared speaker-wise up to permutation \citep{Word_Error_Rate_Definitions}.
-    \item \textbf{DSS-WER}: the proposed double-stream serialisation metric for comparing a two-speaker reference with a single-stream hypothesis. In the implementation and output JSON files this score is stored under the name \texttt{mrs\_wer}; the dissertation retains the conceptual label DSS-WER while noting the code-level name for reproducibility.
+    \item \textbf{DSS-WER}: the proposed double-stream serialisation metric for comparing a two-speaker reference with a single-stream hypothesis. In the implementation and output JSON files this score is stored under the name \texttt{dss\_wer}; the dissertation retains the conceptual label DSS-WER while noting the code-level name for reproducibility.
 \end{itemize}
 
 The DSS-WER implementation uses a beam-search approximation over two reference chains and one hypothesis chain. The scoring script fixes the main search hyperparameters at beam width \(64\), lookahead \(16\), heuristic weight \(0.4\), and maximum expansions \(160{,}000\). These settings are part of the experimental design because they determine the computational approximation used for the proposed metric.

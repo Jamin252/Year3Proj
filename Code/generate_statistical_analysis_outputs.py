@@ -13,11 +13,13 @@ os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib-cache")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from scipy.stats import friedmanchisquare, wilcoxon
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 FIGURE_DIR = PROJECT_ROOT / "Documentation" / "figures"
 SUMMARY_PATH = PROJECT_ROOT / "Documentation" / "statistical_analysis_summary.json"
+WAV2VEC2_FULL_SCOPE_SUMMARY_PATH = PROJECT_ROOT / "Documentation" / "wav2vec2_full_scope_statistical_summary.json"
 WORST_WER_PATH = PROJECT_ROOT / "Documentation" / "worst_wer_examples.json"
 WER_OUTLIER_CONDITIONS_PATH = PROJECT_ROOT / "Documentation" / "wer_outlier_condition_summary.json"
 REAL_EVAL_WER_ORC_PATH = PROJECT_ROOT / "Output" / "real_eval_wer_orc_results.json"
@@ -38,6 +40,9 @@ MODEL_LABELS = {
 }
 SNR_ORDER = ["clean", "7.4", "0", "-5"]
 OVR_ORDER = [0.00, 0.14, 0.20, 0.40]
+NOISE_TYPE_ORDER = ["D", "P", "T"]
+VARIANTS_PER_BASE_MIXTURE = len(SNR_ORDER) * len(NOISE_TYPE_ORDER)
+METRIC_COLUMNS = ["wer", "dss_wer", "orc_wer", "cpwer"]
 DSS_PERMUTATION_N = 10_000
 DSS_RANDOM_SEED = 20260425
 DSS_DIFF_TOLERANCE = 1e-12
@@ -183,9 +188,12 @@ def get_k_worst_wer_examples(k: int = 3) -> dict[str, list[dict[str, Any]]]:
 
 def parse_clip_id(clip_id: str) -> dict[str, Any]:
     parts = clip_id.split("_")
+    variant_index = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else None
     return {
         "clip_id": clip_id,
         "base_id": parts[1] if len(parts) > 1 else None,
+        "variant_index": variant_index,
+        "base_mixture_id": None if variant_index is None else variant_index // VARIANTS_PER_BASE_MIXTURE,
         "overlap_ratio": float(parts[2]) if len(parts) > 2 else None,
         "max_speakers": int(parts[3]) if len(parts) > 3 else None,
         "snr_db": None if len(parts) <= 4 or parts[4] == "None" else float(parts[4]),
@@ -293,6 +301,239 @@ def summarise(values: pd.Series) -> dict[str, float]:
         "max": float(values.max()),
         "pct_gt_1": float((values > 1.0).mean() * 100),
     }
+
+
+def summarise_metric_columns(frame: pd.DataFrame, metric_columns: list[str] | None = None) -> dict[str, Any]:
+    metric_columns = metric_columns or METRIC_COLUMNS
+    summaries: dict[str, Any] = {}
+    for metric in metric_columns:
+        if metric in frame.columns and frame[metric].notna().any():
+            summaries[metric] = summarise(frame[metric])
+    return summaries
+
+
+def grouped_metric_records(
+    frame: pd.DataFrame,
+    group_columns: list[str],
+    metric_columns: list[str] | None = None,
+) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    if frame.empty:
+        return records
+
+    for keys, group in frame.groupby(group_columns, dropna=False):
+        if not isinstance(keys, tuple):
+            keys = (keys,)
+
+        row: dict[str, Any] = {"n": int(len(group))}
+        for key, value in zip(group_columns, keys):
+            if pd.isna(value):
+                row[key] = None
+            elif isinstance(value, (np.integer,)):
+                row[key] = int(value)
+            elif isinstance(value, (np.floating, float)):
+                row[key] = float(value)
+            else:
+                row[key] = value
+        row["metrics"] = summarise_metric_columns(group, metric_columns)
+        records.append(row)
+    return records
+
+
+def holm_adjust_p_values(p_values: list[float]) -> list[float]:
+    """Return Holm-Bonferroni adjusted p-values in the original order."""
+    adjusted = [float("nan")] * len(p_values)
+    finite = [
+        (idx, float(p_value))
+        for idx, p_value in enumerate(p_values)
+        if not pd.isna(p_value)
+    ]
+    if not finite:
+        return adjusted
+
+    sorted_pairs = sorted(finite, key=lambda item: item[1])
+    running_max = 0.0
+    m = len(sorted_pairs)
+    for rank, (idx, p_value) in enumerate(sorted_pairs, start=1):
+        raw_adjusted = min(1.0, (m - rank + 1) * p_value)
+        running_max = max(running_max, raw_adjusted)
+        adjusted[idx] = float(running_max)
+
+    return adjusted
+
+
+def analyse_rq2_cross_model_tests(cross: pd.DataFrame, metric: str = "wer") -> dict[str, Any]:
+    """
+    Run RQ2 repeated-measures model comparisons on the matched cross-model subset.
+
+    The experimental unit is clip_id. Only clip IDs matching CROSS_MODEL_CLIP_REGEX
+    are retained, then complete clip-level rows across all models are tested.
+    """
+    if metric not in cross.columns:
+        raise ValueError(f"Metric column not found: {metric}")
+
+    frame = cross.copy()
+    if "status" in frame.columns:
+        frame = frame[frame["status"] == "success"]
+    clip_mask = frame["clip_id"].astype(str).str.match(CROSS_MODEL_CLIP_REGEX.pattern, na=False)
+    frame = frame[clip_mask].dropna(subset=["clip_id", "model", metric]).copy()
+
+    duplicate_pairs = int(frame.duplicated(subset=["clip_id", "model"]).sum())
+    pivot = (
+        frame.pivot_table(index="clip_id", columns="model", values=metric, aggfunc="mean")
+        .reindex(columns=MODELS)
+        .sort_index()
+    )
+    complete = pivot.dropna(subset=MODELS).copy()
+
+    if len(complete) < 2:
+        raise ValueError("RQ2 cross-model tests require at least two complete matched clips.")
+
+    friedman_result = friedmanchisquare(*(complete[model].to_numpy(dtype=float) for model in MODELS))
+    k = len(MODELS)
+    n = len(complete)
+    kendalls_w = float(friedman_result.statistic / (n * (k - 1)))
+
+    pairwise_rows: list[dict[str, Any]] = []
+    raw_p_values: list[float] = []
+    for left_idx, model_a in enumerate(MODELS):
+        for model_b in MODELS[left_idx + 1 :]:
+            a_values = complete[model_a].to_numpy(dtype=float)
+            b_values = complete[model_b].to_numpy(dtype=float)
+            differences = a_values - b_values
+            non_zero_count = int(np.sum(~np.isclose(differences, 0.0, atol=1e-12, rtol=0.0)))
+
+            if non_zero_count == 0:
+                statistic = 0.0
+                p_value = 1.0
+            else:
+                test_result = wilcoxon(
+                    a_values,
+                    b_values,
+                    zero_method="wilcox",
+                    correction=False,
+                    alternative="two-sided",
+                    method="auto",
+                )
+                statistic = float(test_result.statistic)
+                p_value = float(test_result.pvalue)
+
+            raw_p_values.append(p_value)
+            mean_difference = float(np.mean(differences))
+            median_difference = float(np.median(differences))
+            if mean_difference < 0:
+                lower_mean_wer_model = model_a
+            elif mean_difference > 0:
+                lower_mean_wer_model = model_b
+            else:
+                lower_mean_wer_model = None
+
+            pairwise_rows.append(
+                {
+                    "model_a": model_a,
+                    "model_a_label": MODEL_LABELS[model_a],
+                    "model_b": model_b,
+                    "model_b_label": MODEL_LABELS[model_b],
+                    "comparison": f"{model_a} vs {model_b}",
+                    "n": int(n),
+                    "n_non_zero_differences": non_zero_count,
+                    "wilcoxon_statistic": statistic,
+                    "p_value": p_value,
+                    "mean_difference_model_a_minus_model_b": mean_difference,
+                    "median_difference_model_a_minus_model_b": median_difference,
+                    "mean_model_a": float(np.mean(a_values)),
+                    "mean_model_b": float(np.mean(b_values)),
+                    "lower_mean_wer_model": lower_mean_wer_model,
+                    "alternative": "two-sided",
+                }
+            )
+
+    adjusted_p_values = holm_adjust_p_values(raw_p_values)
+    for row, adjusted_p_value in zip(pairwise_rows, adjusted_p_values):
+        row["holm_adjusted_p_value"] = adjusted_p_value
+        row["holm_reject_alpha_0_05"] = bool(adjusted_p_value <= 0.05)
+
+    return {
+        "scope": "RQ2 cross-model matched subset",
+        "metric": metric,
+        "clip_id_filter": CROSS_MODEL_CLIP_REGEX.pattern,
+        "models": MODELS,
+        "model_labels": {model: MODEL_LABELS[model] for model in MODELS},
+        "row_count_after_filter": int(len(frame)),
+        "unique_clip_count_after_filter": int(frame["clip_id"].nunique()),
+        "complete_matched_clip_count": int(n),
+        "incomplete_clip_count_excluded": int(len(pivot) - n),
+        "duplicate_clip_model_pairs_collapsed": duplicate_pairs,
+        "friedman": {
+            "test": "Friedman chi-square test",
+            "statistic": float(friedman_result.statistic),
+            "p_value": float(friedman_result.pvalue),
+            "df": int(k - 1),
+            "n": int(n),
+            "kendalls_w": kendalls_w,
+        },
+        "post_hoc": {
+            "test": "Wilcoxon signed-rank test",
+            "p_adjustment": "Holm-Bonferroni",
+            "alpha": 0.05,
+            "pairwise": pairwise_rows,
+        },
+    }
+
+
+def deduplicate_clean_snr_variants(frame: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, Any]]:
+    """
+    Collapse replicated clean-SNR rows to one effective sample per base mixture.
+
+    The generator emits one clean waveform for each noise category label (D/P/T),
+    but no noise is added in those rows. Treating all three as independent samples
+    overweights the clean condition in full-scope wav2vec2 analyses.
+    """
+    if frame.empty:
+        return frame.copy(), {
+            "raw_n": 0,
+            "deduplicated_n": 0,
+            "dropped_clean_duplicate_n": 0,
+        }
+
+    working = frame.copy()
+    clean_mask = working["snr_label"].eq("clean")
+    non_clean = working.loc[~clean_mask].copy()
+    clean = working.loc[clean_mask].copy()
+
+    clean_group_columns = ["model", "base_mixture_id", "overlap_ratio", "max_speakers", "snr_label"]
+    clean = clean.sort_values(["base_mixture_id", "overlap_ratio", "noise_type", "clip_id"])
+    clean_kept = clean.drop_duplicates(subset=clean_group_columns, keep="first").copy()
+
+    for subset, is_clean_effective in ((non_clean, False), (clean_kept, True)):
+        subset["noise_type_raw"] = subset["noise_type"]
+        subset["is_clean_effective_sample"] = is_clean_effective
+
+    if not clean_kept.empty:
+        clean_kept["noise_type"] = "clean"
+
+    deduplicated = pd.concat([non_clean, clean_kept], ignore_index=True)
+    deduplicated = deduplicated.sort_values("variant_index", na_position="last").reset_index(drop=True)
+
+    clean_group_sizes = clean.groupby(clean_group_columns, dropna=False).size() if not clean.empty else pd.Series(dtype=int)
+    clean_duplicates_by_size = {
+        str(int(size)): int(count)
+        for size, count in clean_group_sizes.value_counts().sort_index().items()
+    }
+    metadata = {
+        "reason": "Clean SNR rows are generated once per noise-type label but contain the same no-noise audio.",
+        "deduplication_unit": clean_group_columns,
+        "variants_per_base_mixture": int(VARIANTS_PER_BASE_MIXTURE),
+        "raw_n": int(len(working)),
+        "deduplicated_n": int(len(deduplicated)),
+        "raw_clean_n": int(len(clean)),
+        "deduplicated_clean_n": int(len(clean_kept)),
+        "dropped_clean_duplicate_n": int(len(clean) - len(clean_kept)),
+        "non_clean_n": int(len(non_clean)),
+        "clean_duplicate_group_size_counts": clean_duplicates_by_size,
+        "clean_noise_type_policy": "Kept one clean row per base mixture and set noise_type to 'clean'.",
+    }
+    return deduplicated, metadata
 
 
 def _stable_seed(*parts: Any) -> int:
@@ -655,6 +896,55 @@ def fit_wav2vec2_wer_surface(wav2: pd.DataFrame) -> dict[str, Any]:
     }
 
 
+def build_wav2vec2_full_scope_summary(
+    wav2_raw: pd.DataFrame,
+    wav2: pd.DataFrame,
+    deduplication_metadata: dict[str, Any],
+    wav2_effect_sizes: dict[str, float],
+    wav2_wer_surface: dict[str, Any],
+    wav2_delta_vs_ovr: pd.DataFrame,
+    wav2_delta_vs_snr: pd.DataFrame,
+) -> dict[str, Any]:
+    noisy = wav2[wav2["snr_label"] != "clean"].copy()
+    clean = wav2[wav2["snr_label"] == "clean"].copy()
+
+    return {
+        "source_file": "WER_results_wav2vec2.json",
+        "model": "wav2vec2",
+        "scope": "full synthetic wav2vec2 evaluation with clean-SNR de-duplication",
+        "deduplication": deduplication_metadata,
+        "raw_row_count": int(len(wav2_raw)),
+        "effective_row_count": int(len(wav2)),
+        "metric_columns": [metric for metric in METRIC_COLUMNS if metric in wav2.columns],
+        "overall_raw": summarise_metric_columns(wav2_raw),
+        "overall_effective": summarise_metric_columns(wav2),
+        "clean_effective": summarise_metric_columns(clean),
+        "noisy_effective": summarise_metric_columns(noisy),
+        "by_snr": grouped_metric_records(wav2, ["snr_label"]),
+        "by_overlap": grouped_metric_records(wav2, ["overlap_ratio"]),
+        "by_snr_and_overlap": grouped_metric_records(wav2, ["snr_label", "overlap_ratio"]),
+        "by_noise_type_noisy_only": grouped_metric_records(noisy, ["noise_type"]),
+        "by_noise_type_including_clean_category": grouped_metric_records(wav2, ["noise_type"]),
+        "condition_means": grouped_metric_records(wav2, ["snr_label", "overlap_ratio", "noise_type"]),
+        "effect_sizes": wav2_effect_sizes,
+        "wer_surface": wav2_wer_surface,
+        "delta_vs_ovr": {
+            f"{overlap_ratio:.2f}": {
+                snr_label: float(wav2_delta_vs_ovr.loc[overlap_ratio, snr_label])
+                for snr_label in SNR_ORDER
+            }
+            for overlap_ratio in OVR_ORDER
+        },
+        "delta_vs_snr": {
+            snr_label: {
+                f"{overlap_ratio:.2f}": float(wav2_delta_vs_snr.loc[overlap_ratio, snr_label])
+                for overlap_ratio in OVR_ORDER
+            }
+            for snr_label in SNR_ORDER
+        },
+    }
+
+
 def save(fig: plt.Figure, filename: str) -> None:
     FIGURE_DIR.mkdir(parents=True, exist_ok=True)
     fig.savefig(FIGURE_DIR / filename, dpi=300, bbox_inches="tight")
@@ -691,7 +981,7 @@ def plot_wav2vec2_heatmap(wav2: pd.DataFrame) -> None:
 
     fig, axes = plt.subplots(1, 2, figsize=(10.6, 4.2), constrained_layout=True)
     _draw_heatmap(axes[0], pivot, "Mean WER", "YlOrRd", ".3f", colorbar_label="Mean WER")
-    _draw_heatmap(axes[1], counts, "Cell count", "Blues", ".0f", colorbar_label=None)
+    _draw_heatmap(axes[1], counts, "Effective cell count", "Blues", ".0f", colorbar_label=None)
     save(fig, "stat_wav2vec2_snr_overlap_heatmap.png")
 
 
@@ -905,7 +1195,7 @@ def plot_wav2vec2_delta_vs_snr(wav2: pd.DataFrame) -> pd.DataFrame:
         )
         .reindex(index=OVR_ORDER, columns=SNR_ORDER)
     )
-    delta_pivot = mean_pivot.subtract(mean_pivot["clean"], axis=0)
+    delta_pivot = mean_pivot.subtract(mean_pivot.loc[0.00], axis=1)
     colors = {
         0.00: "#1f77b4",
         0.14: "#ff7f0e",
@@ -916,20 +1206,23 @@ def plot_wav2vec2_delta_vs_snr(wav2: pd.DataFrame) -> pd.DataFrame:
 
     fig, ax = plt.subplots(figsize=(6.8, 4.4))
     for overlap_ratio in OVR_ORDER:
+        linestyle = "--" if np.isclose(overlap_ratio, 0.0) else "-"
+        label = "0% OVR baseline" if np.isclose(overlap_ratio, 0.0) else f"OVR {overlap_ratio:.2f}"
         ax.plot(
             x_positions,
             delta_pivot.loc[overlap_ratio, SNR_ORDER].values,
             marker="o",
             linewidth=2.0,
+            linestyle=linestyle,
             color=colors[overlap_ratio],
-            label=f"OVR {overlap_ratio:.2f}",
+            label=label,
         )
     ax.axhline(0.0, color="#333333", linewidth=0.9, alpha=0.6)
     ax.set_xticks(x_positions)
     ax.set_xticklabels(SNR_ORDER)
     ax.set_xlabel("SNR condition")
-    ax.set_ylabel(r"$\Delta$ WER relative to clean")
-    ax.set_title("wav2vec2 noise-induced delta WER vs SNR")
+    ax.set_ylabel(r"$\Delta$ WER relative to 0\% overlap")
+    ax.set_title("wav2vec2 overlap-induced delta WER vs SNR")
     ax.set_ylim(min(-0.02, delta_pivot.min().min() * 1.12), delta_pivot.max().max() * 1.18)
     ax.grid(axis="y", alpha=0.25)
     ax.legend(title="Series", fontsize=7, title_fontsize=8, loc="upper left")
@@ -938,7 +1231,8 @@ def plot_wav2vec2_delta_vs_snr(wav2: pd.DataFrame) -> pd.DataFrame:
 
 
 def plot_noise_type(wav2: pd.DataFrame) -> None:
-    grouped = wav2.groupby("noise_type")["wer"]
+    plot_df = wav2[wav2["snr_label"] != "clean"].copy()
+    grouped = plot_df.groupby("noise_type")["wer"]
     order = grouped.mean().sort_values(ascending=False).index.tolist()
     means = grouped.mean().reindex(order)
     sem = grouped.sem().reindex(order)
@@ -947,6 +1241,7 @@ def plot_noise_type(wav2: pd.DataFrame) -> None:
     ax.bar(order, means, yerr=ci, color="#bdbdbd", edgecolor="#555555", capsize=4)
     ax.set_xlabel("Noise type")
     ax.set_ylabel("Mean clip-level WER")
+    ax.set_title("wav2vec2 WER by noise type (noisy conditions only)")
     ax.grid(axis="y", alpha=0.25)
     save(fig, "stat_wav2vec2_noise_type.png")
 
@@ -1152,7 +1447,9 @@ def _draw_heatmap(
     fmt: str,
     colorbar_label: str | None,
 ) -> None:
-    image = ax.imshow(data.to_numpy(dtype=float), cmap=cmap, aspect="auto")
+    values = data.to_numpy(dtype=float)
+    image = ax.imshow(values, cmap=cmap, aspect="auto")
+    cmap_obj = plt.get_cmap(cmap)
     ax.set_xticks(range(len(data.columns)))
     ax.set_xticklabels([f"{float(col):.2f}" for col in data.columns])
     ax.set_yticks(range(len(data.index)))
@@ -1163,7 +1460,13 @@ def _draw_heatmap(
     for i, row in enumerate(data.index):
         for j, col in enumerate(data.columns):
             value = data.loc[row, col]
-            ax.text(j, i, format(float(value), fmt), ha="center", va="center", color="#1f2933", fontsize=8)
+            if pd.isna(value):
+                ax.text(j, i, "-", ha="center", va="center", color="#666666", fontsize=8)
+                continue
+            rgba = cmap_obj(image.norm(float(value)))
+            luminance = 0.299 * rgba[0] + 0.587 * rgba[1] + 0.114 * rgba[2]
+            text_color = "#ffffff" if luminance < 0.48 else "#111827"
+            ax.text(j, i, format(float(value), fmt), ha="center", va="center", color=text_color, fontsize=8)
     if colorbar_label is not None:
         cbar = ax.figure.colorbar(image, ax=ax, fraction=0.046, pad=0.04)
         cbar.set_label(colorbar_label)
@@ -1234,12 +1537,22 @@ def main(k_worst: int = 3) -> None:
     )
     all_results = pd.concat([load_model_results(model) for model in MODELS], ignore_index=True)
     success = all_results[all_results["status"] == "success"].copy()
-    wav2 = success[success["model"] == "wav2vec2"].copy()
+    wav2_raw = success[success["model"] == "wav2vec2"].copy()
+    wav2, wav2_deduplication_metadata = deduplicate_clean_snr_variants(wav2_raw)
+    success_with_deduped_wav2 = pd.concat(
+        [success[success["model"] != "wav2vec2"], wav2],
+        ignore_index=True,
+    )
+    all_results_with_deduped_wav2 = pd.concat(
+        [all_results[all_results["model"] != "wav2vec2"], wav2],
+        ignore_index=True,
+    )
     cross = success[success["is_cross_model_clip"]].copy()
     timing = load_timing_results()
     real_eval = load_real_eval_wer_orc_results()
     real_transfer = build_real_transferability_summary(cross, real_eval)
-    dss_wer_tests = analyse_dss_wer_hypothesis_tests(success)
+    dss_wer_tests = analyse_dss_wer_hypothesis_tests(success_with_deduped_wav2)
+    rq2_cross_model_tests = analyse_rq2_cross_model_tests(cross, metric="wer")
     wav2_wer_surface = fit_wav2vec2_wer_surface(wav2)
     wav2_effect_sizes = compute_effect_sizes(wav2)
 
@@ -1258,11 +1571,22 @@ def main(k_worst: int = 3) -> None:
     plot_timing_tradeoff(cross, timing)
     plot_real_transfer_wer_change(real_transfer)
     worst_wer_examples = get_k_worst_wer_examples(k=k_worst)
-    wer_outlier_conditions = summarise_wer_outlier_conditions_by_model(all_results)
+    wer_outlier_conditions = summarise_wer_outlier_conditions_by_model(all_results_with_deduped_wav2)
+    wav2_full_scope_summary = build_wav2vec2_full_scope_summary(
+        wav2_raw=wav2_raw,
+        wav2=wav2,
+        deduplication_metadata=wav2_deduplication_metadata,
+        wav2_effect_sizes=wav2_effect_sizes,
+        wav2_wer_surface=wav2_wer_surface,
+        wav2_delta_vs_ovr=wav2_delta_vs_ovr,
+        wav2_delta_vs_snr=wav2_delta_vs_snr,
+    )
 
     summary = {
         "source_files": [f"WER_results_{model}.json" for model in MODELS],
         "cross_model_clip_regex": CROSS_MODEL_CLIP_REGEX.pattern,
+        "wav2vec2_full_clean_snr_deduplication": wav2_deduplication_metadata,
+        "wav2vec2_full_raw": summarise(wav2_raw["wer"]),
         "wav2vec2_full": summarise(wav2["wer"]),
         "wav2vec2_by_snr": {
             key: summarise(group["wer"])
@@ -1273,6 +1597,10 @@ def main(k_worst: int = 3) -> None:
             for key, group in wav2.groupby("overlap_ratio", dropna=False)
         },
         "wav2vec2_by_noise_type": {
+            key: summarise(group["wer"])
+            for key, group in wav2[wav2["snr_label"] != "clean"].groupby("noise_type", dropna=False)
+        },
+        "wav2vec2_by_noise_type_including_clean_category": {
             key: summarise(group["wer"])
             for key, group in wav2.groupby("noise_type", dropna=False)
         },
@@ -1335,6 +1663,7 @@ def main(k_worst: int = 3) -> None:
             .unstack()
             .to_dict()
         ),
+        "rq2_cross_model_tests": rq2_cross_model_tests,
         "real_transferability": {
             "source_file": str(REAL_EVAL_WER_ORC_PATH),
             "synthetic_source": "Matched 700-clip subset selected by cross_model_clip_regex",
@@ -1352,6 +1681,10 @@ def main(k_worst: int = 3) -> None:
         },
     }
     SUMMARY_PATH.write_text(json.dumps(summary, indent=2, sort_keys=True), encoding="utf-8")
+    WAV2VEC2_FULL_SCOPE_SUMMARY_PATH.write_text(
+        json.dumps(wav2_full_scope_summary, indent=2, sort_keys=True),
+        encoding="utf-8",
+    )
     worst_payload = {
         "k_per_model": int(k_worst),
         "count_total": int(sum(len(items) for items in worst_wer_examples.values())),
@@ -1364,6 +1697,7 @@ def main(k_worst: int = 3) -> None:
     )
     print(f"Wrote figures to {FIGURE_DIR}")
     print(f"Wrote summary to {SUMMARY_PATH}")
+    print(f"Wrote wav2vec2 full-scope summary to {WAV2VEC2_FULL_SCOPE_SUMMARY_PATH}")
     print(f"Wrote worst-WER examples to {WORST_WER_PATH}")
     print(f"Wrote WER outlier condition summary to {WER_OUTLIER_CONDITIONS_PATH}")
 

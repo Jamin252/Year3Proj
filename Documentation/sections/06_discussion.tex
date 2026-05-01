@@ -1,0 +1,117 @@
+\chapter{Discussion and Conclusion}
+\label{chap:discussion}
+
+\section{Chapter Overview}
+This chapter concludes the empirical and methodological contributions of the dissertation. The main target of the project was to evaluate the robustness of automatic speech recognition (ASR) to overlapping speech, while separating the effects of overlap, background noise, model architecture, and metric choice. This problem is important because realistic multi-speaker speech contains interruptions, short responses, simultaneous speech, background noise and other acoustic challenges \citep{Conversation_in_small_groups, Shriberg2001ObservationsOO, cetin06_interspeech}. Established corpora such as AMI and CHiME-6 preserve these phenomena. Still, they do not allow the independent control of overlap ratio (OVR), signal-to-noise ratio (SNR), noise type, duration and speaker count \citep{ami-corpus, carletta2005ami, chime6, watanabe2020chime6challengetacklingmultispeakerspeech}. On the other hand, synthetic corpora such as WHAM!, WHAMR!, LibriCSS, and LibriMix have made strong progress in noise, reverberation, overlap modelling and audio diversity, but they primarily provide a benchmark instead of a controlled evaluation framework for factor-level analysis \citep{wichern2019whamextendingspeechseparation, maciejewski2020whamrnoisyreverberantsinglechannel, chen2020continuousspeechseparationdataset, cosentino2020librimixopensourcedatasetgeneralizable}.
+
+This dissertation therefore made the following contributions:
+\begin{enumerate}
+    \item We developed a reusable synthetic mixture generation pipeline that allows OVR, SNR, noise type, duration, and speaker count to be independently controlled.
+    \item We used this framework to conduct an evaluation of the effects of OVR, SNR, and noise type on ASR performance.
+    \item We used this pipeline to compare the performance of four publicly available ASR models: \texttt{faster-whisper}, \texttt{WhisperX}, \texttt{wav2vec-2.0}, and \texttt{Parakeet}, which represent a range of model architectures and pretraining.
+    \item We compared trends in the synthetic data with those in the real ChiME-6 corpus to assess transferability.
+    \item We proposed a novel metric, the \emph{Double-Stream Serialisation WER} (DSS-WER), designed for the specific use case where a two-stream reference is compared against a single-stream hypothesis. We designed and evaluated an approximation algorithm for it. 
+\end{enumerate}
+This dissertation, therefore, contributed both an experimental framework and an approximation algorithm for a structure-mismatch analysis problem common in practical ASR evaluation.
+
+\section{Discussion}
+We summarise and discuss the main findings of the dissertation. A summary of the findings is given in \Cref{tab:discussion_rq_summary}
+
+\begin{table}[htbp]
+\centering
+\caption{Summary of dissertation findings by research question.}
+\label{tab:discussion_rq_summary}
+\small
+\begin{tabularx}{\linewidth}{p{2.2cm}X}
+\toprule
+\textbf{Question} & \textbf{Conclusion} \\
+\midrule
+RQ1 & WER increases as the overlap ratio rises and SNR falls. The fitted \texttt{wav2vec-2.0} surface indicates that overlap is the dominant degradation factor, while the negative interaction term suggests that the marginal effect of one degradation source becomes smaller when the other is already severe. \\
+RQ2 & \texttt{faster-whisper} gives the lowest WER on the matched synthetic subset, while \texttt{wav2vec-2.0} gives the best latency--accuracy trade-off. Model ranking, therefore, depends on whether accuracy, speed, or deployment constraints are prioritised. \\
+RQ3 & Synthetic trends transfer only partially to real CHiME-6 audio. The real-data ranking changes substantially, showing that controlled synthetic benchmarking is diagnostically useful but insufficient as a sole proxy for real conversational robustness. \\
+RQ4 & DSS-WER is close to ordinary WER in non-overlapping clips and significantly lower overall in overlapping clips. However, its behaviour is model-dependent, and it should be interpreted as a task-specific complementary metric rather than a universal replacement for WER. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{RQ1: Effect of Overlap Ratio and SNR on ASR Performance}
+The results in \Cref{chap:statistical_analysis} confirm the central assumption of the dissertation, that overlap and noise should be treated as experimental variables rather than confounds. The data evaluated with \texttt{wav2vec-2.0} showed a clear increase in WER as OVR increased and SNR decreased. This result is consistent with the previous literature, which shows that multi-speaker speech violates the single-speaker assumption of many ASR models \citep{galibert2013methodologies, chen2020continuousspeechseparationdataset, von_Neumann_2023}. It also confirms the intuition that noise degrades ASR performance. 
+
+The fitted surface in \Cref{sec:rq1_analysis} estimates
+\begin{equation}
+    \widehat{\mathrm{WER}} =
+    0.020 + 1.015\,\mathrm{OVR} + 0.281\,z - 0.338\,(\mathrm{OVR}\times z),
+\end{equation}
+where
+\begin{equation}
+    z(\mathrm{SNR}) =
+    \begin{cases}
+        0, & \mathrm{clean}\;(\mathrm{SNR}=\infty),\\
+        10^{-\mathrm{SNR}_{\mathrm{dB}}/20}, & \text{otherwise}.
+    \end{cases}
+\end{equation}
+$z$ represents the linear SNR, the ratio of signal to noise amplitudes (a higher $z$ indicates a noisier environment). The positive coefficients of OVR and $z$ indicate that both higher overlap and louder noise lead to higher WER, where OVR contributes more to the increase in WER than noise. The negative interaction term suggests an antagonistic relationship between overlap and noise, in which the marginal effect of one degradation source weakens when the other is already severe. This means that the two error sources partly saturate the model's error capacity.
+
+This interpretation is consistent with the motivation behind recent realistic overlap simulation work. \citet{chen2020continuousspeechseparationdataset} show that continuous, partially overlapping speech requires different modelling assumptions from fully separated speech. \citet{yang2022simulatingrealisticspeechoverlaps} show that random overlap does not provide a sufficient overlapping pattern to train models that can handle realistic conversation. The present findings support both of these claims, showing that the effect of overlap is not purely additive but interacts with other degradation sources, and that WER rate changes rapidly as OVR increases, suggesting that the model is not robust enough to handle higher OVR levels. The public noise category also produces the higher WER, suggesting that irregular, speech-like, or variable background noise is more disruptive than more stable domestic or transportation noise. This aligns with the dissertation's use of DEMAND as a source, providing a variety of realistic noise types rather than monotonic noise such as white noise \cite{demand}.
+
+\section{RQ2: ASR Model Comparison}
+\label{sec:rq2_discussion}
+The matched synthetic comparison showed that \texttt{faster-whisper} had the lowest mean WER, followed by \texttt{WhisperX}, \texttt{wav2vec-2.0} and \texttt{Parakeet}. This broadly reflects the advantages of large-scale, weakly supervised encoder-decoder ASR under diverse conditions, as represented by the \texttt{Whisper} family \citep{radford2022robustspeechrecognitionlargescale, github_openai_faster-whisper, bain2026whisperx_repo}. However, the timing benchmark showed that \texttt{wav2vec-2.0} was substantially faster than the \texttt{Whisper} models while producing a moderately low WER, which makes it a more balanced choice for latency-sensitive applications like real-time transcription \citep{baevski2020wav2vec20frameworkselfsupervised, facebook_wav2vec2-large-960h}.
+
+However, the model comparison should not be treated as a universal ranking. Instead, it is a statement about the advantages and disadvantages of different model architectures. \texttt{faster-whisper} and \texttt{WhisperX} had the best synthetic WER, but they are also the slowest, and more importantly, they showed severe hallucination issues in some clips. These failures are different in \texttt{waver2vec-2.0}, where it tended to produce random characters under severe noise rather than hallucinating fluent but incorrect text. This distinction is important because WER does not capture the nuance of error types as it collapses all errors into a single metric \citep{morris04_interspeech, sasindran2023hevalnewhybridevaluation, ellis2026werunawareassessingasr, hughes2025problemwithwer}. The hallucination issue is particularly problematic for real-world applications, as it is harder to detect and mitigate than random character errors.
+
+\subsection{RQ3: Synthetic-Real Trend Comparison}
+The transferability analysis is one of the most important findings of the dissertation. The synthetic benchmark successfully captured the effects of overlap and SNR under controlled conditions, but the real ChiME-6 evaluation showed a different model ranking. This confirms a common trade-off in ASR evaluation, where controlled synthetic benchmarking provides diagnostic insights into specific factors but may not fully capture the complexity of real conversational audio \citep{ami-corpus, carletta2005ami, chime6, watanabe2020chime6challengetacklingmultispeakerspeech}. Neither is better than the other, instead, they should be treated as complementary evaluation approaches.
+
+Such a difference is especially instructive in \texttt{Parakeet}'s case, where it had the worst WER on the synthetic benchmark but the best WER on the real CHiME-6 data. This may suggest that the conformer- and transducer-based architecture of \texttt{Parakeet} reflects a different balance between acoustic modelling and decoding assumptions. 
+
+Several factors may contribute to this gap between synthetic and real performance across the four models. The synthetic data uses clean speech from LibriSpeech and VCTK with additive DEMAND noise \citep{librispeech, voxceleb, demand}. Although this allows for controlled manipulation of degradation factors, it does not fully reproduce far-field recording, room reverberation, microphone characteristics, spontaneous speech phenomena, speaker movement, and other acoustic and linguistic complexities of real conversational audio. CHiME-6, in contrast, contains real multi-speaker recordings where all these factors are present \cite{watanabe2020chime6challengetacklingmultispeakerspeech}. This dissertation does not provide sufficient evidence to explain the WER gap or the reversal in rankings, but it highlights the importance of evaluating ASR models on both synthetic and real data to understand their strengths and weaknesses under different conditions. However, this does not invalidate the use of synthetic benchmarking, but rather highlights its role as a diagnostic tool instead of the sole evaluation approach.
+
+These results align with the direction of more recent CHiME challenges, which have moved towards recognising far-field, multi-speaker, multi-array and more realistic audio \citep{BARKER2017605, chime7, chime8_task1, cornell2024chime8dasrchallengegeneralizable}. It has also seen increasing integration of separation, diarisation, and recognition in modular or end-to-end pipelines \citep{raj2020integrationspeechseparationdiarization, chen2020continuousspeechseparationconformer, vonneumann2024meetingrecognitioncontinuousspeech}. This dissertation complements this direction by showing what can be learned from controlled synthetic benchmarking, while also demonstrating the limitations in transferability to real audio.
+
+\section{RQ4: DSS-WER Analysis}
+The DSS-WER analysis addresses a narrower but important methodological problem. Standard WER assumes a single-input single-output scenario, where one reference transcript is compared against one hypothesis transcript. However, in multi-speaker ASR evaluation, the reference may consist of multiple parallel streams while the ASR still outputs a single stream. Existing multi-speaker metrics like cpWER, OCR-WER, MIMO-WER and DI-cpWER formalise several important segmented, speaker-attributed or speaker-agnostic settings, but the double-stream-reference to single-stream-hypothesis case remains not well-addressed in practice \citep{galibert2013methodologies, von_Neumann_2023, vonneumann2024meetevaltoolkitcomputationword, von_Neumann_2025, Word_Error_Rate_Definitions}. 
+
+DSS-WER is introduced to address this case by allowing any interleaving of the two reference streams that preserves the within-stream partial order. The approximation algorithm is designed to provide a close estimate of this metric without the combinatorial time complexity of exhaustively searching all possible interleavings. The results support the validity of this algorithm. In non-overlapping clips, DSS-WER remains very close to the ordinary WER, as expected, since the two reference streams do not contain interleaved words. In overlapping clips, DSS-WER is statistically significantly lower than ordinary WER overall. This suggests that standard WER can overestimate and overpenalise a hypothesis that serialises overlapping speech in a valid but different order from the reference. 
+
+However, the DSS-WER is not a universal replacement for WER. It is an approximate metric. For \texttt{Parakeet}, the DSS-WER is even higher than the mean WER in the overlapping condition. This implies that the beam-search algorithm can be sensitive to the quality of hypotheses and to search ambiguity. In addition, the DSS-WER has a more complex algorithmic structure and a much higher computational cost than WER. This metric and algorithm should therefore be treated as a task-specific complementary metric for the specific use case rather than a universal replacement for WER. Its strongest use case is to test whether a model's apparent WER is due to valid serialisation differences or to more fundamental recognition errors, isolating the point of failure. This is consistent with the recent metric literature that emphasises the importance of using multiple complementary metrics to reflect different dimensions of ASR performance and error types \citep{von_Neumann_2023, vonneumann2024meetevaltoolkitcomputationword, von_Neumann_2025}.
+
+\section{Main Contributions}
+The first contribution is the development of a reusable, controlled framework for generating synthetic mixtures. By varying OVR, SNR, noise type, duration, and speaker count, this framework enables evaluation of factor-level analyses that cannot be fully achieved with a single synthetic or real corpus. This sits as a customisable framework with enough control for casual interpretation.
+
+The second contribution is the conduct of a controlled evaluation of the effects of OVR, SNR, and noise type on ASR performance. This evaluation confirms the intuitive positive relationship between WER, OVR and SNR. It also shows that the effect of OVR is stronger than SNR and that there is an antagonistic interaction between them.
+
+The third contribution is the conduct of a comparison of four publicly available ASR models under identical conditions. This dissertation shows that accuracy, latency and failure modes do not align perfectly. \texttt{faster-whisper} has the best synthetic WER, \texttt{wav2vec-2.0} gave the best speed, and \texttt{Parakeet} had the best real WER to the CHiME-6 evaluation subset. This provides a nuanced picture of the advantages and disadvantages of different model architectures.
+
+The fourth contribution is the synthetic-to-real comparison. The dissertation shows that controlled synthetic benchmarking is useful for diagnosing specific factor effects, but only partially captures the ASR model performance on real conversational audio. These findings are important as they prevent the synthetic benchmark from being over-interpreted as a proxy for real performance. Hence, the framework is best understood as a diagnostic tool for specific factor effects rather than a comprehensive evaluation of real-world performance.
+
+The fifth contribution is the proposal and evaluation of the DSS-WER metric and the approximation algorithm. DSS-WER targets the specific structure-mismatch problem in which a two-stream reference is compared against a single-stream hypothesis. The evaluation results show that DSS-WER can reduce WER by accounting for valid serialisation differences, while also highlighting the need for further improvements in accuracy and computational cost.
+
+\section{Limitations}
+Several limitations constrain the interpretation and generalisability of the findings. They include the following:
+\begin{itemize}
+    \item The synthetic data is generated from clean speech from LibriSpeech and VCTK, with additive DEMAND noise. Although this allows for independent manipulation of degradation factors, it does not fully capture the acoustic and linguistic complexities of real conversational audio. This means the synthetic benchmark is suitable for control acoustic analysis but less suitable for modelling linguistic and conversational phenomena.
+    \item The main experiment fixes the number of speakers to two and the duration to 60 seconds. This means the findings may not generalise to scenarios with more speakers or longer duration. The conclusion should therefore be read as stronger for two-speaker overlap than for multi-speaker scenarios.
+    \item The real data evaluation uses 100 clips from a single CHiME-6 session. This is sufficient to show that transferability is only partial, but it does not provide a comprehensive evaluation of overall performance. A broader real-data evaluation would be needed before making a more general conclusion.
+    \item Model coverage is limited to four ASR systems, and not every model was evaluated on the full set of 4000 clips. The matched 700 synthetic clips support fair cross-comparison, but do not provide the full factorial model-by-condition analysis. Therefore, the full factorial analysis results on \texttt{wav2vec-2.0} are more useful for understanding the factor effects, while the matched subset is more suitable for model comparison.
+    \item The DSS-WER approximation algorithm is not exact. The evaluation results are encouraging, but the \texttt{Parakeet} case shows that it can be sensitive to hypothesis quality and to search ambiguity. The metric also has a much higher computational cost than WER. It should therefore be treated as a task-specific complementary metric rather than a universal replacement for WER.
+\end{itemize}
+
+\section{Further Research Directions}
+\subsection{More Realistic Synthetic Mixture Generation}
+Future directions for synthetic mixture generation are to improve the realism of the synthetic generation algorithm while preserving factor control. This could include reverberation, spatialised sources, microphone-array simulation and more varied background noise, following the motivation behind WHAM!, WHAMR!, LibriCSS and other recent synthetic corpora \citep{wichern2019whamextendingspeechseparation, maciejewski2020whamrnoisyreverberantsinglechannel, chen2020continuousspeechseparationdataset}. A second improvement would be to replace the current random-utterance overlap simulation with a learned overlap simulation that reproduces more realistic patterns \citet{yang2022simulatingrealisticspeechoverlaps}.
+\subsection{Broader Real-Data Evaluation}
+The synthetic-to-real transferability analysis could be extended by evaluating on a broader range of real conversational audio, including more sessions from CHiME-6 and other corpora such as AMI or CHiME-7 \citep{ami-corpus, carletta2005ami, chime6, watanabe2020chime6challengetacklingmultispeakerspeech, chime7}. This would allow for a more comprehensive evaluation across a wider distribution of environmental conditions. This would make it possible to distinguish which synthetic trends can transfer to real audio and which cannot.
+
+\subsection{Further Development of DSS-WER}
+DSS-WER could be further developed in different directions. It could be compared with the exact solution to quantify the approximation error and tune the algorithm's hyperparameters. It could also be stress-tested under low-quality hypotheses to understand the failure modes. DSS-WER could also be optimised in terms of computational cost. For example, a better heuristic search strategy could be designed to reduce the search space. Lastly, the algorithm could be extended to handle more than two reference streams.
+
+\subsection{Training and Adaptation Experiments}
+The present dissertation uses the mixture generation framework for evaluation, but it could also be used for training and adaptation experiments. The next step could be to train models on different controlled mixtures and test whether the robustness to overlap and noise can be improved. Prior work suggests realistic overlap simulation can improve multi-speaker ASR performance \cite{yang2022simulatingrealisticspeechoverlaps}. The present framework would allow such gains to be analysed more systematically, for example, whether training on higher OVR levels can improve robustness to overlap in general or only to higher OVR levels, and whether training on specific noise types can improve robustness to other noise types.
+
+\section{Final Conclusion}
+This dissertation shows that robust ASR evaluation under overlapping speech requires a combination of controlled synthetic benchmarking and real conversational evaluation. The synthetic benchmark shows that OVR and SNR have a clear, interpretable effect on WER, with OVR being the more dominant factor. The model comparison shows that different models have different advantages and disadvantages in terms of accuracy, speed and failure modes. The real-data evaluation further shows that model ranking cannot be assumed to transfer from synthetic to real audio.
+
+This dissertation also contributes a novel metric, DSS-WER, and an approximation algorithm for it, to address the specific use case of comparing a two-stream reference against a single-stream hypothesis. It provides a first step towards tackling the structure-mismatch problem in multi-speaker ASR evaluation, while also highlighting its limitations and the need for further development.
+
+In conclusion, overlapping speech should not be treated as a confound in ASR evaluation, but rather as an important experimental factor. It is a source of structural degradation that interacts with other factors, such as noise, model architecture, and metric choice. A controlled synthetic benchmarking framework can be paired with real-corpus validation and careful metric selection to offer a clearer picture of ASR performance under overlapping speech, where ASR models are increasingly expected to perform well.

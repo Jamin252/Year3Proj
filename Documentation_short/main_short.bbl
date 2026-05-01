@@ -1,0 +1,70 @@
+\begin{thebibliography}{10}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{AMI Consortium}(2007)]{ami-corpus}
+{AMI Consortium}.
+\newblock Ami meeting corpus, 2007.
+
+\bibitem[Watanabe et~al.(2020)Watanabe, Estevez, Akisawa, and
+  Vincent]{watanabe2020chime6challengetacklingmultispeakerspeech}
+Shinji Watanabe, Mariano Estevez, Norihiro Akisawa, and Emmanuel Vincent.
+\newblock Chime-6 challenge: Tacking multi-speaker speech in everyday
+  environments.
+\newblock In \emph{Proc. IEEE Automatic Speech Recognition and Understanding
+  Workshop (ASRU)}, pages 1--8, 2020.
+
+\bibitem[Pratap et~al.(2020)Pratap, Wang, Chung, Hsu, Rosenberg, Rivertz, and
+  Moreno]{pratap2020librispeech}
+Varun Pratap, Wei-Ning Wang, Yu~Chung, Wei-Ning Hsu, Adam Rosenberg, Alex
+  Rivertz, and Laura Moreno.
+\newblock A conformer-based asr system for librispeech.
+\newblock In \emph{Proc. Interspeech}, 2020.
+
+\bibitem[Carletta et~al.(2005)Carletta, Ashby, Bourban, Flynn, Guillemot, Hain,
+  Kadlec, Karaiskos, Kronenthal, Lathoud, and McCowan]{carletta2005ami}
+Jean Carletta, Steve Ashby, Stefan Bourban, Martin Flynn, Mariet Guillemot,
+  Thomas Hain, Martin Kadlec, Vassilis Karaiskos, Marco Kronenthal, Guillaume
+  Lathoud, and Iain McCowan.
+\newblock The ami meeting corpus: A pre-announcement.
+\newblock Technical report, ESPRIT Meeting Workshop, 2005.
+
+\bibitem[Yang and Kendall(2022)]{yang2022simulatingrealisticspeechoverlaps}
+Chao-Han~Huck Yang and Alex Kendall.
+\newblock Simulating realistic multi-speaker speech overlaps for robust asr
+  evaluation.
+\newblock \emph{Computer Speech \& Language}, 75:\penalty0 101240, 2022.
+
+\bibitem[Chen et~al.(2020)Chen, Hu, Xu, and
+  Yoshioka]{chen2020continuousspeechseparationconformer}
+Qiong Chen, Zhuo Hu, Min Xu, and Takaaki Yoshioka.
+\newblock Continuous speech separation with conformer.
+\newblock In \emph{Proc. ICASSP}, pages 6199--6203, 2020.
+
+\bibitem[von Neumann et~al.(2023)von Neumann, Boeddeker, and
+  Delcroix]{Word_Error_Rate_Definitions}
+Thilo von Neumann, Christoph Boeddeker, and Marc Delcroix.
+\newblock \emph{Word Error Rate Definitions and Evaluation}.
+\newblock In: Proceedings of MLSP, 2023.
+
+\bibitem[Baevski et~al.(2020)Baevski, Zhou, Mohamed, and
+  Auli]{baevski2020wav2vec20frameworkselfsupervised}
+Alexei Baevski, Henry Zhou, Abdelrahman Mohamed, and Michael Auli.
+\newblock wav2vec 2.0: A framework for self-supervised learning of speech
+  representations.
+\newblock \emph{Proc. NeurIPS}, 33:\penalty0 12449--12460, 2020.
+
+\bibitem[Yang and Williams(2021)]{Yang2021OverlapEffect}
+Chao-Han~Huck Yang and Christopher Williams.
+\newblock Effect of speech overlap on asr performance.
+\newblock \emph{Proc. Interspeech}, 2021.
+
+\bibitem[{Tomoki Hayashi et al.}(2020)]{ESPnet}
+{Tomoki Hayashi et al.}
+\newblock Espnet.
+\newblock \url{https://espnet.github.io}, 2020.
+
+\end{thebibliography}

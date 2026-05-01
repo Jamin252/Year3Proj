@@ -1,107 +1,125 @@
-\contentsline {chapter}{\numberline {1}Introduction}{3}{chapter.1}%
-\contentsline {chapter}{\numberline {2}Literature Review}{5}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Foundational Knowledge}{5}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}Multi-Speaker Corpora for ASR Research}{5}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}Overlap Modelling and Evaluation Metrics for Multi-Speaker ASR}{6}{subsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.1.3}ASR Architectures and Benchmark Systems for Robust Speech Transcription}{6}{subsection.2.1.3}%
-\contentsline {section}{\numberline {2.2}Establishing a Gap in the Literature}{7}{section.2.2}%
-\contentsline {section}{\numberline {2.3}Recent Advances}{7}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}Realism and Generalisation in Overlap Modelling}{7}{subsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.3.2}Integrated Pipelines and End-to-End ASR for Overlapping Speech}{7}{subsection.2.3.2}%
-\contentsline {subsection}{\numberline {2.3.3}Unified Metrics for Multi-Speaker ASR Evaluation}{8}{subsection.2.3.3}%
-\contentsline {subsection}{\numberline {2.3.4}Summary}{9}{subsection.2.3.4}%
-\contentsline {chapter}{\numberline {3}Architectural Design}{10}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Design Objective and Principles}{10}{section.3.1}%
-\contentsline {section}{\numberline {3.2}System Overview}{10}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}System Boundary and Design Rationale}{10}{subsection.3.2.1}%
-\contentsline {section}{\numberline {3.3}Artifact Structure}{11}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Synthetic Audio Manifest Structure}{11}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Transcription Output Schema}{11}{subsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.3.3}Metric Output Schema}{11}{subsection.3.3.3}%
-\contentsline {section}{\numberline {3.4}Synthetic Mixture Generation}{12}{section.3.4}%
-\contentsline {subsection}{\numberline {3.4.1}Speaker and Clip Selection}{13}{subsection.3.4.1}%
-\contentsline {subsection}{\numberline {3.4.2}Offset Scheduling}{13}{subsection.3.4.2}%
-\contentsline {subsection}{\numberline {3.4.3}Noise Addition}{14}{subsection.3.4.3}%
-\contentsline {section}{\numberline {3.5}ASR Inference and Experiment Orchestration}{14}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}Fairness Controls}{15}{subsection.3.5.1}%
-\contentsline {section}{\numberline {3.6}Evaluation Architecture}{15}{section.3.6}%
-\contentsline {subsection}{\numberline {3.6.1}Established Metric Modules}{15}{subsection.3.6.1}%
-\contentsline {subsubsection}{WER}{15}{section*.7}%
-\contentsline {subsubsection}{ORC-WER}{16}{section*.8}%
-\contentsline {subsection}{\numberline {3.6.2}Proposed Metric Module: Double-Stream Serialised WER (DSS-WER)}{16}{subsection.3.6.2}%
-\contentsline {subsubsection}{Example of DSS-WER vs. WER}{16}{section*.9}%
-\contentsline {subsection}{\numberline {3.6.3}Beam-Search Approximation for DSS-WER}{16}{subsection.3.6.3}%
-\contentsline {subsubsection}{Normalisation}{16}{section*.12}%
-\contentsline {subsubsection}{State Definition}{17}{section*.13}%
-\contentsline {subsubsection}{Transition and Cost}{17}{section*.14}%
-\contentsline {subsubsection}{Scoring Function}{17}{section*.15}%
-\contentsline {subsubsection}{Heuristic Function}{18}{section*.16}%
-\contentsline {subsubsection}{Beam Pruning}{18}{section*.17}%
-\contentsline {subsubsection}{Bidirectional Search}{18}{section*.18}%
-\contentsline {subsubsection}{Final Output}{19}{section*.19}%
-\contentsline {subsubsection}{Complexity}{19}{section*.20}%
-\contentsline {subsection}{\numberline {3.6.4}Metric Output Schema}{19}{subsection.3.6.4}%
-\contentsline {section}{\numberline {3.7}Benchmarking}{19}{section.3.7}%
-\contentsline {section}{\numberline {3.8}Real-Data Segmentation and Evaluation Pipeline}{20}{section.3.8}%
-\contentsline {section}{\numberline {3.9}Statistical Analysis Module}{20}{section.3.9}%
-\contentsline {section}{\numberline {3.10}Design Trade-offs and Limitations}{20}{section.3.10}%
-\contentsline {section}{\numberline {3.11}Reproducibility and Experimental Setup}{20}{section.3.11}%
-\contentsline {chapter}{\numberline {4}Experimental Design}{26}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Objective and Scope}{26}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Research Questions}{26}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Design Principles}{27}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Track 1: Controlled Synthetic Benchmark}{27}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Speech and Noise Sources}{27}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Synthetic Mixture Generation}{28}{subsection.4.4.2}%
-\contentsline {subsection}{\numberline {4.4.3}Noise Addition and SNR Control}{28}{subsection.4.4.3}%
-\contentsline {subsection}{\numberline {4.4.4}Experimental Conditions and Corpus Size}{28}{subsection.4.4.4}%
-\contentsline {paragraph}{Overlap Ratios Choice.}{29}{section*.24}%
-\contentsline {paragraph}{Maximum Concurrent Speakers Choice.}{29}{section*.25}%
-\contentsline {paragraph}{Signal-to-noise Ratio Choice.}{29}{section*.26}%
-\contentsline {paragraph}{Noise Type Choice.}{29}{section*.27}%
-\contentsline {section}{\numberline {4.5}Track 2: Real-world Data Transferability Evaluation}{29}{section.4.5}%
-\contentsline {section}{\numberline {4.6}ASR Models Under Evaluation}{30}{section.4.6}%
-\contentsline {section}{\numberline {4.7}Scoring Metrics}{30}{section.4.7}%
-\contentsline {subsection}{\numberline {4.7.1}Reference and Hypothesis Structure}{30}{subsection.4.7.1}%
-\contentsline {subsection}{\numberline {4.7.2}Metrics}{31}{subsection.4.7.2}%
-\contentsline {subsection}{\numberline {4.7.3}Metric Application Rules}{31}{subsection.4.7.3}%
-\contentsline {section}{\numberline {4.8}Experimental Unit and Comparison Strategy}{31}{section.4.8}%
-\contentsline {section}{\numberline {4.9}Track 3: Hypothesis Testing of DSS-WER}{31}{section.4.9}%
-\contentsline {subsection}{\numberline {4.9.1}Primary Hypothesis}{32}{subsection.4.9.1}%
-\contentsline {subsection}{\numberline {4.9.2}Condition-Specific Hypotheses}{32}{subsection.4.9.2}%
-\contentsline {paragraph}{Non-overlapping clips.}{32}{section*.28}%
-\contentsline {paragraph}{Overlapping clips.}{32}{section*.29}%
-\contentsline {subsection}{\numberline {4.9.3}Test Procedure}{32}{subsection.4.9.3}%
-\contentsline {subsection}{\numberline {4.9.4}Interpretation}{33}{subsection.4.9.4}%
-\contentsline {section}{\numberline {4.10}Reproducibility}{33}{section.4.10}%
-\contentsline {section}{\numberline {4.11}Scope and Limitations}{33}{section.4.11}%
-\contentsline {chapter}{\numberline {5}Statistical Analysis}{34}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Analytical Aims and Data Provenance}{34}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Variable Selection}{35}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}Dependent Variables}{35}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {5.2.2}Explanatory Variables}{35}{subsection.5.2.2}%
-\contentsline {section}{\numberline {5.3}Statistical Methods}{36}{section.5.3}%
-\contentsline {section}{\numberline {5.4}Overview of the Evaluation Results}{36}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}Scope 1: Cross-Model Comparison}{36}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}Inference Time}{36}{subsection.5.4.2}%
-\contentsline {section}{\numberline {5.5}Scope 2: Full Condition Analysis of wav2vec-2.0}{37}{section.5.5}%
-\contentsline {section}{\numberline {5.6}RQ1: Effects of Overlap Ratio and Signal-to-Noise Ratio}{39}{section.5.6}%
-\contentsline {subsection}{\numberline {5.6.1}Effect of Overlap Ratio}{39}{subsection.5.6.1}%
-\contentsline {subsection}{\numberline {5.6.2}Effect of Signal-to-Noise Ratio}{40}{subsection.5.6.2}%
-\contentsline {subsection}{\numberline {5.6.3}Summary}{41}{subsection.5.6.3}%
-\contentsline {section}{\numberline {5.7}RQ2: Comparison of ASR Models}{41}{section.5.7}%
-\contentsline {subsection}{\numberline {5.7.1}Overall Comparison}{41}{subsection.5.7.1}%
-\contentsline {subsection}{\numberline {5.7.2}Extreme Cases}{42}{subsection.5.7.2}%
-\contentsline {paragraph}{\texttt {faster-whisper}.}{42}{section*.42}%
-\contentsline {paragraph}{\texttt {WhisperX}.}{43}{section*.43}%
-\contentsline {paragraph}{\texttt {wav2vec-2.0}.}{43}{section*.44}%
-\contentsline {paragraph}{\texttt {Parakeet}.}{43}{section*.45}%
-\contentsline {subsection}{\numberline {5.7.3}Inference Efficiency}{44}{subsection.5.7.3}%
-\contentsline {subsection}{\numberline {5.7.4}Summary}{44}{subsection.5.7.4}%
-\contentsline {section}{\numberline {5.8}RQ3: Transferability of ASR Performance Trends}{44}{section.5.8}%
-\contentsline {section}{\numberline {5.9}RQ4: Evaluation of DSS-WER}{45}{section.5.9}%
-\contentsline {section}{\numberline {5.10}Summary of Findings}{47}{section.5.10}%
-\contentsline {chapter}{\numberline {A}Pseudocode for DSS-WER Beam Search}{52}{appendix.A}%
-\contentsline {chapter}{\numberline {B}Software Configuration}{53}{appendix.B}%
-\contentsline {section}{\numberline {B.1}Software Dependencies}{53}{section.B.1}%
-\contentsline {section}{\numberline {B.2}ASR Models and Configurations}{53}{section.B.2}%
+\contentsline {chapter}{\numberline {1}Introduction}{4}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Literature Review}{6}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Foundational Knowledge}{6}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Multi-Speaker Corpora for ASR Research}{6}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Overlap Modelling and Evaluation Metrics for Multi-Speaker ASR}{7}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}ASR Architectures and Benchmark Systems for Robust Speech Transcription}{7}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2}Establishing a Gap in the Literature}{8}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Recent Advances}{8}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Realism and Generalisation in Overlap Modelling}{8}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Integrated Pipelines and End-to-End ASR for Overlapping Speech}{8}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Unified Metrics for Multi-Speaker ASR Evaluation}{9}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}Summary}{10}{subsection.2.3.4}%
+\contentsline {chapter}{\numberline {3}Architectural Design}{11}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Design Objective and Principles}{11}{section.3.1}%
+\contentsline {section}{\numberline {3.2}System Overview}{11}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}System Boundary and Design Rationale}{11}{subsection.3.2.1}%
+\contentsline {section}{\numberline {3.3}Artifact Structure}{12}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Synthetic Audio Manifest Structure}{12}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Transcription Output Schema}{12}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Metric Output Schema}{12}{subsection.3.3.3}%
+\contentsline {section}{\numberline {3.4}Synthetic Mixture Generation}{13}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Speaker and Clip Selection}{14}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Offset Scheduling}{14}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Noise Addition}{15}{subsection.3.4.3}%
+\contentsline {section}{\numberline {3.5}ASR Inference and Experiment Orchestration}{15}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Fairness Controls}{16}{subsection.3.5.1}%
+\contentsline {section}{\numberline {3.6}Evaluation Architecture}{16}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Established Metric Modules}{16}{subsection.3.6.1}%
+\contentsline {subsubsection}{WER}{16}{section*.8}%
+\contentsline {subsubsection}{ORC-WER}{17}{section*.9}%
+\contentsline {subsection}{\numberline {3.6.2}Proposed Metric Module: Double-Stream Serialised WER (DSS-WER)}{17}{subsection.3.6.2}%
+\contentsline {subsubsection}{Example of DSS-WER vs. WER}{17}{section*.10}%
+\contentsline {subsection}{\numberline {3.6.3}Beam-Search Approximation for DSS-WER}{17}{subsection.3.6.3}%
+\contentsline {subsubsection}{Normalisation}{17}{section*.13}%
+\contentsline {subsubsection}{State Definition}{18}{section*.14}%
+\contentsline {subsubsection}{Transition and Cost}{18}{section*.15}%
+\contentsline {subsubsection}{Scoring Function}{18}{section*.16}%
+\contentsline {subsubsection}{Heuristic Function}{19}{section*.17}%
+\contentsline {subsubsection}{Beam Pruning}{19}{section*.18}%
+\contentsline {subsubsection}{Bidirectional Search}{19}{section*.19}%
+\contentsline {subsubsection}{Final Output}{20}{section*.20}%
+\contentsline {subsubsection}{Complexity}{20}{section*.21}%
+\contentsline {subsection}{\numberline {3.6.4}Metric Output Schema}{20}{subsection.3.6.4}%
+\contentsline {section}{\numberline {3.7}Benchmarking}{20}{section.3.7}%
+\contentsline {section}{\numberline {3.8}Real-Data Segmentation and Evaluation Pipeline}{21}{section.3.8}%
+\contentsline {section}{\numberline {3.9}Statistical Analysis Module}{21}{section.3.9}%
+\contentsline {section}{\numberline {3.10}Design Trade-offs and Limitations}{21}{section.3.10}%
+\contentsline {section}{\numberline {3.11}Reproducibility and Experimental Setup}{21}{section.3.11}%
+\contentsline {chapter}{\numberline {4}Experimental Design}{27}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Objective and Scope}{27}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Research Questions}{27}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Design Principles}{28}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Track 1: Controlled Synthetic Benchmark}{28}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Speech and Noise Sources}{28}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Synthetic Mixture Generation}{29}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Noise Addition and SNR Control}{29}{subsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.4.4}Experimental Conditions and Corpus Size}{29}{subsection.4.4.4}%
+\contentsline {paragraph}{Overlap Ratios Choice.}{30}{section*.25}%
+\contentsline {paragraph}{Maximum Concurrent Speakers Choice.}{30}{section*.26}%
+\contentsline {paragraph}{Signal-to-noise Ratio Choice.}{30}{section*.27}%
+\contentsline {paragraph}{Noise Type Choice.}{30}{section*.28}%
+\contentsline {section}{\numberline {4.5}Track 2: Real-world Data Transferability Evaluation}{31}{section.4.5}%
+\contentsline {section}{\numberline {4.6}ASR Models Under Evaluation}{31}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Scoring Metrics}{31}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Reference and Hypothesis Structure}{31}{subsection.4.7.1}%
+\contentsline {subsection}{\numberline {4.7.2}Metrics}{32}{subsection.4.7.2}%
+\contentsline {subsection}{\numberline {4.7.3}Metric Application Rules}{32}{subsection.4.7.3}%
+\contentsline {section}{\numberline {4.8}Experimental Unit and Comparison Strategy}{32}{section.4.8}%
+\contentsline {section}{\numberline {4.9}Track 3: Hypothesis Testing of DSS-WER}{33}{section.4.9}%
+\contentsline {subsection}{\numberline {4.9.1}Primary Hypothesis}{33}{subsection.4.9.1}%
+\contentsline {subsection}{\numberline {4.9.2}Condition-Specific Hypotheses}{33}{subsection.4.9.2}%
+\contentsline {paragraph}{Non-overlapping clips.}{33}{section*.29}%
+\contentsline {paragraph}{Overlapping clips.}{33}{section*.30}%
+\contentsline {subsection}{\numberline {4.9.3}Test Procedure}{33}{subsection.4.9.3}%
+\contentsline {subsection}{\numberline {4.9.4}Interpretation}{34}{subsection.4.9.4}%
+\contentsline {section}{\numberline {4.10}Reproducibility}{34}{section.4.10}%
+\contentsline {section}{\numberline {4.11}Scope and Limitations}{34}{section.4.11}%
+\contentsline {chapter}{\numberline {5}Statistical Analysis}{35}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Analytical Aims and Data Provenance}{35}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Variable Selection}{36}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Dependent Variables}{36}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Explanatory Variables}{36}{subsection.5.2.2}%
+\contentsline {section}{\numberline {5.3}Statistical Methods}{37}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Overview of the Evaluation Results}{37}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Scope 1: Cross-Model Comparison}{37}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Inference Time}{37}{subsection.5.4.2}%
+\contentsline {section}{\numberline {5.5}Scope 2: Full Condition Analysis of wav2vec-2.0}{38}{section.5.5}%
+\contentsline {section}{\numberline {5.6}RQ1: Effects of Overlap Ratio and Signal-to-Noise Ratio}{40}{section.5.6}%
+\contentsline {subsection}{\numberline {5.6.1}Effect of Overlap Ratio}{42}{subsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.6.2}Effect of Signal-to-Noise Ratio}{42}{subsection.5.6.2}%
+\contentsline {subsection}{\numberline {5.6.3}Summary}{43}{subsection.5.6.3}%
+\contentsline {section}{\numberline {5.7}RQ2: Comparison of ASR Models}{43}{section.5.7}%
+\contentsline {subsection}{\numberline {5.7.1}Overall Comparison}{43}{subsection.5.7.1}%
+\contentsline {subsection}{\numberline {5.7.2}Extreme Cases}{44}{subsection.5.7.2}%
+\contentsline {paragraph}{\texttt {faster-whisper}.}{44}{section*.47}%
+\contentsline {paragraph}{\texttt {WhisperX}.}{45}{section*.48}%
+\contentsline {paragraph}{\texttt {wav2vec-2.0}.}{45}{section*.49}%
+\contentsline {paragraph}{\texttt {Parakeet}.}{45}{section*.50}%
+\contentsline {subsection}{\numberline {5.7.3}Inference Efficiency}{46}{subsection.5.7.3}%
+\contentsline {subsection}{\numberline {5.7.4}Summary}{46}{subsection.5.7.4}%
+\contentsline {section}{\numberline {5.8}RQ3: Transferability of ASR Performance Trends}{47}{section.5.8}%
+\contentsline {section}{\numberline {5.9}RQ4: Evaluation of DSS-WER}{48}{section.5.9}%
+\contentsline {subsection}{\numberline {5.9.1}Validation of DSS-WER Approximation}{50}{subsection.5.9.1}%
+\contentsline {subsection}{\numberline {5.9.2}Synthetic Examples}{50}{subsection.5.9.2}%
+\contentsline {subsection}{\numberline {5.9.3}Summary}{50}{subsection.5.9.3}%
+\contentsline {section}{\numberline {5.10}Summary of Findings}{50}{section.5.10}%
+\contentsline {chapter}{\numberline {6}Discussion and Conclusion}{51}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Chapter Overview}{51}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Discussion}{51}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}RQ1: Effect of Overlap Ratio and SNR on ASR Performance}{52}{subsection.6.2.1}%
+\contentsline {section}{\numberline {6.3}RQ2: ASR Model Comparison}{53}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}RQ3: Synthetic-Real Trend Comparison}{53}{subsection.6.3.1}%
+\contentsline {section}{\numberline {6.4}RQ4: DSS-WER Analysis}{54}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Main Contributions}{54}{section.6.5}%
+\contentsline {section}{\numberline {6.6}Limitations}{55}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Further Research Directions}{55}{section.6.7}%
+\contentsline {subsection}{\numberline {6.7.1}More Realistic Synthetic Mixture Generation}{55}{subsection.6.7.1}%
+\contentsline {subsection}{\numberline {6.7.2}Broader Real-Data Evaluation}{56}{subsection.6.7.2}%
+\contentsline {subsection}{\numberline {6.7.3}Further Development of DSS-WER}{56}{subsection.6.7.3}%
+\contentsline {subsection}{\numberline {6.7.4}Training and Adaptation Experiments}{56}{subsection.6.7.4}%
+\contentsline {section}{\numberline {6.8}Final Conclusion}{56}{section.6.8}%
+\contentsline {chapter}{\numberline {A}Pseudocode for DSS-WER Beam Search}{61}{appendix.A}%
+\contentsline {chapter}{\numberline {B}Software Configuration}{62}{appendix.B}%
+\contentsline {section}{\numberline {B.1}Software Dependencies}{62}{section.B.1}%
+\contentsline {section}{\numberline {B.2}ASR Models and Configurations}{62}{section.B.2}%
